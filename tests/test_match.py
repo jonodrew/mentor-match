@@ -36,8 +36,8 @@ class TestMatch:
         match = Match(base_mentor, base_mentee)
         assert match.score == 0
 
-    @pytest.mark.parametrize("mentee_grade", [grade for grade in GRADES[0:-3]])
-    @pytest.mark.parametrize("mentor_grade", [grade for grade in GRADES[3:]])
+    @pytest.mark.parametrize("mentee_grade", [grade for grade in GRADES])
+    @pytest.mark.parametrize("mentor_grade", [grade for grade in GRADES])
     def test_cant_match_with_greater_than_two_grade_difference(
         self, base_mentee, base_mentor, mentee_grade, mentor_grade
     ):
@@ -49,3 +49,9 @@ class TestMatch:
             pass
         else:
             assert match.score == 0
+
+    def test_matching_profession_scores_four_points(self, base_mentor, base_mentee):
+        base_mentor.grade = "Grade 6"  # 1 grade diff
+        base_mentor.department = "Department of Sad"
+        match = Match(base_mentor, base_mentee)
+        assert match.score - match.weightings["grade"] == 4
