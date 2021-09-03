@@ -1,23 +1,33 @@
-from match import Match
+from matching.match import Match
 from munkres import Munkres, make_cost_matrix, Matrix
 import sys
-from typing import Generator
-from mentee import Mentee
-from mentor import Mentor
+from typing import Union, Type
+
+from matching.mentee import Mentee
+from matching.mentor import Mentor
+import csv
 
 
-def create_mentee_list() -> Generator[Mentee]:
-    pass
+def process_form(path_to_form) -> csv.DictReader:
+    with open(path_to_form, "r") as data_form:
+        file_reader = csv.DictReader(data_form)
+        for row in file_reader:
+            yield row
 
 
-def create_mentor_list() -> Generator[Mentor]:
-    pass
+def create_participant_list(
+    participant: Union[Type[Mentee], Type[Mentor]], path_to_data
+):
+    return [participant(**row) for row in process_form(path_to_data)]
 
 
-def create_matches() -> list[list[Match]]:
+def create_matches(path_to_data) -> list[list[Match]]:
     return [
-        [Match(mentor, mentee) for mentor in create_mentor_list()]
-        for mentee in create_mentee_list()
+        [
+            Match(mentor, mentee)
+            for mentor in create_participant_list(Mentor, path_to_data / "mentors.csv")
+        ]
+        for mentee in create_participant_list(Mentee, path_to_data / "mentees.csv")
     ]
 
 

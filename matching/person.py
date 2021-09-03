@@ -12,6 +12,10 @@ GRADES = [
     "SCS4",
 ]
 
+ORGS = ["DWP", "HMRC", "Cabinet Office", "FCDO", "Home Office"]
+
+PROFESSIONS = ["Policy", "Operational Delivery", "Digital"]
+
 
 class Person:
     def __init__(self, **kwargs):
