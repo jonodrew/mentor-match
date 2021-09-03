@@ -32,7 +32,7 @@ def _random_file(path_to_file, role_type: str, quantity=50):
             "Your profession",
         ]
         data = [headings]
-        for i in range(50):
+        for i in range(quantity):
             data.append(
                 [
                     datetime.now(),

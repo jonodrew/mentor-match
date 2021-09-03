@@ -1,11 +1,11 @@
-from matching.match import Match
-from munkres import Munkres, make_cost_matrix, Matrix
-import sys
+import csv
 from typing import Union, Type
 
+from munkres import Munkres, make_cost_matrix, Matrix, DISALLOWED
+
+from matching.match import Match
 from matching.mentee import Mentee
 from matching.mentor import Mentor
-import csv
 
 
 def process_form(path_to_form) -> csv.DictReader:
@@ -31,12 +31,13 @@ def create_matches(path_to_data) -> list[list[Match]]:
     ]
 
 
-def prepare_matrix() -> Matrix:
+def prepare_matrix(path_to_data) -> Matrix:
     return make_cost_matrix(
-        create_matches(), lambda match: (sys.maxsize - match.quality)
+        create_matches(path_to_data),
+        lambda match: (DISALLOWED if match.disallowed else match.score),
     )
 
 
-def calculate_matches():
+def calculate_matches(path_to_data):
     algorithm = Munkres()
-    return algorithm.compute(prepare_matrix())
+    return algorithm.compute(prepare_matrix(path_to_data))
