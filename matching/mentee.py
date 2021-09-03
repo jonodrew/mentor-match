@@ -1,5 +1,6 @@
-from person import Person
-from mentor import Mentor
+from matching.mentor import Mentor
+from matching.person import Person
+
 
 class Mentee(Person):
     def __init__(self, **kwargs):
@@ -11,7 +12,7 @@ class Mentee(Person):
         return self._mentors
 
     @mentors.setter
-    def mentors(self, new_mentor: Mentor):
+    def mentors(self, new_mentor: "Mentor"):
         if len(self._mentors) < 3:
             self._mentors.append(new_mentor)
         else:
