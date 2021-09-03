@@ -1,19 +1,16 @@
-from mentee import Mentee
-from mentor import Mentor
-
 GRADES = [
-    "SCS4",
-    "SCS3",
-    "SCS2",
-    "SCS1",
-    "Grade 6",
-    "Grade 7",
-    "SEO",
-    "HEO",
-    "EO",
-    "AO",
     "AA",
-].split(",")
+    "AO",
+    "EO",
+    "HEO",
+    "SEO",
+    "Grade 7",
+    "Grade 6",
+    "SCS1",
+    "SCS2",
+    "SCS3",
+    "SCS4",
+]
 
 
 class Person:
