@@ -8,13 +8,13 @@ import pytest
 @pytest.fixture
 def base_data() -> dict:
     return {
-        "first name": "Test",
-        "last name": "Data",
-        "email address": "test@data.com",
-        "role": "N/A",
-        "department": "Department of Fun",
-        "grade": "Grade 7",
-        "profession": "Policy",
+        "Your first name": "Test",
+        "Your last name": "Data",
+        "Your Civil Service email address": "test@data.com",
+        "Your job title or role": "N/A",
+        "Your department or agency": "Department of Fun",
+        "Your grade": "Grade 7",
+        "Your profession": "Policy",
     }
 
 

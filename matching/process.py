@@ -1,32 +1,43 @@
-from match import Match
-from munkres import Munkres, make_cost_matrix, Matrix
-import sys
-from typing import Generator
-from mentee import Mentee
-from mentor import Mentor
+import csv
+from typing import Union, Type
+
+from munkres import Munkres, make_cost_matrix, Matrix, DISALLOWED
+
+from matching.match import Match
+from matching.mentee import Mentee
+from matching.mentor import Mentor
 
 
-def create_mentee_list() -> Generator[Mentee]:
-    pass
+def process_form(path_to_form) -> csv.DictReader:
+    with open(path_to_form, "r") as data_form:
+        file_reader = csv.DictReader(data_form)
+        for row in file_reader:
+            yield row
 
 
-def create_mentor_list() -> Generator[Mentor]:
-    pass
+def create_participant_list(
+    participant: Union[Type[Mentee], Type[Mentor]], path_to_data
+):
+    return [participant(**row) for row in process_form(path_to_data)]
 
 
-def create_matches() -> list[list[Match]]:
+def create_matches(path_to_data) -> list[list[Match]]:
     return [
-        [Match(mentor, mentee) for mentor in create_mentor_list()]
-        for mentee in create_mentee_list()
+        [
+            Match(mentor, mentee)
+            for mentor in create_participant_list(Mentor, path_to_data / "mentors.csv")
+        ]
+        for mentee in create_participant_list(Mentee, path_to_data / "mentees.csv")
     ]
 
 
-def prepare_matrix() -> Matrix:
+def prepare_matrix(path_to_data) -> Matrix:
     return make_cost_matrix(
-        create_matches(), lambda match: (sys.maxsize - match.quality)
+        create_matches(path_to_data),
+        lambda match: (DISALLOWED if match.disallowed else match.score),
     )
 
 
-def calculate_matches():
+def calculate_matches(path_to_data):
     algorithm = Munkres()
-    return algorithm.compute(prepare_matrix())
+    return algorithm.compute(prepare_matrix(path_to_data))
