@@ -1,11 +1,14 @@
-from matching.mentor import Mentor
+from typing import TYPE_CHECKING
 from matching.person import Person
+
+if TYPE_CHECKING:
+    from matching.mentor import Mentor
 
 
 class Mentee(Person):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._mentors: list[Mentor] = []
+        self._mentors: list["Mentor"] = []
 
     @property
     def mentors(self):

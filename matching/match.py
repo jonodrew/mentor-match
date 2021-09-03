@@ -1,9 +1,12 @@
-from matching.mentee import Mentee
-from matching.mentor import Mentor
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from matching.mentor import Mentor
+    from matching.mentee import Mentee
 
 
 class Match:
-    def __init__(self, mentor: Mentor, mentee: Mentee, weightings=None):
+    def __init__(self, mentor: "Mentor", mentee: "Mentee", weightings=None):
         if weightings is None:
             self.weightings = {"profession": 4, "grade": 3}
         self.mentee = mentee

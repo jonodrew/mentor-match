@@ -1,4 +1,8 @@
 from matching.person import Person
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from matching.mentee import Mentee
 
 
 class Mentor(Person):
