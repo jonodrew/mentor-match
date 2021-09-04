@@ -50,4 +50,6 @@ class TestMatch:
         self, base_mentee, base_mentor
     ):
         base_mentor.mentees.append(base_mentee)
-        assert Match(base_mentor, base_mentee).disallowed
+        test_match = Match(base_mentor, base_mentee)
+        test_match.calculate_match()
+        assert test_match.disallowed
