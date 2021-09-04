@@ -13,6 +13,7 @@ from matching.process import (
     Mentee,
     create_matches,
     conduct_matching,
+    create_mailing_list,
 )
 
 
@@ -86,5 +87,14 @@ class TestProcess:
         for mentee in mentees:
             assert len(mentee.mentors) > 0
 
-    def test_deserialise_participant_to_csv(self, test_data_path):
-        pass
+    def test_create_mailing_list(self, tmp_path, base_mentee, base_mentor, base_data):
+        mentors = [base_mentor]
+        for mentor in mentors:
+            mentor.mentees.extend([base_mentee for i in range(3)])
+        create_mailing_list(mentors, tmp_path)
+        assert tmp_path.joinpath("mentors-list.csv").exists()
+        with open(tmp_path.joinpath("mentors-list.csv"), "r") as test_mentors_file:
+            file_reader = csv.reader(test_mentors_file)
+            assert {"match 1 email", "match 2 email", "match 3 email"}.issubset(
+                set(next(file_reader))
+            )

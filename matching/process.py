@@ -6,6 +6,7 @@ from munkres import Munkres, make_cost_matrix, Matrix, DISALLOWED
 from matching.match import Match
 from matching.mentee import Mentee
 from matching.mentor import Mentor
+from pathlib import Path
 
 
 def process_form(path_to_form) -> csv.DictReader:
@@ -87,3 +88,19 @@ def round_three_matching(
 
 def conduct_matching(path_to_data):
     return round_three_matching(*round_two_matching(*round_one_matching(path_to_data)))
+
+
+def create_mailing_list(
+    participant_list: list[Union[Mentor, Mentee]], output_folder: Path
+):
+    file_name = f"{type(participant_list[0]).__name__.lower()}s-list.csv"
+    file = output_folder.joinpath(file_name)
+    participant_list = [participant.to_dict() for participant in participant_list]
+    with open(file, "w", newline="") as output_file:
+        field_headings = list(participant_list[0].keys())
+        writer = csv.DictWriter(output_file, fieldnames=field_headings)
+        writer.writeheader()
+        print(participant_list)
+        for participant in participant_list:
+            print(participant)
+            writer.writerow(participant)
