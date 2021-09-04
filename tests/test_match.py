@@ -45,3 +45,9 @@ class TestMatch:
         match = Match(base_mentor, base_mentee)
         match.calculate_match()
         assert match.disallowed
+
+    def test_cant_match_with_someone_already_matched_with(
+        self, base_mentee, base_mentor
+    ):
+        base_mentor.mentees.append(base_mentee)
+        assert Match(base_mentor, base_mentee).disallowed

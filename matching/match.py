@@ -16,6 +16,7 @@ class Match:
         self.mentor = mentor
         self._disallowed: bool = False
         self._score: int = 0
+        self.check_not_already_matched()
 
     @property
     def score(self):
@@ -67,3 +68,7 @@ class Match:
     def mark_successful(self):
         self.mentor.mentees.append(self.mentee)
         self.mentee.mentors.append(self.mentor)
+
+    def check_not_already_matched(self):
+        if self.mentee in self.mentor.mentees or self.mentor in self.mentee.mentors:
+            self._disallowed = True
