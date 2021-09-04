@@ -11,11 +11,11 @@ class Mentor(Person):
         self._mentees: list["Mentee"] = []
 
     @property
-    def mentors(self):
+    def mentees(self):
         return self._mentees
 
-    @mentors.setter
-    def mentors(self, new_mentee: "Mentee"):
+    @mentees.setter
+    def mentees(self, new_mentee: "Mentee"):
         if len(self._mentees) < 3:
             self._mentees.append(new_mentee)
         else:

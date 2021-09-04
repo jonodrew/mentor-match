@@ -6,8 +6,14 @@ from datetime import datetime
 
 import pytest
 
+from matching.mentor import Mentor
 from matching.person import GRADES, ORGS, PROFESSIONS
-from matching.process import create_participant_list, Mentee, create_matches
+from matching.process import (
+    create_participant_list,
+    Mentee,
+    create_matches,
+    conduct_matching,
+)
 
 
 def _random_file(path_to_file, role_type: str, quantity=50):
@@ -59,13 +65,26 @@ def fifty_random_mentees_and_mentors(tmp_path):
 
 class TestProcess:
     def test_create_mentee_list(self, fifty_random_mentees_and_mentors, tmp_path):
-        folder_path = tmp_path / "data" / "mentees.csv"
+        folder_path = tmp_path / "data"
         mentees = create_participant_list(Mentee, folder_path)
         assert len(mentees) == 50
         assert all(map(lambda role: type(role) is Mentee, mentees))
 
     def test_create_matches(self, fifty_random_mentees_and_mentors, tmp_path):
         path_to_data = tmp_path / "data"
-        matches = create_matches(path_to_data)
+        matches = create_matches(
+            create_participant_list(Mentor, path_to_data),
+            create_participant_list(Mentee, path_to_data),
+        )
         assert len(matches) == 50
         assert len(matches[0]) == 50
+
+    def test_conduct_matching(self, fifty_random_mentees_and_mentors, tmp_path):
+        path_to_data = tmp_path / "data"
+        mentors, mentees = conduct_matching(path_to_data)
+        assert len(mentors) == 50
+        assert len(mentees) == 50
+        for mentor in mentors:
+            assert len(mentor.mentees) > 0
+        for mentee in mentees:
+            assert len(mentee.mentors) > 0
