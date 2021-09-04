@@ -59,6 +59,6 @@ class Person:
         }
         if depth == 1:
             for i, connection in enumerate(self.connections):
-                for key, value in connection.to_dict().items():
+                for key, value in connection.to_dict(depth=0).items():
                     output[f"match {i+1} {key}"] = value
         return output
