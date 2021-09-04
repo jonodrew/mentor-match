@@ -8,15 +8,11 @@ if TYPE_CHECKING:
 class Mentee(Person):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._mentors: list["Mentor"] = []
 
     @property
     def mentors(self):
-        return self._mentors
+        return super(Mentee, self).connections
 
     @mentors.setter
     def mentors(self, new_mentor: "Mentor"):
-        if len(self._mentors) < 3:
-            self._mentors.append(new_mentor)
-        else:
-            raise Exception
+        super(Mentee, self).connections.append(new_mentor)

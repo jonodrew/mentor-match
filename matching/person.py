@@ -26,6 +26,7 @@ class Person:
         self.department: str = kwargs["Your department or agency"]
         self._grade: int = GRADES.index(kwargs["Your grade"])
         self.profession: str = kwargs["Your profession"]
+        self._connections: list[Person] = []
 
     @property
     def grade(self):
@@ -37,3 +38,14 @@ class Person:
             self._grade = GRADES.index(new_grade)
         else:
             raise NotImplementedError
+
+    @property
+    def connections(self):
+        return self._connections
+
+    @connections.setter
+    def connections(self, new_connection: "Person"):
+        if len(self._connections) < 3:
+            self._connections.append(new_connection)
+        else:
+            raise Exception
