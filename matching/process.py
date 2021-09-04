@@ -1,8 +1,6 @@
 import csv
 from typing import Union, Type
-
 from munkres import Munkres, make_cost_matrix, Matrix, DISALLOWED
-
 from matching.match import Match
 from matching.mentee import Mentee
 from matching.mentor import Mentor
@@ -100,7 +98,5 @@ def create_mailing_list(
         field_headings = list(participant_list[0].keys())
         writer = csv.DictWriter(output_file, fieldnames=field_headings)
         writer.writeheader()
-        print(participant_list)
         for participant in participant_list:
-            print(participant)
             writer.writerow(participant)
