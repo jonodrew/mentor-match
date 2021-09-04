@@ -68,7 +68,7 @@ def round_two_matching(
     match_and_assign_participants(
         round_one_mentor_list,
         round_one_mentee_list,
-        weightings={"profession": 4, "grade": 3, "unmatched bonus": 1.5},
+        weightings={"profession": 4, "grade": 3, "unmatched bonus": 50},
     )
     return round_one_mentor_list, round_one_mentee_list
 
@@ -79,7 +79,7 @@ def round_three_matching(
     match_and_assign_participants(
         round_two_mentor_list,
         round_two_mentee_list,
-        weightings={"profession": 0, "grade": 3, "unmatched bonus": 2},
+        weightings={"profession": 0, "grade": 3, "unmatched bonus": 100},
     )
     return round_two_mentor_list, round_two_mentee_list
 
