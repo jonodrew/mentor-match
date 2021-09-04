@@ -7,8 +7,11 @@ if TYPE_CHECKING:
 
 class Match:
     def __init__(self, mentor: "Mentor", mentee: "Mentee", weightings=None):
-        if weightings is None:
-            self.weightings = {"profession": 4, "grade": 3}
+        self.weightings = (
+            {"profession": 4, "grade": 3, "unmatched bonus": 1}
+            if weightings is None
+            else weightings
+        )
         self.mentee = mentee
         self.mentor = mentor
         self._disallowed: bool = False
@@ -20,7 +23,8 @@ class Match:
         if self._disallowed:
             return 0
         else:
-            return self._score
+            score = self._score * self.weightings.get("unmatched bonus")
+            return score
 
     @score.setter
     def score(self, new_value: int):
@@ -59,3 +63,7 @@ class Match:
     def score_department(self) -> None:
         if self.mentee.department == self.mentor.department:
             self._disallowed = True
+
+    def mark_successful(self):
+        self.mentor.mentees.append(self.mentee)
+        self.mentee.mentors.append(self.mentor)

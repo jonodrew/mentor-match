@@ -55,3 +55,9 @@ class TestMatch:
         base_mentor.department = "Department of Sad"
         match = Match(base_mentor, base_mentee)
         assert match.score - match.weightings["grade"] == 4
+
+    def test_mark_successful(self, base_mentee, base_mentor):
+        match = Match(base_mentor, base_mentee)
+        match.mark_successful()
+        assert base_mentor in base_mentee.mentors
+        assert base_mentee in base_mentor.mentees
