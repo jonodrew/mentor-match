@@ -18,12 +18,7 @@ from matching.process import (
 
 def _random_file(path_to_file, role_type: str, quantity=50):
     padding_size = int(math.log10(quantity)) + 1
-    d = path_to_file / "data"
-    try:
-        d.mkdir()
-    except FileExistsError:
-        pass
-    data_path = d / f"{role_type}.csv"
+    data_path = path_to_file / f"{role_type}s.csv"
     with open(data_path, "w", newline="") as test_data:
         headings = [
             "Timestamp",
@@ -57,34 +52,39 @@ def _random_file(path_to_file, role_type: str, quantity=50):
         file_writer.writerows(data)
 
 
-@pytest.fixture
-def fifty_random_mentees_and_mentors(tmp_path):
-    _random_file(tmp_path, "mentees")
-    _random_file(tmp_path, "mentors")
+@pytest.fixture(scope="session")
+def test_data_path(tmpdir_factory):
+    return tmpdir_factory.mktemp("data")
+
+
+@pytest.fixture(scope="session")
+def fifty_random_mentees_and_mentors(test_data_path):
+    _random_file(test_data_path, "mentee")
+    _random_file(test_data_path, "mentor")
 
 
 class TestProcess:
-    def test_create_mentee_list(self, fifty_random_mentees_and_mentors, tmp_path):
-        folder_path = tmp_path / "data"
-        mentees = create_participant_list(Mentee, folder_path)
+    def test_create_mentee_list(self, fifty_random_mentees_and_mentors, test_data_path):
+        mentees = create_participant_list(Mentee, test_data_path)
         assert len(mentees) == 50
         assert all(map(lambda role: type(role) is Mentee, mentees))
 
-    def test_create_matches(self, fifty_random_mentees_and_mentors, tmp_path):
-        path_to_data = tmp_path / "data"
+    def test_create_matches(self, fifty_random_mentees_and_mentors, test_data_path):
         matches = create_matches(
-            create_participant_list(Mentor, path_to_data),
-            create_participant_list(Mentee, path_to_data),
+            create_participant_list(Mentor, test_data_path),
+            create_participant_list(Mentee, test_data_path),
         )
         assert len(matches) == 50
         assert len(matches[0]) == 50
 
-    def test_conduct_matching(self, fifty_random_mentees_and_mentors, tmp_path):
-        path_to_data = tmp_path / "data"
-        mentors, mentees = conduct_matching(path_to_data)
+    def test_conduct_matching(self, fifty_random_mentees_and_mentors, test_data_path):
+        mentors, mentees = conduct_matching(test_data_path)
         assert len(mentors) == 50
         assert len(mentees) == 50
         for mentor in mentors:
             assert len(mentor.mentees) > 0
         for mentee in mentees:
             assert len(mentee.mentors) > 0
+
+    def test_deserialise_participant_to_csv(self, test_data_path):
+        pass
