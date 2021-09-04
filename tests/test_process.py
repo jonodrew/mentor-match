@@ -1,5 +1,6 @@
 import csv
 import math
+import pathlib
 import random
 import string
 from datetime import datetime
@@ -44,8 +45,8 @@ def _random_file(path_to_file, role_type: str, quantity=50):
                     str(i).zfill(padding_size),
                     "".join(random.choices(string.ascii_letters + string.digits, k=16)),
                     "".join(random.choices(string.ascii_letters + string.digits, k=16)),
-                    random.choice(ORGS),
-                    random.choice(GRADES),
+                    random.choices(ORGS, [5, 5, 1, 2, 5], k=1)[0],
+                    random.choices(GRADES, [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1], k=1)[0],
                     random.choice(PROFESSIONS),
                 ]
             )
@@ -86,6 +87,29 @@ class TestProcess:
             assert len(mentor.mentees) > 0
         for mentee in mentees:
             assert len(mentee.mentors) > 0
+
+    @pytest.mark.xfail
+    def test_conduct_matching_with_unbalanced_inputs(self, test_data_path):
+        _random_file(test_data_path, "mentee", 550)
+        _random_file(test_data_path, "mentor", 425)
+        mentors, mentees = conduct_matching(test_data_path)
+        every_mentee_has_a_mentor = list(
+            map(lambda mentee: len(mentee.mentors) > 0, mentees)
+        )
+        print(f"Mentees without a mentor: {every_mentee_has_a_mentor.count(False)}")
+        assert all(every_mentee_has_a_mentor)
+
+    @pytest.mark.xfail
+    def test_integration_data(self):
+        mentors, mentees = conduct_matching(pathlib.Path("./integration"))
+        every_mentee_has_a_mentor = list(
+            map(lambda mentee: len(mentee.mentors) > 0, mentees)
+        )
+        print(f"Mentees without a mentor: {every_mentee_has_a_mentor.count(False)}")
+        print(
+            f"Total matches made: {sum(map(lambda participant: len(participant.connections), mentees))}"
+        )
+        assert all(every_mentee_has_a_mentor)
 
     def test_create_mailing_list(self, tmp_path, base_mentee, base_mentor, base_data):
         mentors = [base_mentor]
