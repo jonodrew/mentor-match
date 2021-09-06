@@ -1,6 +1,7 @@
 import csv
 import logging
 import math
+import os
 import pathlib
 from datetime import datetime
 
@@ -102,7 +103,9 @@ class TestProcess:
         )
         assert all(every_mentee_has_a_mentor)
 
-    @pytest.mark.skip
+    @pytest.mark.skipif(
+        os.environ.get("TEST") is None, reason="can't put integration data on Github"
+    )
     def test_integration_data(self):
         def _unmatchables(list_participants: list[Person]):
             return len(
