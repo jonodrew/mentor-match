@@ -10,6 +10,6 @@ class TestPerson:
 
     def test_to_dict_depth_one(self, base_data):
         test_person = Person(**base_data)
-        test_person.connections.extend([Person(**base_data) for i in range(3)])
+        test_person.connections.extend([Person(**base_data) for _ in range(3)])
         mentor_as_dict = test_person.to_dict()
         assert "match 1 email" in mentor_as_dict.keys()

@@ -4,9 +4,9 @@ import sys
 from pathlib import Path
 from typing import Union, Type
 
-from munkres import Munkres, make_cost_matrix, Matrix, UnsolvableMatrix
+from munkres import Munkres, make_cost_matrix, Matrix
 
-from matching.helpers.pre_processing import check_unsolvability, transpose_matrix
+from matching.helpers.pre_processing import transpose_matrix
 from matching.match import Match
 from matching.mentee import Mentee
 from matching.mentor import Mentor
@@ -67,10 +67,6 @@ def prepare_matrix(matches: list[list[Match]]) -> Matrix:
         matches,
         lambda match: sys.maxsize - match.score,
     )
-    try:
-        check_unsolvability(prepared_matrix)
-    except UnsolvableMatrix:
-        raise UnsolvableMatrix("This matrix cannot be solved")
     return prepared_matrix
 
 
