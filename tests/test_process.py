@@ -123,7 +123,8 @@ class TestProcess:
             map(lambda mentee: len(mentee.mentors) > 0, mentees)
         )
         logging.info(
-            f"Mentees without a mentor: {every_mentee_has_a_mentor.count(False)}"
+            f"Mentees without a mentor: {every_mentee_has_a_mentor.count(False)}\n"
+            f"Mentors without any mentees {list(map(lambda mentor: len(mentor.mentees) > 0, mentors)).count(False)}"
         )
         logging.info(
             f"Total matches made: {sum(map(lambda participant: len(participant.connections), mentees))}"
@@ -136,7 +137,7 @@ class TestProcess:
     def test_create_mailing_list(self, tmp_path, base_mentee, base_mentor, base_data):
         mentors = [base_mentor]
         for mentor in mentors:
-            mentor.mentees.extend([base_mentee for i in range(3)])
+            mentor.mentees.extend([base_mentee for _ in range(3)])
         create_mailing_list(mentors, tmp_path)
         assert tmp_path.joinpath("mentors-list.csv").exists()
         with open(tmp_path.joinpath("mentors-list.csv"), "r") as test_mentors_file:
