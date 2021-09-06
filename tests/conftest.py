@@ -24,4 +24,7 @@ def base_mentee(base_data):
 
 @pytest.fixture
 def base_mentor(base_data):
-    return Mentor(**base_data)
+    data_copy = base_data.copy()
+    data_copy["Your grade"] = "Grade 6"
+    data_copy["Your department or agency"] = "Ministry of Silly Walks"
+    return Mentor(**data_copy)

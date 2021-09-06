@@ -1,12 +1,24 @@
 import csv
+import logging
+import sys
+from pathlib import Path
 from typing import Union, Type
 
-from munkres import Munkres, make_cost_matrix, Matrix, DISALLOWED
+from munkres import Munkres, make_cost_matrix, Matrix, UnsolvableMatrix
 
+from matching.helpers.pre_processing import check_unsolvability, transpose_matrix
 from matching.match import Match
 from matching.mentee import Mentee
 from matching.mentor import Mentor
-from pathlib import Path
+
+
+def generate_match_matrix(
+    mentor_list: list[Mentor], mentee_list: list[Mentee], weightings: dict[str, int]
+) -> list[list[Match]]:
+    return [
+        [Match(mentor, mentee, weightings) for mentee in mentee_list]
+        for mentor in mentor_list
+    ]
 
 
 def process_form(path_to_form) -> csv.DictReader:
@@ -23,22 +35,43 @@ def create_participant_list(
     return [participant(**row) for row in process_form(path_to_data)]
 
 
+def _mark_participants_with_no_matches(matrix: list[list[Match]], role_as_str: str):
+    for row in matrix:
+        if all([match.disallowed for match in row]):
+            row[0].__getattribute__(role_as_str).has_no_match = True
+            logging.debug(
+                f"Participant {row[0].__getattribute__(role_as_str).data['Your Civil Service email address']} has no matches"
+            )
+
+
 def create_matches(
     mentor_list: list[Mentor],
     mentee_list: list[Mentee],
     weightings: Union[None, dict[str, int]] = None,
 ) -> list[list[Match]]:
-    return [
-        [Match(mentor, mentee, weightings) for mentor in mentor_list]
-        for mentee in mentee_list
-    ]
+    def _can_match(participant: Union[Mentor, Mentee]):
+        return not participant.has_no_match
+
+    preliminary_matches = generate_match_matrix(mentor_list, mentee_list, weightings)
+    _mark_participants_with_no_matches(preliminary_matches, "mentor")
+    _mark_participants_with_no_matches(transpose_matrix(preliminary_matches), "mentee")
+    return generate_match_matrix(
+        list(filter(_can_match, mentor_list)),
+        list(filter(_can_match, mentee_list)),
+        weightings,
+    )
 
 
 def prepare_matrix(matches: list[list[Match]]) -> Matrix:
-    return make_cost_matrix(
+    prepared_matrix = make_cost_matrix(
         matches,
-        lambda match: (DISALLOWED if match.disallowed else match.score),
+        lambda match: sys.maxsize - match.score,
     )
+    try:
+        check_unsolvability(prepared_matrix)
+    except UnsolvableMatrix:
+        raise UnsolvableMatrix("This matrix cannot be solved")
+    return prepared_matrix
 
 
 def calculate_matches(prepared_matrix: Matrix):
@@ -67,10 +100,11 @@ def round_one_matching(path_to_data) -> tuple[list[Mentor], list[Mentee]]:
 def round_two_matching(
     round_one_mentor_list: list[Mentor], round_one_mentee_list: list[Mentee]
 ) -> tuple[list[Mentor], list[Mentee]]:
+    logging.debug("Round two!")
     match_and_assign_participants(
         round_one_mentor_list,
         round_one_mentee_list,
-        weightings={"profession": 4, "grade": 3, "unmatched bonus": 1.5},
+        weightings={"profession": 4, "grade": 3, "unmatched bonus": 50},
     )
     return round_one_mentor_list, round_one_mentee_list
 
@@ -81,7 +115,7 @@ def round_three_matching(
     match_and_assign_participants(
         round_two_mentor_list,
         round_two_mentee_list,
-        weightings={"profession": 0, "grade": 3, "unmatched bonus": 2},
+        weightings={"profession": 0, "grade": 3, "unmatched bonus": 100},
     )
     return round_two_mentor_list, round_two_mentee_list
 
@@ -96,11 +130,13 @@ def create_mailing_list(
     file_name = f"{type(participant_list[0]).__name__.lower()}s-list.csv"
     file = output_folder.joinpath(file_name)
     participant_list = [participant.to_dict() for participant in participant_list]
+    field_headings = participant_list[0].keys()
+    length_headings = len(field_headings)
+    for participant in participant_list:
+        if len(participant.keys()) > length_headings:
+            field_headings = participant.keys()
     with open(file, "w", newline="") as output_file:
-        field_headings = list(participant_list[0].keys())
-        writer = csv.DictWriter(output_file, fieldnames=field_headings)
+        writer = csv.DictWriter(output_file, fieldnames=list(field_headings))
         writer.writeheader()
-        print(participant_list)
         for participant in participant_list:
-            print(participant)
             writer.writerow(participant)

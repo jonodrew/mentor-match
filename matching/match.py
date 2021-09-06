@@ -1,3 +1,4 @@
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -8,7 +9,7 @@ if TYPE_CHECKING:
 class Match:
     def __init__(self, mentor: "Mentor", mentee: "Mentee", weightings=None):
         self.weightings = (
-            {"profession": 4, "grade": 3, "unmatched bonus": 1}
+            {"profession": 4, "grade": 3, "unmatched bonus": 0}
             if weightings is None
             else weightings
         )
@@ -16,15 +17,14 @@ class Match:
         self.mentor = mentor
         self._disallowed: bool = False
         self._score: int = 0
+        self.calculate_match()
 
     @property
     def score(self):
-        self.calculate_match()
         if self._disallowed:
             return 0
         else:
-            score = self._score * self.weightings.get("unmatched bonus")
-            return score
+            return self._score
 
     @score.setter
     def score(self, new_value: int):
@@ -41,9 +41,11 @@ class Match:
 
     def calculate_match(self) -> None:
         scoring_methods = [
+            self.check_not_already_matched,
             self.score_department,
             self.score_grade,
             self.score_profession,
+            self.score_unmatched,
         ]
         while not self._disallowed and scoring_methods:
             scoring_method = scoring_methods.pop()
@@ -64,6 +66,22 @@ class Match:
         if self.mentee.department == self.mentor.department:
             self._disallowed = True
 
+    def score_unmatched(self) -> None:
+        if any(
+            map(
+                lambda participant: len(participant.connections) == 0,
+                (self.mentee, self.mentor),
+            )
+        ):
+            self._score += self.weightings.get("unmatched bonus")
+
     def mark_successful(self):
-        self.mentor.mentees.append(self.mentee)
-        self.mentee.mentors.append(self.mentor)
+        if not self.disallowed:
+            self.mentor.mentees.append(self.mentee)
+            self.mentee.mentors.append(self.mentor)
+        else:
+            logging.debug("Skipping this match as disallowed")
+
+    def check_not_already_matched(self):
+        if self.mentee in self.mentor.mentees or self.mentor in self.mentee.mentors:
+            self._disallowed = True
