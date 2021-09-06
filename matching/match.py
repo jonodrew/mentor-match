@@ -1,3 +1,4 @@
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -16,10 +17,10 @@ class Match:
         self.mentor = mentor
         self._disallowed: bool = False
         self._score: int = 0
+        self.calculate_match()
 
     @property
     def score(self):
-        self.calculate_match()
         if self._disallowed:
             return 0
         else:
@@ -75,8 +76,11 @@ class Match:
             self._score += self.weightings.get("unmatched bonus")
 
     def mark_successful(self):
-        self.mentor.mentees.append(self.mentee)
-        self.mentee.mentors.append(self.mentor)
+        if not self.disallowed:
+            self.mentor.mentees.append(self.mentee)
+            self.mentee.mentors.append(self.mentor)
+        else:
+            logging.debug("Skipping this match as disallowed")
 
     def check_not_already_matched(self):
         if self.mentee in self.mentor.mentees or self.mentor in self.mentee.mentors:

@@ -1,4 +1,5 @@
 import csv
+import logging
 import math
 import pathlib
 from datetime import datetime
@@ -6,6 +7,7 @@ from datetime import datetime
 import pytest
 
 from matching.mentor import Mentor
+from matching.person import Person
 from matching.process import (
     create_participant_list,
     Mentee,
@@ -95,18 +97,36 @@ class TestProcess:
         every_mentee_has_a_mentor = list(
             map(lambda mentee: len(mentee.mentors) > 0, mentees)
         )
-        print(f"Mentees without a mentor: {every_mentee_has_a_mentor.count(False)}")
+        logging.debug(
+            f"Mentees without a mentor: {every_mentee_has_a_mentor.count(False)}"
+        )
         assert all(every_mentee_has_a_mentor)
 
-    @pytest.mark.xfail
+    @pytest.mark.skip
     def test_integration_data(self):
-        mentors, mentees = conduct_matching(pathlib.Path("./integration"))
+        def _unmatchables(list_participants: list[Person]):
+            return len(
+                [
+                    participant
+                    for participant in list_participants
+                    if participant.has_no_match and len(participant.connections) == 0
+                ]
+            )
+
+        mentors, mentees = conduct_matching(
+            pathlib.Path(".").absolute() / "integration"
+        )
         every_mentee_has_a_mentor = list(
             map(lambda mentee: len(mentee.mentors) > 0, mentees)
         )
-        print(f"Mentees without a mentor: {every_mentee_has_a_mentor.count(False)}")
-        print(
+        logging.info(
+            f"Mentees without a mentor: {every_mentee_has_a_mentor.count(False)}"
+        )
+        logging.info(
             f"Total matches made: {sum(map(lambda participant: len(participant.connections), mentees))}"
+        )
+        logging.info(
+            f"Unmatchable mentors: {_unmatchables(mentors)} | mentees: {_unmatchables(mentees)}"
         )
         assert all(every_mentee_has_a_mentor)
 

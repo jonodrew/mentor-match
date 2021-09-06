@@ -12,10 +12,6 @@ GRADES = [
     "SCS4",
 ]
 
-ORGS = ["DWP", "HMRC", "Cabinet Office", "FCDO", "Home Office"]
-
-PROFESSIONS = ["Policy", "Operational Delivery", "Digital"]
-
 
 class Person:
     def __init__(self, **kwargs):
@@ -24,6 +20,7 @@ class Person:
         self.profession: str = kwargs["Your profession"]
         self.data: dict = kwargs
         self._connections: list[Person] = []
+        self.has_no_match: bool = False
 
     @property
     def grade(self):
