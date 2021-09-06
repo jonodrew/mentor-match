@@ -41,8 +41,9 @@ class TestMatch:
         assert base_mentor in base_mentee.mentors
         assert base_mentee in base_mentor.mentees
 
-    def test_cant_match_with_self(self, base_mentee, base_mentor):
-        match = Match(base_mentor, base_mentee)
+    def test_cant_match_with_self(self, base_mentee, base_data):
+        mentor = Mentor(**base_data)
+        match = Match(mentor, base_mentee)
         match.calculate_match()
         assert match.disallowed
 
