@@ -4,6 +4,7 @@ import math
 import os
 import pathlib
 from datetime import datetime
+from typing import List
 
 import pytest
 
@@ -107,7 +108,7 @@ class TestProcess:
         os.environ.get("TEST") is None, reason="can't put integration data on Github"
     )
     def test_integration_data(self):
-        def _unmatchables(list_participants: list[Person]):
+        def _unmatchables(list_participants: List[Person]):
             return len(
                 [
                     participant
