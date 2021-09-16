@@ -1,3 +1,5 @@
+from typing import List
+
 GRADES = [
     "AA",
     "AO",
@@ -19,7 +21,7 @@ class Person:
         self.department: str = kwargs["Your department or agency"]
         self.profession: str = kwargs["Your profession"]
         self.data: dict = kwargs
-        self._connections: list[Person] = []
+        self._connections: List[Person] = []
         self.has_no_match: bool = False
 
     @property
