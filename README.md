@@ -29,3 +29,12 @@ project: `pip install -r requirements.txt`
 
 Now type `python match.py path/to/folder/with/my/data` and hit return. It should run quietly for up to five minutes and then
 spit out an `output` folder with two files. These are your matched mentors/mentees!
+
+This software also exists as a web application. To run it locally, run the following commands in your terminal:
+```
+export FLASK_APP=app
+export FLASK_ENV=development
+export FLASK_DEBUG=1
+flask run
+```
+This will run the Flask server locally, and you'll be able to see it running at http://127.0.0.1:5000/
