@@ -25,7 +25,7 @@ def main():
     path_to_data = Path(parser.parse_args().filepath)
     logging.info("Beginning matching exercise. This might take up to five minutes.")
     mentors, mentees = conduct_matching(path_to_data)
-    logging.log("Matches found. Exporting to output folder!")
+    logging.info("Matches found. Exporting to output folder!")
     out_put_folder = path_to_data / "output"
     create_mailing_list(mentors, out_put_folder)
     create_mailing_list(mentees, out_put_folder)

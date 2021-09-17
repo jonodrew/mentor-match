@@ -1,5 +1,6 @@
 import csv
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Union, Type, List, Dict, Tuple, Generator, Optional
@@ -135,6 +136,10 @@ def create_mailing_list(
     for participant in list_participants_as_dicts:
         if len(participant.keys()) > length_headings:
             field_headings = participant.keys()
+    try:
+        os.mkdir(output_folder)
+    except FileExistsError:
+        pass
     with open(file, "w", newline="") as output_file:
         writer = csv.DictWriter(output_file, fieldnames=list(field_headings))
         writer.writeheader()
