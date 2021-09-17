@@ -2,9 +2,9 @@ import csv
 import logging
 import sys
 from pathlib import Path
-from typing import Union, Type, List, Dict, Tuple
+from typing import Union, Type, List, Dict, Tuple, Generator, Optional
 
-from munkres import Munkres, make_cost_matrix, Matrix
+from munkres import Munkres, make_cost_matrix, Matrix  # type: ignore
 
 from matching.helpers.pre_processing import transpose_matrix
 from matching.match import Match
@@ -13,7 +13,9 @@ from matching.mentor import Mentor
 
 
 def generate_match_matrix(
-    mentor_list: List[Mentor], mentee_list: List[Mentee], weightings: Dict[str, int]
+    mentor_list: List[Mentor],
+    mentee_list: List[Mentee],
+    weightings: Optional[Dict[str, int]],
 ) -> List[List[Match]]:
     return [
         [Match(mentor, mentee, weightings) for mentee in mentee_list]
@@ -21,7 +23,7 @@ def generate_match_matrix(
     ]
 
 
-def process_form(path_to_form) -> csv.DictReader:
+def process_form(path_to_form) -> Generator[Dict[str, str], None, None]:
     with open(path_to_form, "r") as data_form:
         file_reader = csv.DictReader(data_form)
         for row in file_reader:

@@ -41,7 +41,7 @@ def known_file(base_data):
             for i in range(quantity):
                 data.append(
                     [
-                        datetime.now(),
+                        str(datetime.now()),
                         "yes",
                         "yes",
                         role_type,
