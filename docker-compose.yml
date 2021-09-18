@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:6.0.15
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  app:
+    build:
+      context: "."
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=development
+      - REDIS_URL=redis://redis:6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - ./app:/app
+
+  worker:
+    build: .
+    command: celery --app=app.tasks.celery worker --loglevel=info
+    volumes:
+      - ./app:/app
+    environment:
+      - FLASK_DEBUG=1
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - app
+      - redis
