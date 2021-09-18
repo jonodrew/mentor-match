@@ -3,8 +3,9 @@ attrs==21.2.0
 backports.entry-points-selectable==1.1.0
 billiard==3.6.4.0
 celery==5.1.2
+celery-stubs==0.1.2
 cfgv==3.3.1
-click<8.0
+click==7.1.2
 click-didyoumean==0.0.3
 click-plugins==1.1.1
 click-repl==0.2.0
