@@ -9,7 +9,7 @@ build:
 run:
   web:
     command:
-    - gunicorn app:app
+    - gunicorn "app:create_app()"
     image: web
   worker:
     command:
