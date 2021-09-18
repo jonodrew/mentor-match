@@ -28,10 +28,6 @@ jobs:
         pip install tox tox-gh-actions
     - name: Test with tox
       run: tox
-
-  approve:
-    needs: [build]
-    if: needs.check.result == "success"
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo 0
+    - name: Tests passing
+      if: ${{ success() }}
+      run: echo 0
