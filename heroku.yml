@@ -1,0 +1,17 @@
+setup:
+  addons:
+    - plan: heroku-redis
+
+build:
+  docker:
+    web: Dockerfile
+
+run:
+  web:
+    command:
+    - gunicorn app:app
+    image: web
+  worker:
+    command:
+      - celery --app=app.tasks.celery worker --loglevel=info
+    image: web
