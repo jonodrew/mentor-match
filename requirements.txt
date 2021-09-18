@@ -1,7 +1,13 @@
+amqp==5.0.6
 attrs==21.2.0
 backports.entry-points-selectable==1.1.0
+billiard==3.6.4.0
+celery==5.1.2
 cfgv==3.3.1
-click==8.0.1
+click<8.0
+click-didyoumean==0.0.3
+click-plugins==1.1.1
+click-repl==0.2.0
 distlib==0.3.2
 extras==1.0.0
 filelock==3.0.12
@@ -12,6 +18,7 @@ identify==2.2.13
 iniconfig==1.1.1
 itsdangerous==2.0.1
 Jinja2==3.0.1
+kombu==5.1.0
 lettuce==0.2.23
 MarkupSafe==2.0.1
 mock==4.0.3
@@ -24,11 +31,14 @@ pbr==5.6.0
 platformdirs==2.3.0
 pluggy==1.0.0
 pre-commit==2.14.1
+prompt-toolkit==3.0.20
 py==1.10.0
 pyparsing==2.4.7
 pytest==6.2.5
 python-subunit==1.4.0
+pytz==2021.1
 PyYAML==5.4.1
+redis==3.5.3
 selenium==3.141.0
 six==1.16.0
 sure==2.0.0
@@ -37,5 +47,7 @@ toml==0.10.2
 tox==3.24.4
 typing-extensions==3.10.0.2
 urllib3==1.26.6
+vine==5.0.0
 virtualenv==20.7.2
+wcwidth==0.2.5
 Werkzeug==2.0.1
