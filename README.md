@@ -38,3 +38,9 @@ export FLASK_DEBUG=1
 flask run
 ```
 This will run the Flask server locally, and you'll be able to see it running at http://127.0.0.1:5000/
+
+**Alternatively**, if you want to see things running in all their glory, you'll need to install `Docker` and
+`docker-compose`. [Docker instructions](https://docs.docker.com/engine/install/) and
+[docker-compose instructions](https://docs.docker.com/compose/install/). Like democracy, it is the worst way to write and
+code, except for all the others. Once you've got those two installed, you'll need to run `docker-compose -up -d` to get
+things running, and `docker-compose down` to stop them again. You should see the app running at http://127.0.0.1:5001
