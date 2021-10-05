@@ -1,3 +1,5 @@
 /venv
 /.idea
 *.csv
+.vscode/settings.json
+*.pyc
