@@ -1,8 +1,8 @@
 from celery.result import AsyncResult
-from flask import render_template, request
+from tasks.tasks import create_task
 
 from app.main import main_bp
-from app.tasks import create_task
+
 
 
 @main_bp.route("/", methods=["GET"])
@@ -14,6 +14,9 @@ def index():
 def upload():
     if request.method == "GET":
         return render_template()
+    if request.method == "POST":
+        task = create_task.delay(int("1"))
+        return jsonify(task_id="1"), 202
 
 
 @main_bp.route("/tasks", methods=["POST"])
