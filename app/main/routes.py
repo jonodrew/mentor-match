@@ -1,6 +1,4 @@
-from flask import render_template, request, jsonify
 from tasks.tasks import create_task
-from extensions import celery
 
 from flask import render_template, request, jsonify, current_app, url_for, send_from_directory, \
     after_this_request
@@ -44,6 +42,9 @@ def download(task_id):
             return response
 
         return send_from_directory(data_path, f"{task_id}.zip")
+    if request.method == "POST":
+        task = create_task.delay(int("1"))
+        return jsonify(task_id="1"), 202
 
 
 @main_bp.route("/tasks", methods=["POST"])
