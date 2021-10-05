@@ -2,7 +2,7 @@ from celery.result import AsyncResult
 from flask import render_template, request
 
 from app.main import main_bp
-from app.tasks import create_task
+
 
 
 @main_bp.route("/", methods=["GET"])
