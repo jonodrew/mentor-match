@@ -1,5 +1,6 @@
 from celery.result import AsyncResult
 from tasks.tasks import create_task
+from extensions import celery
 
 from app.main import main_bp
 
@@ -29,7 +30,7 @@ def run_task():
 
 @main_bp.route("/tasks/<task_id>", methods=["GET"])
 def get_status(task_id):
-    task_result = AsyncResult(task_id)
+    task_result = celery.AsyncResult(task_id)
     result = {
         "task_id": task_id,
         "task_status": task_result.status,
