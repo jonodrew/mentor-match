@@ -1,4 +1,4 @@
-from app.tasks import process_data
+from tasks.tasks import process_data
 from matching.process import create_participant_list_from_path, process_data
 from matching.mentor import Mentor
 from matching.mentee import Mentee

@@ -4,23 +4,13 @@ from matching import process
 from typing import Tuple, List
 from matching.mentee import Mentee
 from matching.mentor import Mentor
-
-from celery import Celery
-
-celery = Celery(
-    __name__,
-)
-celery.conf.broker_url = os.environ.get(
-    "CELERY_BROKER_URL", f"{os.environ.get('REDIS_URL')}/0"
-)
-celery.conf.result_backend = os.environ.get(
-    "CELERY_RESULT_BACKEND", f"{os.environ.get('REDIS_URL')}/0"
-)
+import asyncio
+from extensions import celery
 
 
 @celery.task(name="create_task")
 def create_task(task_type):
-    time.sleep(int(task_type) * 10)
+    time.sleep(int(task_type) * 9)
     return True
 
 @celery.task(name="process_data")
