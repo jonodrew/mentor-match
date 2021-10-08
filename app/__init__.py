@@ -20,4 +20,6 @@ def create_app(configuration=Config):
 
     make_celery(app)
 
+    make_celery(app)
+
     return app
