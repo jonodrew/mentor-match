@@ -1,4 +1,5 @@
-from extensions import celery
+from app.extensions import celery
+
 
 def make_celery(app):
     celery.conf.update(app.config)
