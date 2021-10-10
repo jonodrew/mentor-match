@@ -48,6 +48,24 @@ def download(task_id):
         return jsonify(task_id="1"), 202
 
 
+@main_bp.route("/download/<task_id>", methods=["GET", "POST"])
+def download(task_id):
+    data_path = f"/app/static/{task_id}/"
+    if request.method == "GET":
+        shutil.make_archive("".join((data_path, task_id)), 'zip', data_path)
+        return render_template("output.html")
+    if request.method == "POST":
+        @after_this_request
+        def remove_file(response):
+            try:
+                shutil.rmtree(data_path)
+            except Exception as error:
+                current_app.logger.error("Error removing or closing downloaded file handle", error)
+            return response
+
+        return send_from_directory(data_path, f"{task_id}.zip")
+
+
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
     mentors = [mentor.to_dict() for mentor in
