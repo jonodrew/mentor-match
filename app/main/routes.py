@@ -2,8 +2,16 @@ from flask import render_template, request, jsonify
 from tasks.tasks import create_task
 from extensions import celery
 
-from app.main import main_bp
+from flask import render_template, request, jsonify, current_app, url_for, send_from_directory, \
+    after_this_request
 
+from app.extensions import celery
+from app.main import main_bp
+from app.tasks.tasks import create_task, process_data
+from matching.factory import ParticipantFactory
+from matching.mentee import Mentee
+from matching.mentor import Mentor
+from matching.process import create_participant_list_from_path, create_mailing_list
 
 
 @main_bp.route("/", methods=["GET"])
@@ -22,10 +30,12 @@ def upload():
 
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
-    content = request.json
-    task_type = content["type"]
-    task = create_task.delay(int(task_type))
-    return {"task_id": task.id}, 202
+    mentors = [mentor.to_dict() for mentor in
+               create_participant_list_from_path(Mentor, pathlib.Path("/app/static/data"))]
+    mentees = [mentee.to_dict() for mentee in
+               create_participant_list_from_path(Mentee, pathlib.Path("/app/static/data"))]
+    task = process_data.delay((mentors, mentees))
+    return jsonify(task_id=task.id), 202
 
 
 @main_bp.route("/tasks/<task_id>", methods=["GET"])
@@ -34,6 +44,13 @@ def get_status(task_id):
     result = {
         "task_id": task_id,
         "task_status": task_result.status,
-        "task_result": task_result.result,
+        "task_result": "Processing",
     }
+    if task_result.status == "SUCCESS":
+        for matched_participant_list in task_result.result:
+            participants = [ParticipantFactory.create_from_dict(participant_dict) for participant_dict in
+                            matched_participant_list]
+            create_mailing_list(participants, pathlib.Path(f"app/static/{task_id}"))
+            result["task_result"] = f'<a href={url_for("main.download", task_id=task_id)}><button>Download ' \
+                                    'results</button></a> '
     return result, 200
