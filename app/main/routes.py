@@ -1,3 +1,6 @@
+import pathlib
+import shutil
+
 from tasks.tasks import create_task
 from extensions import celery
 
@@ -22,27 +25,6 @@ def index():
 def upload():
     if request.method == "GET":
         return render_template("input.html")
-    if request.method == "POST":
-        task = create_task.delay(int("1"))
-        return jsonify(task_id="1"), 202
-
-
-@main_bp.route("/download/<task_id>", methods=["GET", "POST"])
-def download(task_id):
-    data_path = f"/app/static/{task_id}/"
-    if request.method == "GET":
-        shutil.make_archive("".join((data_path, task_id)), 'zip', data_path)
-        return render_template("output.html")
-    if request.method == "POST":
-        @after_this_request
-        def remove_file(response):
-            try:
-                shutil.rmtree(data_path)
-            except Exception as error:
-                current_app.logger.error("Error removing or closing downloaded file handle", error)
-            return response
-
-        return send_from_directory(data_path, f"{task_id}.zip")
     if request.method == "POST":
         task = create_task.delay(int("1"))
         return jsonify(task_id="1"), 202
