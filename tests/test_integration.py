@@ -1,15 +1,18 @@
 import json
-import pytest
-from flask import current_app
 from unittest.mock import patch
-from app.config import TestConfig
-from app import create_app
 
+import pytest
+
+from app import create_app
+from app.config import TestConfig
+
+
+@pytest.mark.skip
 def test_input_output_data(test_participants, test_data_path, celery_worker, celery_app):
-    with patch("extensions.celery", celery_app):
+    with patch("app.extensions.celery", celery_app):
         app = create_app(TestConfig)
         with app.test_client() as client:
-            src_file_paths = (test_data_path/"mentees.csv", test_data_path/"mentors.csv")
+            src_file_paths = (test_data_path / "mentees.csv", test_data_path / "mentors.csv")
             files = []
             try:
                 files = [open(fpath, 'rb') for fpath in src_file_paths]
