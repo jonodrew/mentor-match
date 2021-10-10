@@ -1,13 +1,14 @@
+import csv
+import math
+from datetime import datetime
+
 import pytest as pytest
 
+from app import create_app
+from app.config import TestConfig
 from matching.mentee import Mentee
 from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path
-from datetime import datetime
-from app.config import TestConfig
-from app import create_app
-import math
-import csv
 
 
 @pytest.fixture
@@ -34,6 +35,7 @@ def base_mentor(base_data):
     data_copy["Your grade"] = "Grade 6"
     data_copy["Your department or agency"] = "Ministry of Silly Walks"
     return Mentor(**data_copy)
+
 
 @pytest.fixture
 def known_file(base_data):
@@ -86,17 +88,11 @@ def client():
     with app.test_client() as client:
         yield client
 
+
 @pytest.fixture
 def test_participants(test_data_path, known_file):
     known_file(test_data_path, "mentee", 50)
     known_file(test_data_path, "mentor", 50)
-    mentees = create_participant_list_from_path(Mentee, test_data_path)
-    mentors = create_participant_list_from_path(Mentor, test_data_path)
+    create_participant_list_from_path(Mentee, test_data_path)
+    create_participant_list_from_path(Mentor, test_data_path)
     yield
-
-@pytest.fixture(scope='session')
-def celery_config():
-    return {
-        'broker_url': "amqp://myuser:mypassword@localhost/myvhost",
-        'result_backend': 'rpc://'
-    }
