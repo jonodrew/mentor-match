@@ -1,8 +1,10 @@
 import json
-import pytest
 from unittest.mock import patch
-from app.config import TestConfig
+
+import pytest
+
 from app import create_app
+from app.config import TestConfig
 
 
 @pytest.mark.skip
