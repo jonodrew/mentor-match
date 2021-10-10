@@ -21,7 +21,7 @@ def index():
 @main_bp.route("/upload", methods=["GET", "POST"])
 def upload():
     if request.method == "GET":
-        return render_template()
+        return render_template("input.html")
     if request.method == "POST":
         task = create_task.delay(int("1"))
         return jsonify(task_id="1"), 202
