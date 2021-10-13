@@ -929,7 +929,7 @@ blockquote.warning-text:before { content: ""; position: relative; top: 10px; lef
 
 blockquote.warning-text:after { content: ""; display: block; clear: both; }
 
-html { background-color: #FFFFFF; text-size-adjust: 100%; }
+html { background-color: #FFE6F4; text-size-adjust: 100%; }
 
 @media only screen { html { overflow-y: scroll; } }
 

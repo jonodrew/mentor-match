@@ -2,39 +2,40 @@
 {% block title %}Index{% endblock %}
 {% block head %}
     {{ super() }}
-    <style>
-        .important { color: #336699; }
-    </style>
 {% endblock %}
 {% block content %}
-    <h1>Index</h1>
-    <p class="important">
-      Welcome to my awesome homepage.
-    </p>
-    <br>
+
+    <h1 class="home--heading">Mentor matcher</h1>
+    <p class="lead">Welcome to the mentor matcher.</p>
+
+	<hr>
+
     <div>
-    <h3>Tasks</h3>
-    <p>Pick a task length.</p>
-    <div class="btn-group" role="group" aria-label="Basic example">
-      <button type="button" class="btn btn-primary" onclick="handleClick(1)">Short</button>
-      <button type="button" class="btn btn-primary" onclick="handleClick(2)">Medium</button>
-      <button type="button" class="btn btn-primary" onclick="handleClick(3)">Long</button>
-    </div>
-  </div>
-  <br><br>
-  <div>
-    <h3>Task Status</h3>
-    <br>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Status</th>
-          <th>Result</th>
-        </tr>
-      </thead>
-      <tbody id="tasks">
-      </tbody>
-    </table>
-  </div>
+	    <h2>Tasks</h2>
+	    <p>Pick a task length.</p>
+	    <div class="button-group" role="group" aria-label="Basic example">
+			<button type="button" class="button" onclick="handleClick(1)">Short</button>
+			<button type="button" class="button" onclick="handleClick(2)">Medium</button>
+			<button type="button" class="button" onclick="handleClick(3)">Long</button>
+	    </div>
+	</div>
+
+	<hr>
+
+	<div>
+		<h2>Task Status</h2>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Status</th>
+					<th>Result</th>
+				</tr>
+			</thead>
+			<tbody id="tasks">
+
+			</tbody>
+		</table>
+	</div>
 {% endblock %}
