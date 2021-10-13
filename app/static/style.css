@@ -37,7 +37,7 @@ img { width: 100%; margin: 25px 0; }
 
 @media only screen and (min-width: 641px) { .page--header--loop .page--heading, .page--heading { margin-bottom: 50px; } }
 
-.caption--xl, .legend-xl, h1, .heading-xl { color: #0B0C0C; font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 700; font-size: 32px; line-height: 35px; display: block; margin-top: 0; margin-bottom: 30px; }
+.caption--xl, .legend-xl, h1, .heading-xl { color: inherit; font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 700; font-size: 32px; line-height: 35px; display: block; margin-top: 0; margin-bottom: 30px; }
 
 @media only screen and (min-width: 641px) { .caption--xl, .legend-xl, h1, .heading-xl { font-size: 48px; line-height: 52px; } }
 
@@ -53,7 +53,7 @@ img { width: 100%; margin: 25px 0; }
 
 @media only screen and (min-width: 641px) { .caption--lg, .legend-lg, h2, .heading-lg { margin-bottom: 30px; } }
 
-.volunteer--name, .caption--md, .legend-md, legend, h3, .heading-md { color: #0B0C0C; font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 700; font-size: 18px; line-height: 20px; display: block; margin-top: 0; margin-bottom: 15px; }
+.volunteer--name, .caption--md, .legend-md, legend, h3, .heading-md { color: inherit; font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 700; font-size: 18px; line-height: 20px; display: block; margin-top: 0; margin-bottom: 15px; }
 
 @media only screen and (min-width: 641px) { .volunteer--name, .caption--md, .legend-md, legend, h3, .heading-md { font-size: 24px; line-height: 30px; } }
 
@@ -537,7 +537,7 @@ footer a:focus, .footer a:focus, .footer--link:focus { box-sizing: border-box; c
 
 .feedback { margin-bottom: 15px; }
 
-.header { color: #0B0C0C; background: #e6007e; }
+.header { color: #FFFFFF !important; background: #e6007e; }
 
 .header--container--full-width { padding: 0 15px; }
 
@@ -549,7 +549,7 @@ footer a:focus, .footer a:focus, .footer--link:focus { box-sizing: border-box; c
 
 @media only screen and (max-width: 641px) { .header--container { padding: 15px 0 10px; } }
 
-.header--logo, .header--content { box-sizing: border-box; }
+.header--logo, .header--content { box-sizing: border-box; color: #FFFFFF !important; }
 
 .header--logo:after, .header--content:after { content: ""; display: block; clear: both; }
 
@@ -575,7 +575,7 @@ footer a:focus, .footer a:focus, .footer--link:focus { box-sizing: border-box; c
 
 @media only print { .header--logotype--link { font-size: 18pt; line-height: 1.15; } }
 
-.header--logotype--link:link, .header--logotype--link:visited { color: #ffffff; }
+.header--logotype--link:link, .header--logotype--link:visited { color: #FFFFFF; }
 
 .header--logotype--link:link, .header--logotype--link:visited, .header--logotype--link:active { text-decoration: none; }
 
@@ -929,7 +929,7 @@ blockquote.warning-text:before { content: ""; position: relative; top: 10px; lef
 
 blockquote.warning-text:after { content: ""; display: block; clear: both; }
 
-html { background-color: #0B0C0C; text-size-adjust: 100%; }
+html { background-color: #FFFFFF; text-size-adjust: 100%; }
 
 @media only screen { html { overflow-y: scroll; } }
 
