@@ -24,8 +24,16 @@ and "mentors.csv"
 
 Start by [cloning this repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository).
 Then [set up a virtual environment](https://docs.python.org/3/library/venv.html), to make sure the things you're about to
-install don't mess around with your base system. Now activate it following the instructions. Now install the requirements for this
-project: `pip install -r requirements.txt`
+install don't mess around with your base system.
+
+On a Mac, run the following commands:
+
+```
+python3 -m venv /path/to/new/virtual/environment
+source /path-to-new-virtual-environment/bin-activate
+```
+
+Now install the requirements for this project: `pip install -r requirements.txt`
 
 Now type `python match.py path/to/folder/with/my/data` and hit return. It should run quietly for up to five minutes and then
 spit out an `output` folder with two files. These are your matched mentors/mentees!
