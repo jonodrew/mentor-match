@@ -1,8 +1,7 @@
 from flask import Flask
-import os
 
 from app.config import Config
-from tasks import make_celery
+from app.tasks import make_celery
 
 
 def create_app(configuration=Config):
