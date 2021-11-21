@@ -3,3 +3,4 @@
 *.csv
 .vscode/settings.json
 *.pyc
+/.python-version
