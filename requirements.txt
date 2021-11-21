@@ -23,6 +23,7 @@ Jinja2==3.0.1
 kombu==5.1.0
 lettuce==0.2.23
 MarkupSafe==2.0.1
+mentor-match==2.0.0
 mock==4.0.3
 munkres==1.1.4
 mypy==0.910
@@ -53,3 +54,7 @@ vine==5.0.0
 virtualenv==20.7.2
 wcwidth==0.2.5
 Werkzeug==2.0.1
+
+pip~=21.1.2
+wheel~=0.36.2
+setuptools~=57.0.0
