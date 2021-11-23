@@ -23,7 +23,7 @@ Jinja2==3.0.1
 kombu==5.1.0
 lettuce==0.2.23
 MarkupSafe==2.0.1
-mentor-match>=2.3.0
+mentor-match==2.3.0
 mock==4.0.3
 munkres==1.1.4
 mypy==0.910
@@ -38,6 +38,7 @@ prompt-toolkit==3.0.20
 py==1.10.0
 pyparsing==2.4.7
 pytest==6.2.5
+pytest-celery==0.0.0
 python-subunit==1.4.0
 pytz==2021.1
 PyYAML==5.4.1
