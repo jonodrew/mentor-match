@@ -13,7 +13,7 @@ def index():
 @main_bp.route("/upload", methods=["GET", "POST"])
 def upload():
     if request.method == "GET":
-        return render_template()
+        return render_template("input.html")
 
 
 @main_bp.route("/tasks", methods=["POST"])
