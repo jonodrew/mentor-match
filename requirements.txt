@@ -20,6 +20,7 @@ Flask==2.0.1
 fuzzywuzzy==0.18.0
 google-api-core==2.2.2
 google-api-python-client==2.31.0
+google-api-python-client-stubs==1.8.0
 google-auth==2.3.3
 google-auth-httplib2==0.1.0
 google-auth-oauthlib==0.4.6
