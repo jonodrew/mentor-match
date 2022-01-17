@@ -2,7 +2,7 @@ import flask
 
 from app.auth import auth_bp
 from flask import redirect, url_for
-import google_auth_oauthlib.flow
+import google_auth_oauthlib.flow  # type: ignore
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
