@@ -18,6 +18,10 @@ services:
       - REDIS_URL=redis://redis:6379
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - OAUTHLIB_INSECURE_TRANSPORT=1
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+
     volumes:
       - ./app:/app
     command: flask run -h 0.0.0.0 -p 5001
