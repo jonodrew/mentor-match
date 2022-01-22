@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 import secrets
 
@@ -9,6 +11,7 @@ def create_app(configuration=Config):
     app = Flask(__name__, static_folder="static")
 
     app.config.from_object(configuration)
+    app.config["UPLOAD_FOLDER"] = os.path.join(app.static_folder, "data")
 
     from app.main import main_bp
     from app.auth import auth_bp

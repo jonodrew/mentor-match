@@ -1,10 +1,20 @@
-from flask import render_template, request, jsonify, current_app, url_for, send_from_directory, after_this_request
+import os.path
+
+from flask import (
+    render_template,
+    request,
+    jsonify,
+    current_app,
+    url_for,
+    send_from_directory,
+    after_this_request,
+)
 import pathlib
 import shutil
 
 from app.extensions import celery
 from app.main import main_bp
-from app.tasks.tasks import create_task, process_data
+from app.tasks.tasks import async_process_data
 from matching.factory import ParticipantFactory
 from matching.mentee import Mentee
 from matching.mentor import Mentor
@@ -21,7 +31,6 @@ def upload():
     if request.method == "GET":
         return render_template("input.html")
     if request.method == "POST":
-        task = create_task.delay(int("1"))
         return jsonify(task_id="1"), 202
 
 
@@ -29,15 +38,18 @@ def upload():
 def download(task_id):
     data_path = f"/app/static/{task_id}/"
     if request.method == "GET":
-        shutil.make_archive("".join((data_path, task_id)), 'zip', data_path)
+        shutil.make_archive("".join((data_path, task_id)), "zip", data_path)
         return render_template("output.html")
     if request.method == "POST":
+
         @after_this_request
         def remove_file(response):
             try:
                 shutil.rmtree(data_path)
             except Exception as error:
-                current_app.logger.error("Error removing or closing downloaded file handle", error)
+                current_app.logger.error(
+                    "Error removing or closing downloaded file handle", error
+                )
             return response
 
         return send_from_directory(data_path, f"{task_id}.zip")
@@ -45,11 +57,17 @@ def download(task_id):
 
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
-    mentors = [mentor.to_dict() for mentor in
-               create_participant_list_from_path(Mentor, pathlib.Path("/app/static/data"))]
-    mentees = [mentee.to_dict() for mentee in
-               create_participant_list_from_path(Mentee, pathlib.Path("/app/static/data"))]
-    task = process_data.delay((mentors, mentees))
+    task_id = request.form.get("task_id")
+    folder = pathlib.Path(os.path.join(current_app.config["UPLOAD_FOLDER"], task_id))
+    mentors = [
+        mentor.to_dict()
+        for mentor in create_participant_list_from_path(Mentor, path_to_data=folder)
+    ]
+    mentees = [
+        mentee.to_dict()
+        for mentee in create_participant_list_from_path(Mentee, path_to_data=folder)
+    ]
+    task = async_process_data.delay((mentors, mentees))
     return jsonify(task_id=task.id), 202
 
 
@@ -59,13 +77,21 @@ def get_status(task_id):
     result = {
         "task_id": task_id,
         "task_status": task_result.status,
-        "task_result": "Processing",
     }
     if task_result.status == "SUCCESS":
         for matched_participant_list in task_result.result:
-            participants = [ParticipantFactory.create_from_dict(participant_dict) for participant_dict in
-                            matched_participant_list]
-            create_mailing_list(participants, pathlib.Path(f"app/static/{task_id}"))
-            result["task_result"] = f'<a href={url_for("main.download", task_id=task_id)}><button>Download ' \
-                                    'results</button></a> '
+            participants = [
+                ParticipantFactory.create_from_dict(participant_dict)
+                for participant_dict in matched_participant_list
+            ]
+            create_mailing_list(
+                participants,
+                pathlib.Path(
+                    os.path.join(current_app.config["UPLOAD_FOLDER"], task_id)
+                ),
+            )
+            result["task_result"] = (
+                f'<a href={url_for("main.download", task_id=task_id)}><button>Download '
+                "results</button></a> "
+            )
     return result, 200
