@@ -1,11 +1,6 @@
+from flask import render_template, request, jsonify, current_app, url_for, send_from_directory, after_this_request
 import pathlib
 import shutil
-
-from tasks.tasks import create_task
-from extensions import celery
-
-from flask import render_template, request, jsonify, current_app, url_for, send_from_directory, \
-    after_this_request
 
 from app.extensions import celery
 from app.main import main_bp
