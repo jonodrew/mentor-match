@@ -16,6 +16,7 @@ from app.tasks.tasks import async_process_data
     reason="These tests require a running instance of a backing service",
 )
 class TestIntegration:
+    @pytest.mark.skip(reason="Input isn't written yet")
     def test_input_data(
         self,
         test_participants,
