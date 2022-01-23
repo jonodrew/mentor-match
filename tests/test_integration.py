@@ -66,9 +66,7 @@ class TestIntegration:
             "task_result": True,
         }
 
-    def test_process_data(
-        self, celery_session_app, celery_session_worker, known_file, test_data_path
-    ):
+    def test_process_data(self, celery_app, celery_worker, known_file, test_data_path):
         known_file(test_data_path, "mentee", 50)
         known_file(test_data_path, "mentor", 50)
         mentees = [
@@ -95,14 +93,17 @@ class TestIntegration:
         output,
         celeried_client,
     ):
-        """This test hangs unless it's run with all the others"""
         processing_id = celeried_client.post(
-            "/tasks", data={"task_id": test_task}
+            "/tasks", json={"task_id": test_task}
         ).get_json()["task_id"]
         current_app.config["UPLOAD_FOLDER"] = test_data_path
         resp = celeried_client.get(f"/tasks/{processing_id}")
         content = resp.get_json()
-        assert content == {"task_id": processing_id, "task_status": "PENDING"}
+        assert content == {
+            "task_id": processing_id,
+            "task_status": "PENDING",
+            "task_result": "processing",
+        }
         assert resp.status_code == 200
 
         while content["task_status"] == "PENDING":
