@@ -15,9 +15,7 @@ services:
       - "5001:5001"
     environment:
       - FLASK_ENV=development
-      - REDIS_URL=redis://redis:6379
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/0
       - OAUTHLIB_INSECURE_TRANSPORT=1
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
@@ -28,13 +26,13 @@ services:
 
   worker:
     build: .
-    command: celery --app=app.tasks.celery worker --loglevel=info
+    command: celery --app=app.extensions.celery worker --loglevel=info
     volumes:
       - ./app:/app
     environment:
+      - FLASK_ENV=development
       - FLASK_DEBUG=1
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/0
     depends_on:
       - app
       - redis
