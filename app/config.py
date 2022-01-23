@@ -11,7 +11,7 @@ class Config:
 
 
 class TestConfig(Config):
-    ENV = "test"
+    TESTING = True
     DEBUG = True
     CELERY_RESULT_BACKEND = "rpc://"
     CELERY_BROKER_URL = "amqp://myuser:mypassword@localhost/myvhost"
