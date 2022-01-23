@@ -3,11 +3,9 @@ import os
 
 class Config:
     CELERY_RESULT_BACKEND = os.environ.get(
-        "CELERY_BROKER_URL", f"{os.environ.get('REDIS_URL')}/0"
+        "REDIS_URL", os.environ.get("CELERY_BROKER_URL")
     )
-    BROKER_URL = os.environ.get(
-        "CELERY_RESULT_BACKEND", f"{os.environ.get('REDIS_URL')}/0"
-    )
+    BROKER_URL = CELERY_RESULT_BACKEND
 
 
 class TestConfig(Config):
