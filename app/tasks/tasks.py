@@ -1,6 +1,5 @@
 import time
 from typing import Tuple, List
-from celery import shared_task
 from app.extensions import celery
 from matching import process
 from matching.factory import ParticipantFactory
@@ -12,7 +11,7 @@ def create_task(task_type):
     return True
 
 
-@shared_task(name="async_process_data", bind=True)
+@celery.task(name="async_process_data", bind=True)
 def async_process_data(
     self, data_to_process: Tuple[List[dict], List[dict]]
 ) -> Tuple[List[dict], List[dict]]:
