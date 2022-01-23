@@ -34,13 +34,11 @@ def upload():
         return jsonify(task_id="1"), 202
 
 
-@main_bp.route("/download/<task_id>", methods=["GET", "POST"])
+@main_bp.route("/download/<task_id>", methods=["GET"])
 def download(task_id):
-    data_path = f"/app/static/{task_id}/"
+    data_path = pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id)
+    current_app.logger.debug(data_path)
     if request.method == "GET":
-        shutil.make_archive("".join((data_path, task_id)), "zip", data_path)
-        return render_template("output.html")
-    if request.method == "POST":
 
         @after_this_request
         def remove_file(response):
@@ -52,12 +50,21 @@ def download(task_id):
                 )
             return response
 
-        return send_from_directory(data_path, f"{task_id}.zip")
+        shutil.make_archive(
+            base_name=f"{pathlib.Path(current_app.config['UPLOAD_FOLDER']).__str__()}/matches",
+            format="zip",
+            root_dir=data_path,
+        )
+        return send_from_directory(
+            directory=pathlib.Path(current_app.config["UPLOAD_FOLDER"]),
+            path="matches.zip",
+        )
 
 
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
-    task_id = request.form.get("task_id")
+    current_app.logger.debug(request.get_json())
+    task_id = request.get_json()["task_id"]
     folder = pathlib.Path(os.path.join(current_app.config["UPLOAD_FOLDER"], task_id))
     mentors = [
         mentor.to_dict()
@@ -77,6 +84,7 @@ def get_status(task_id):
     result = {
         "task_id": task_id,
         "task_status": task_result.status,
+        "task_result": "processing",
     }
     if task_result.status == "SUCCESS":
         for matched_participant_list in task_result.result:
