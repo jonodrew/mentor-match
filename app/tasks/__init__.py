@@ -2,6 +2,8 @@ from app.extensions import celery
 
 
 def make_celery(app):
+    celery.conf.broker = app.config.get("CELERY_BROKER_URL")
+    celery.conf.result_backend = app.config.get("CELERY_RESULT_BACKEND")
     celery.conf.update(app.config)
 
     class ContextTask(celery.Task):
