@@ -1,26 +1,27 @@
 # Mentor Match
 
-This is a package to help match mentees and mentors. It's specifically designed for a volunteer programme I support, but you could probably extend or alter it to suit whatever you're doing.
+This is a service to help mentoring programme administrators match mentors and mentees. Right now it's specifically designed to support the Civil Service's LBGTQ+ network. It might work if you run a different network in the Civil Service. Get in touch to find out more, or raise an issue.
 
-It uses [this implementation of Munkres](https://github.com/bmc/munkres) to find the most effective pairings. The Munkres algorithm works on a grid of scores.
+It uses [this package](https://github.com/jonodrew/mentor-match-package) to calculate matches. It relies on the Munkres, or Hungarian, algorithm. The Munkres algorithm works on a grid of scores and finds the solution that makes the most people the least unhappy. That is to say, everyone will be equally unhappy with their score: any switch will
+make *someone* worse off.
 
-## Scoring
+## Architecture
+This service has three main parts: a web server, running Flask; a Celery worker; and a Redis instance. The long-running task of matching mentors and mentees is passed off to the Celery worker via Redis, which acts as the broker. Results are also stored in Redis and retrieved by the Flask app as needed.
 
-Full details of how the matches are calculated can be read in the code itself.
+The Flask app is very basic: mostly HTML and basic routes, with a smidgeon of javascript to keep the user interested in what's happening while they wait for their results. That needs some work **so pull requests are welcome**.
 
 ## Setup
 
 If you've never done Python before in your life this project might not be for you. On the other hand, I think the code is
-beautiful and I've made an effort with the documentation, and you can [find me on twitter](https://www.twitter.com/jonodrew)
+beautiful, and I've made an effort with the documentation, and you can [find me on twitter](https://www.twitter.com/jonodrew)
 if you need to ask me questions, so what the heck. Let's get stuck in.
 
 You will need:
 
-- Python 3.6+ : I've used type hinting throughout, which was only introduced in Python 3.6
+- Python 3.7+
 - admin rights, or at least enough rights to install stuff
 - `git`
-- a file of mentors and mentees. Next update will include a template input file. These files should be called "mentees.csv"
-and "mentors.csv"
+- a file of mentors and mentees. These files should be called "mentees.csv" and "mentors.csv", and align to the template in [the data folder](./app/static/data/small)
 
 Start by [cloning this repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository).
 Then [set up a virtual environment](https://docs.python.org/3/library/venv.html), to make sure the things you're about to
@@ -35,20 +36,6 @@ source /path-to-new-virtual-environment/bin-activate
 
 Now install the requirements for this project: `pip install -r requirements.txt`
 
-Now type `python match.py path/to/folder/with/my/data` and hit return. It should run quietly for up to five minutes and then
-spit out an `output` folder with two files. These are your matched mentors/mentees!
-
-This software also exists as a web application. To run it locally, run the following commands in your terminal:
-```
-export FLASK_APP=app
-export FLASK_ENV=development
-export FLASK_DEBUG=1
-flask run
-```
-This will run the Flask server locally, and you'll be able to see it running at http://127.0.0.1:5000/
-
-**Alternatively**, if you want to see things running in all their glory, you'll need to install `Docker` and
+This software is best run in Docker, because it needs Redis and a Celery worker. You'll need to install `Docker` and
 `docker-compose`. [Docker instructions](https://docs.docker.com/engine/install/) and
-[docker-compose instructions](https://docs.docker.com/compose/install/). Like democracy, it is the worst way to write and
-code, except for all the others. Once you've got those two installed, you'll need to run `docker-compose -up -d` to get
-things running, and `docker-compose down` to stop them again. You should see the app running at http://127.0.0.1:5001
+[docker-compose instructions](https://docs.docker.com/compose/install/). Once you've got those two installed, you'll need to run `docker-compose -up -d` to get things running, and `docker-compose down` to stop them again. You should see the app running at http://127.0.0.1:5001
