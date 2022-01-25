@@ -3,3 +3,7 @@ services:
   app:
     image:
       "ghcr.io/jonodrew/mentor-match:${GH_IMAGE_COMMIT_TAG}"
+
+  worker:
+    image:
+      "ghcr.io/jonodrew/mentor-match:${GH_IMAGE_COMMIT_TAG}"
