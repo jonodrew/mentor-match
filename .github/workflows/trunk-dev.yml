@@ -62,11 +62,11 @@ jobs:
           cache-to: type=gha,mode=max
 
   integration-tests:
-    env:
-      ENV: integration
-      GH_IMAGE_COMMIT_TAG: ${{ jobs.build-and-push-container.outputs.image_commit_tag }}
     needs:
       - build-and-push-container
+    env:
+      ENV: integration
+      GH_IMAGE_COMMIT_TAG: ${{ needs.build-and-push-container.outputs.image_commit_tag }}
     runs-on: ubuntu-20.04
     steps:
       - name: Compose environment
