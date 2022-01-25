@@ -9,8 +9,6 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
 
   app:
-    build:
-      context: "."
     ports:
       - "5001:5001"
     environment:
@@ -25,7 +23,6 @@ services:
     command: flask run -h 0.0.0.0 -p 5001
 
   worker:
-    build: .
     command: celery --app=app.extensions.celery worker --loglevel=info
     volumes:
       - ./app:/app

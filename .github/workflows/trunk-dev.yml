@@ -1,0 +1,92 @@
+on:
+  push:
+    branches:
+      - main
+jobs:
+  unit-test:
+    env:
+      REDIS_URL: redis@redis
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [ 3.7, 3.8, 3.9, "3.10" ]
+
+    steps:
+      - name: Checkout HEAD
+        uses: actions/checkout@v2.4.0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Test with tox
+        run: tox
+
+  build-and-push-container:
+    needs:
+      - unit-test
+    runs-on: ubuntu-20.04
+    outputs:
+      image_commit_tag: ${{ steps.vars.outputs.image_commit_tag }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "::set-output name=image_commit_tag::$(git rev-parse --short HEAD)"
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/${{ github.project_name }}:${{ steps.vars.outputs.image_commit_tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  integration-tests:
+    env:
+      ENV: integration
+      GH_IMAGE_COMMIT_TAG: ${{ build-and-push-container.outputs.image_commit_tag }}
+    needs:
+      - build-and-push-container
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Compose environment
+        run: docker-compose up -f docker-compose.yml -f docker-compose.ci.yml
+      - name: Test
+        run: docker-compose exec app -T pytest
+
+  heroku-push-and-release:
+    needs:
+      - integration-tests
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+      - name: Push images to Heroku
+        run: |
+          docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+          docker tag mentor-match_app registry.heroku.com/cslgbt-mentor-match/web
+          docker push registry.heroku.com/cslgbt-mentor-match/web
+          docker tag mentor-match_app registry.heroku.com/cslgbt-mentor-match/worker
+          docker push registry.heroku.com/cslgbt-mentor-match/worker
+      - name: Deploy to Heroku
+        run: heroku container:release web worker
