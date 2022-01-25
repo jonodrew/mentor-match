@@ -12,6 +12,8 @@ jobs:
         python-version: [ 3.7, 3.8, 3.9, "3.10" ]
 
     steps:
+      - name: Checkout HEAD
+        uses: actions/checkout@v2.4.0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -62,7 +64,7 @@ jobs:
   integration-tests:
     env:
       ENV: integration
-      GH_IMAGE_COMMIT_TAG: ${{ jobs.build-and-push-container.outputs.image_commit_tag }}
+      GH_IMAGE_COMMIT_TAG: ${{ build-and-push-container.outputs.image_commit_tag }}
     needs:
       - build-and-push-container
     runs-on: ubuntu-20.04
