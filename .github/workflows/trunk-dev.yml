@@ -73,7 +73,7 @@ jobs:
       - name: Compose environment
         run: docker-compose up -f docker-compose.yml -f docker-compose.ci.yml
       - name: Test
-        run: docker-compose exec app -T pytest tests
+        run: docker-compose exec -T app pytest tests
 
   heroku-push-and-release:
     needs:
