@@ -12,23 +12,20 @@ services:
     ports:
       - "5001:5001"
     environment:
+      - FLASK_APP=app:create_app()
       - FLASK_ENV=development
       - REDIS_URL=redis://redis:6379/0
       - OAUTHLIB_INSECURE_TRANSPORT=1
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
 
-    volumes:
-      - ./app:/app
     command: flask run -h 0.0.0.0 -p 5001
 
   worker:
     command: celery --app=app.extensions.celery worker --loglevel=info
-    volumes:
-      - ./app:/app
+
     environment:
       - FLASK_ENV=development
-      - FLASK_DEBUG=1
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - app
