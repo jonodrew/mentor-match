@@ -1,7 +1,6 @@
 import csv
 import math
 from datetime import datetime
-from unittest.mock import patch
 
 import pytest as pytest
 
@@ -88,14 +87,6 @@ def client():
     app = create_app(TestConfig)
     with app.test_client() as client:
         yield client
-
-
-@pytest.fixture
-def celeried_client(celery_app):
-    with patch("app.extensions.celery", celery_app):
-        app = create_app(TestConfig)
-        with app.test_client() as client:
-            yield client
 
 
 @pytest.fixture

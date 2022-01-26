@@ -23,7 +23,7 @@ class TestIntegration:
         test_data_path,
         celery_worker,
         celery_app,
-        celeried_client,
+        client,
     ):
         src_file_paths = (
             test_data_path / "mentees.csv",
@@ -32,7 +32,7 @@ class TestIntegration:
         files = []
         try:
             files = [open(fpath, "rb") for fpath in src_file_paths]
-            resp = celeried_client.post(
+            resp = client.post(
                 "/upload",
                 data={
                     "files": files,
@@ -47,18 +47,18 @@ class TestIntegration:
         assert resp.status_code == 202
         assert task_id == "1"
 
-        processing_id = celeried_client.post(
-            "/tasks", data={"task_id": "small"}
-        ).get_json()["task_id"]
+        processing_id = client.post("/tasks", data={"task_id": "small"}).get_json()[
+            "task_id"
+        ]
         current_app.config["UPLOAD_FOLDER"] = test_data_path
-        resp = celeried_client.get(f"/tasks/{processing_id}")
+        resp = client.get(f"/tasks/{processing_id}")
         content = resp.get_json()
         assert content == {"task_id": processing_id, "task_status": "PENDING"}
         assert resp.status_code == 200
 
         while content["task_status"] == "PENDING":
             time.sleep(1)
-            resp = celeried_client.get(f"/tasks/{processing_id}")
+            resp = client.get(f"/tasks/{processing_id}")
             content = resp.get_json()
         assert content == {
             "task_id": processing_id,
@@ -91,13 +91,13 @@ class TestIntegration:
         test_data_path,
         test_task,
         output,
-        celeried_client,
+        client,
     ):
-        processing_id = celeried_client.post(
-            "/tasks", json={"task_id": test_task}
-        ).get_json()["task_id"]
+        processing_id = client.post("/tasks", json={"task_id": test_task}).get_json()[
+            "task_id"
+        ]
         current_app.config["UPLOAD_FOLDER"] = test_data_path
-        resp = celeried_client.get(f"/tasks/{processing_id}")
+        resp = client.get(f"/tasks/{processing_id}")
         content = resp.get_json()
         assert content == {
             "task_id": processing_id,
@@ -108,7 +108,7 @@ class TestIntegration:
 
         while content["task_status"] == "PENDING":
             time.sleep(1)
-            resp = celeried_client.get(f"/tasks/{processing_id}")
+            resp = client.get(f"/tasks/{processing_id}")
             content = resp.get_json()
         assert pathlib.Path(
             os.path.join(current_app.config["UPLOAD_FOLDER"]), processing_id
