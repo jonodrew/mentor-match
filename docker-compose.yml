@@ -20,7 +20,7 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
 
     volumes:
-      - ./tests:/app/tests
+      - ./tests:/tests
 
   worker:
     command: celery --app=app.extensions.celery worker --loglevel=info
