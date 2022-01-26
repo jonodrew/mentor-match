@@ -5,6 +5,7 @@ on:
       - main
 jobs:
   unit-test:
+    if: ${{ !environment.ACT }}
     env:
       REDIS_URL: redis@redis
     runs-on: ubuntu-20.04
@@ -63,6 +64,10 @@ jobs:
         run: docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
       - name: Test
         run: docker-compose exec -T app pytest tests
+
+      - name: Stop docker
+        if: ${{ env.ACT }}
+        run: docker-compose down
 
   heroku-push-and-release:
     needs:
