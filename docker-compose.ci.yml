@@ -5,6 +5,8 @@ services:
       context: "."
       target: web
     image: registry.heroku.com/cslgbt-mentor-match/web:${GH_IMAGE_COMMIT_TAG}
+    environment:
+      - ENV=${ENV}
 
   worker:
     build:
