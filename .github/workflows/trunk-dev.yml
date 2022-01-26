@@ -5,6 +5,7 @@ on:
       - main
 jobs:
   unit-test:
+    if: ${{ !env.ACT }}
     env:
       REDIS_URL: redis@redis
     runs-on: ubuntu-20.04
@@ -26,9 +27,7 @@ jobs:
       - name: Test with tox
         run: tox
 
-  build-and-push-container:
-    needs:
-      - unit-test
+  get-commit-tag:
     runs-on: ubuntu-20.04
     outputs:
       image_commit_tag: ${{ steps.vars.outputs.image_commit_tag }}
@@ -42,21 +41,23 @@ jobs:
         run: |
           echo "::set-output name=image_commit_tag::$(git rev-parse --short HEAD)"
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-
 
   integration-tests:
     needs:
-      - build-and-push-container
+      - get-commit-tag
     env:
       ENV: integration
-      GH_IMAGE_COMMIT_TAG: ${{ needs.build-and-push-container.outputs.image_commit_tag }}
+      GH_IMAGE_COMMIT_TAG: ${{ needs.get-commit-tag.outputs.image_commit_tag }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout HEAD
         uses: actions/checkout@v2.4.0
+        if: ${{ env.ACT }}
+      - name: Install docker-compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       - name: Compose environment
         run: docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
       - name: Test
