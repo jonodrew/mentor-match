@@ -19,7 +19,8 @@ services:
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
 
-    command: flask run -h 0.0.0.0 -p 5001
+    volumes:
+      - ./tests:/app/tests
 
   worker:
     command: celery --app=app.extensions.celery worker --loglevel=info
