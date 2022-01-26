@@ -58,7 +58,7 @@ jobs:
       - name: Checkout HEAD
         uses: actions/checkout@v2.4.0
       - name: Compose environment
-        run: docker-compose up -f docker-compose.yml -f docker-compose.ci.yml
+        run: docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
       - name: Test
         run: docker-compose exec -T app pytest tests
 
