@@ -3,6 +3,9 @@ services:
   app:
     build:
       context: "."
+    volumes:
+      - ./app:/app/app
+
   worker:
     build:
       context: "."
