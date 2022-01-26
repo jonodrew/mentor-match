@@ -72,10 +72,9 @@ jobs:
           docker push registry.heroku.com/cslgbt-mentor-match/worker:${{ needs.get-commit-tag.outputs.image_commit_tag }}
 
   heroku-push-and-release:
-    needs:
-      - [integration-tests, get-commit-tag]
+    needs: [integration-tests, get-commit-tag]
     runs-on: ubuntu-20.04
-    environment:
+    env:
       HEROKU_API_KEY: ${{ github.secrets.HEROKU_API_KEY }}
       HEROKU_EMAIL: ${{ github.secrets.HEROKU_EMAIL }}
     steps:
