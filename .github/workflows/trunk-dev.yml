@@ -65,17 +65,24 @@ jobs:
         if: ${{ env.ACT }}
         run: docker-compose down
 
+      - name: Push to Heroku registry
+        run: |
+          docker login --username=${{ github.secrets.HEROKU_EMAIL }} --password=${{ github.secrets.HEROKU_API_KEY }} registry.heroku.com
+          docker push registry.heroku.com/cslgbt-mentor-match/web:${{ needs.get-commit-tag.outputs.image_commit_tag }}
+          docker push registry.heroku.com/cslgbt-mentor-match/worker:${{ needs.get-commit-tag.outputs.image_commit_tag }}
+
   heroku-push-and-release:
     needs:
-      - integration-tests
+      - [integration-tests, get-commit-tag]
     runs-on: ubuntu-20.04
+    environment:
+      HEROKU_API_KEY: ${{ github.secrets.HEROKU_API_KEY }}
+      HEROKU_EMAIL: ${{ github.secrets.HEROKU_EMAIL }}
     steps:
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
       - name: Push images to Heroku
         run: |
-          docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
-          docker push registry.heroku.com/cslgbt-mentor-match/web
-          docker push registry.heroku.com/cslgbt-mentor-match/worker
+          heroku container:login
       - name: Deploy to Heroku
         run: heroku container:release web worker
