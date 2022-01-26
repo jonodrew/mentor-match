@@ -46,21 +46,6 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository }}:${{ steps.vars.outputs.image_commit_tag }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   integration-tests:
     needs:
@@ -70,6 +55,8 @@ jobs:
       GH_IMAGE_COMMIT_TAG: ${{ needs.build-and-push-container.outputs.image_commit_tag }}
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout HEAD
+        uses: actions/checkout@v2.4.0
       - name: Compose environment
         run: docker-compose up -f docker-compose.yml -f docker-compose.ci.yml
       - name: Test
@@ -85,9 +72,7 @@ jobs:
       - name: Push images to Heroku
         run: |
           docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
-          docker tag mentor-match_app registry.heroku.com/cslgbt-mentor-match/web
           docker push registry.heroku.com/cslgbt-mentor-match/web
-          docker tag mentor-match_app registry.heroku.com/cslgbt-mentor-match/worker
           docker push registry.heroku.com/cslgbt-mentor-match/worker
       - name: Deploy to Heroku
         run: heroku container:release web worker
