@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 
 services:
   redis:
@@ -9,6 +9,9 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
 
   app:
+    build:
+      context: "."
+      target: web
     ports:
       - "5001:5001"
     environment:
@@ -23,6 +26,9 @@ services:
       - ./tests:/tests
 
   worker:
+    build:
+      context: "."
+      target: worker
     command: celery --app=app.extensions.celery worker --loglevel=info
 
     environment:
