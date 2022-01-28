@@ -68,8 +68,8 @@ jobs:
       - name: Push to Heroku registry
         run: |
           docker login --username=${{ secrets.HEROKU_EMAIL }} --password-stdin <<< "${{ secrets.HEROKU_API_KEY }}" registry.heroku.com
-          docker tag registry.heroku.com/cslgbt-mentor-match/web:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/web
-          docker tag registry.heroku.com/cslgbt-mentor-match/worker:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/worker
+          docker tag web:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/web
+          docker tag worker:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/worker
           docker push registry.heroku.com/cslgbt-mentor-match/web
           docker push registry.heroku.com/cslgbt-mentor-match/worker
 
