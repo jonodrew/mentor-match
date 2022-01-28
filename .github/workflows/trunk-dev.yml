@@ -21,8 +21,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Test with pytest
-        run: pytest
+          pip install mypy flake8 pytest pytest-cov
+
+      - name: Test with mypy
+        run: mypy tests/ app/ --ignore-missing-imports
+
+      - name: Test with flake8
+        run: flake8 --max-line-length=131 --extend-ignore=E203 tests/ app/
+
+      - name: Test with pytest and generate coverage
+        run: |
+          pytest --cache-clear --cov=app tests/ > pytest-coverage.txt
+
+      - name: Comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2
 
   get-commit-tag:
     needs: unit-test
@@ -68,8 +80,8 @@ jobs:
       - name: Push to Heroku registry
         run: |
           docker login --username=${{ secrets.HEROKU_EMAIL }} --password-stdin <<< "${{ secrets.HEROKU_API_KEY }}" registry.heroku.com
-          docker tag registry.heroku.com/cslgbt-mentor-match/web:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/web
-          docker tag registry.heroku.com/cslgbt-mentor-match/worker:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/worker
+          docker tag web:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/web
+          docker tag worker:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/worker
           docker push registry.heroku.com/cslgbt-mentor-match/web
           docker push registry.heroku.com/cslgbt-mentor-match/worker
 

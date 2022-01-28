@@ -1,14 +1,7 @@
-import time
 from typing import Tuple, List
 from app.extensions import celery
 from matching import process
 from matching.factory import ParticipantFactory
-
-
-@celery.task(name="create_task")
-def create_task(task_type):
-    time.sleep(int(task_type) * 9)
-    return True
 
 
 @celery.task(name="async_process_data", bind=True)

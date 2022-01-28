@@ -1,15 +1,10 @@
 version: "3.4"
 services:
   app:
-    build:
-      context: "."
-      target: web
-    image: registry.heroku.com/cslgbt-mentor-match/web:${GH_IMAGE_COMMIT_TAG}
+    image: web:${GH_IMAGE_COMMIT_TAG}
     environment:
       - ENV=${ENV}
+      - GH_IMAGE_COMMIT_TAG=${GH_IMAGE_COMMIT_TAG}
 
   worker:
-    build:
-      context: "."
-      target: worker
-    image: registry.heroku.com/cslgbt-mentor-match/worker:${GH_IMAGE_COMMIT_TAG}
+    image: worker:${GH_IMAGE_COMMIT_TAG}
