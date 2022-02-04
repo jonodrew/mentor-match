@@ -1,7 +1,7 @@
 import csv
 import math
+import pathlib
 from datetime import datetime
-from tempfile import tempdir
 import pytest as pytest
 
 from app import create_app
@@ -41,6 +41,7 @@ def base_mentor(base_data):
 def known_file(base_data):
     def _known_file(path_to_file, role_type: str, quantity=50):
         padding_size = int(math.log10(quantity)) + 1
+        pathlib.Path(path_to_file).mkdir(parents=True, exist_ok=True)
         data_path = path_to_file / f"{role_type}s.csv"
         with open(data_path, "w", newline="") as test_data:
             headings = [
@@ -83,9 +84,9 @@ def test_data_path(tmpdir_factory):
 
 
 @pytest.fixture
-def client():
+def client(test_data_path):
     app = create_app(TestConfig)
-    app.config["UPLOAD_FOLDER"] = tempdir
+    app.config["UPLOAD_FOLDER"] = test_data_path
     with app.test_client() as client:
         yield client
 
