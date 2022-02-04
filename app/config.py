@@ -15,4 +15,5 @@ class TestConfig(Config):
         "interval_step": 0.2,
         "interval_max": 0.5,
     }
-    os.environ["REDIS_URL"] = "redis@redis"
+    if os.environ.get("REDIS_URL") is None:
+        os.environ["REDIS_URL"] = "redis@redis"
