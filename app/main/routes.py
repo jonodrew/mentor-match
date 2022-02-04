@@ -1,6 +1,7 @@
 import os.path
 
 from flask import (
+    make_response,
     render_template,
     request,
     jsonify,
@@ -14,6 +15,7 @@ import shutil
 
 from app.extensions import celery
 from app.main import main_bp
+from app.helpers import valid_files
 from app.tasks.tasks import async_process_data
 from matching.factory import ParticipantFactory
 from matching.mentee import Mentee
@@ -31,7 +33,20 @@ def upload():
     if request.method == "GET":
         return render_template("input.html")
     if request.method == "POST":
-        return jsonify(task_id="1"), 202
+        files = request.files.getlist("files")
+        filenames = [file.filename for file in files]
+        if len(files) == 2 and valid_files(filenames):
+            return jsonify(task_id="1"), 202
+        else:
+            if len(files) != 2:
+                error_message = (
+                    "Number of files is incorrect. Please only upload two files"
+                )
+            elif not valid_files(filenames):
+                error_message = "Filenames incorrect. Please label your files as 'mentees.csv and mentors.csv"
+            return make_response(
+                render_template("input.html", error_message=error_message), 415
+            )
 
 
 @main_bp.route("/download/<task_id>", methods=["GET"])
