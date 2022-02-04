@@ -1,7 +1,7 @@
 import csv
 import math
 from datetime import datetime
-
+from tempfile import tempdir
 import pytest as pytest
 
 from app import create_app
@@ -85,6 +85,7 @@ def test_data_path(tmpdir_factory):
 @pytest.fixture
 def client():
     app = create_app(TestConfig)
+    app.config["UPLOAD_FOLDER"] = tempdir
     with app.test_client() as client:
         yield client
 

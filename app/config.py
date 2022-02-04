@@ -15,3 +15,4 @@ class TestConfig(Config):
         "interval_step": 0.2,
         "interval_max": 0.5,
     }
+    os.environ["REDIS_URL"] = "redis@redis"
