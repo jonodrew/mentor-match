@@ -16,7 +16,6 @@ from app.tasks.tasks import async_process_data
     reason="These tests require a running instance of a backing service",
 )
 class TestIntegration:
-    @pytest.mark.skip(reason="Input isn't written yet")
     def test_input_data(
         self,
         test_participants,
@@ -46,25 +45,6 @@ class TestIntegration:
         task_id = content["task_id"]
         assert resp.status_code == 202
         assert task_id == "1"
-
-        processing_id = client.post("/tasks", data={"task_id": "small"}).get_json()[
-            "task_id"
-        ]
-        current_app.config["UPLOAD_FOLDER"] = test_data_path
-        resp = client.get(f"/tasks/{processing_id}")
-        content = resp.get_json()
-        assert content == {"task_id": processing_id, "task_status": "PENDING"}
-        assert resp.status_code == 200
-
-        while content["task_status"] == "PENDING":
-            time.sleep(1)
-            resp = client.get(f"/tasks/{processing_id}")
-            content = resp.get_json()
-        assert content == {
-            "task_id": processing_id,
-            "task_status": "SUCCESS",
-            "task_result": True,
-        }
 
     def test_process_data(self, celery_app, celery_worker, known_file, test_data_path):
         known_file(test_data_path, "mentee", 50)

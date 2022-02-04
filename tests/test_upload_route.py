@@ -39,6 +39,13 @@ def test_can_only_upload_csv(client, file_ending, api_response):
             ],
             415,
         ),
+        (
+            [
+                (io.BytesIO(b"abcd"), "unkown/random/path/mentors.csv"),
+                (io.BytesIO(b"abcd"), "unkown/random/path/mentees.csv"),
+            ],
+            202,
+        ),
     ],
 )
 def test_must_upload_two_files(client, files, api_response):
