@@ -11,7 +11,7 @@ from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def base_data() -> dict:
     return {
         "Your first name": "Test",
@@ -24,12 +24,12 @@ def base_data() -> dict:
     }
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def base_mentee(base_data):
     return Mentee(**base_data)
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def base_mentor(base_data):
     data_copy = base_data.copy()
     data_copy["Your grade"] = "Grade 6"
@@ -37,7 +37,7 @@ def base_mentor(base_data):
     return Mentor(**data_copy)
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def known_file(base_data):
     def _known_file(path_to_file, role_type: str, quantity=50):
         padding_size = int(math.log10(quantity)) + 1
@@ -91,7 +91,7 @@ def client(test_data_path):
         yield client
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def test_participants(test_data_path, known_file):
     known_file(test_data_path, "mentee", 50)
     known_file(test_data_path, "mentor", 50)
