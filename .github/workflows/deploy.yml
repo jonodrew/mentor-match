@@ -8,8 +8,8 @@ jobs:
   heroku-push-and-release:
     runs-on: ubuntu-20.04
     env:
-      HEROKU_API_KEY: ${{ github.secrets.HEROKU_API_KEY }}
-      HEROKU_EMAIL: ${{ github.secrets.HEROKU_EMAIL }}
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
     steps:
       - name: Push images to Heroku
         run: |
