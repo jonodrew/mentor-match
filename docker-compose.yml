@@ -13,7 +13,7 @@ services:
       context: "."
       target: web
     ports:
-      - "5001:5001"
+      - "5001:5000"
     environment:
       - FLASK_APP=app:create_app()
       - FLASK_ENV=development
@@ -24,6 +24,8 @@ services:
 
     volumes:
       - ./tests:/tests
+
+    command: flask run -h 0.0.0.0
 
   worker:
     build:
