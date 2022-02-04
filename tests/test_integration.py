@@ -93,10 +93,12 @@ class TestIntegration:
         output,
         client,
     ):
+        known_file(pathlib.Path(test_data_path, test_task), "mentee", output)
+        known_file(pathlib.Path(test_data_path, test_task), "mentor", output)
         processing_id = client.post("/tasks", json={"task_id": test_task}).get_json()[
             "task_id"
         ]
-        current_app.config["UPLOAD_FOLDER"] = test_data_path
+
         resp = client.get(f"/tasks/{processing_id}")
         content = resp.get_json()
         assert content == {
@@ -105,7 +107,7 @@ class TestIntegration:
             "task_result": "processing",
         }
         assert resp.status_code == 200
-
+        current_app.config["UPLOAD_FOLDER"] = test_data_path
         while content["task_status"] == "PENDING":
             time.sleep(1)
             resp = client.get(f"/tasks/{processing_id}")
