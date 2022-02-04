@@ -1,8 +1,6 @@
 name: Integrate and deploy
 on:
-  push:
-    branches:
-      - main
+  pull_request:
 
 env:
   REDIS_URL: redis@redis
@@ -84,16 +82,3 @@ jobs:
           docker tag worker:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/worker
           docker push registry.heroku.com/cslgbt-mentor-match/web
           docker push registry.heroku.com/cslgbt-mentor-match/worker
-
-  heroku-push-and-release:
-    needs: [integration-tests, get-commit-tag]
-    runs-on: ubuntu-20.04
-    env:
-      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      HEROKU_EMAIL: ${{ github.secrets.HEROKU_EMAIL }}
-    steps:
-      - name: Push images to Heroku
-        run: |
-          heroku container:login
-      - name: Deploy to Heroku
-        run: heroku container:release web worker --app cslgbt-mentor-match
