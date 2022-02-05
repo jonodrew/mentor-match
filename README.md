@@ -34,7 +34,7 @@ python3 -m venv /path/to/new/virtual/environment
 source /path-to-new-virtual-environment/bin-activate
 ```
 
-Now install the requirements for this project: `pip3 install -r requirements.txt`
+Now install the requirements for this project: `pip install -r requirements.txt`
 
 This software is best run in Docker, because it needs Redis and a Celery worker. You'll need to install `Docker` and
 `docker-compose`. [Docker instructions](https://docs.docker.com/engine/install/) and
