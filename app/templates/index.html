@@ -19,58 +19,43 @@
 
 <div class="grid-row">
   <div class="grid-column-two-thirds">
-
 		<details>
-
 			<summary>About this tool</summary>
-
 				<p>Explanatory text about the took can go here...</p>
-
 		</details>
   </div>
 </div>
 
-<div class="grid-row">
+<div class="grid-row main-wrapper--lg">
   <div class="grid-column-full">
-
+    <h2>Tasks</h2>
     <div class="page--content">
-  
-      <h2>Tasks</h2>
       <p>Pick a task length.</p>
       <div class="button-group" role="group" aria-label="Basic example">
 		  <button type="button" class="button" onclick="handleClick('small')">50 participants</button>
 		  <button type="button" class="button" onclick="handleClick('large')">500 participants</button>
       </div>
-      
     </div>
-
   </div>
 </div>
 
-<div class="grid-row">
+<div class="grid-row main-wrapper--lg">
   <div class="grid-column-full">
-
-    <div class="page--content">
-
-	<details>
-		<summary>Task Status</summary>
-
-		<table class="table">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Status</th>
-					<th>Result</th>
-				</tr>
-			</thead>
-			<tbody id="tasks">
-
-			</tbody>
-		</table>
-	</details>
-{% endblock %}
-
-
-    </div>
+	  <details>
+		  <summary>Logging information</summary>
+		  <table class="table">
+			  <thead>
+				  <tr>
+					  <th>ID</th>
+					  <th>Status</th>
+					  <th>Result</th>
+				  </tr>
+			  </thead>
+			  <tbody id="tasks">
+  
+			  </tbody>
+		  </table>
+	  </details>
   </div>
 </div>
+{% endblock %}
