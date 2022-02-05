@@ -4,6 +4,7 @@ import pathlib
 from datetime import datetime
 import pytest as pytest
 
+import app.helpers
 from app import create_app
 from app.config import TestConfig
 from matching.mentee import Mentee
@@ -85,9 +86,9 @@ def test_data_path(tmpdir_factory):
 
 @pytest.fixture
 def client(test_data_path):
-    app = create_app(TestConfig)
-    app.config["UPLOAD_FOLDER"] = test_data_path
-    with app.test_client() as client:
+    test_app = create_app(TestConfig)
+    test_app.config["UPLOAD_FOLDER"] = test_data_path
+    with test_app.test_client() as client:
         yield client
 
 
@@ -98,3 +99,11 @@ def test_participants(test_data_path, known_file):
     create_participant_list_from_path(Mentee, test_data_path)
     create_participant_list_from_path(Mentor, test_data_path)
     yield
+
+
+@pytest.fixture(autouse=True)
+def predictable_random_string(monkeypatch):
+    def predictable_string():
+        return "abcdef"
+
+    monkeypatch.setattr(app.helpers, "random_string", predictable_string)

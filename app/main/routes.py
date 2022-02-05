@@ -9,13 +9,16 @@ from flask import (
     url_for,
     send_from_directory,
     after_this_request,
+    session,
 )
 import pathlib
 import shutil
 
+from werkzeug.utils import secure_filename
+
 from app.extensions import celery
 from app.main import main_bp
-from app.helpers import valid_files
+from app.helpers import valid_files, random_string
 from app.tasks.tasks import async_process_data
 from matching.factory import ParticipantFactory
 from matching.mentee import Mentee
@@ -36,6 +39,16 @@ def upload():
         files = request.files.getlist("files")
         filenames = [file.filename for file in files]
         if len(files) == 2 and valid_files(filenames):
+            folder = random_string()
+            for file in files:
+                pathlib.Path(current_app.config["UPLOAD_FOLDER"], folder).mkdir(
+                    parents=True, exist_ok=True
+                )
+                filename = secure_filename(file.filename)
+                file.save(
+                    os.path.join(current_app.config["UPLOAD_FOLDER"], folder, filename)
+                )
+                session["data-folder"] = folder
             return jsonify(task_id="1"), 202
         else:
             if len(files) != 2:
@@ -44,6 +57,8 @@ def upload():
                 )
             elif not valid_files(filenames):
                 error_message = "Filenames incorrect. Please label your files as 'mentees.csv and mentors.csv"
+            else:
+                error_message = "Unspecified error. Please contact the admin team"
             return make_response(
                 render_template("input.html", error_message=error_message), 415
             )
