@@ -1,3 +1,7 @@
+import string
+import random
+
+
 def valid_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() == "csv"
 
@@ -19,3 +23,7 @@ def mentors_and_mentees_present(filenames: list[str]) -> bool:
 
 def valid_files(filenames: list[str]) -> bool:
     return mentors_and_mentees_present(filenames) and all(map(valid_file, filenames))
+
+
+def random_string():
+    return "".join(random.choice(string.ascii_lowercase) for _ in range(10))
