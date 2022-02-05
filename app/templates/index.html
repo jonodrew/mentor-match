@@ -5,12 +5,20 @@
 {% endblock %}
 {% block content %}
 
-    <h1 class="home--heading">Mentor matcher</h1>
-    <p class="lead">Welcome to the mentor matcher.</p>
+<div class="grid-row">
+  <header class="page--header">
+	  <div class="grid-column-full">
+			<span class="page--caption">Tools</span>
+		  <h1 class="page--heading">Mentor matcher</h1>
+	  </div>
+	  <div class="grid-column-two-thirds">
+		  <p class="page--excerpt">This tool helps you to match mentors to mentees as part of the Civil Service LGBT+ mentoring programme.</p>
+	  </div>
+  </header>
 
+</div>
 	<hr>
-
-    <div>
+  <div>
 	    <h2>Tasks</h2>
 	    <p>Pick a task length.</p>
 	    <div class="button-group" role="group" aria-label="Basic example">
@@ -18,8 +26,6 @@
 			<button type="button" class="button" onclick="handleClick('large')">500 participants</button>
 	    </div>
 	</div>
-
-	<hr>
 
 	<details>
 		<summary>Task Status</summary>
