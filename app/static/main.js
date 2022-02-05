@@ -55,7 +55,7 @@ function showDialog(x) {
 }
 
 function closeDialog(x) {
-	// show the dialog
+	// hide the dialog
 	var dialog = document.getElementById(x);
 	dialog.close();
 }
