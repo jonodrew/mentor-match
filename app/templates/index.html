@@ -39,6 +39,20 @@
   </div>
 </div>
 
+<dialog class="dialog" id="dialog-box">
+  <!-- this dialog will only show when required -->
+  <!-- note that this won't work in Safari yet -->
+  <section class="dialog--header"><h2 class="heading-lg dialog--title">Matching complete</h2></section>
+	<section class="dialog--content">
+    <p>The matching process is complete.</p>
+    <p>Use the <kbd>Download matches</kbd> button to get the results.</p>
+	</section>
+	<footer class="dialog--actions">
+		<a href="" class="button button--dialog" id="download-matches" title="Download matching results" download>Download matches</a>
+		<button onclick="closeDialog('dialog-box')" class="button button--secondary button--dialog button--close">Close this dialog</button>
+	</footer>
+</dialog>
+
 <div class="grid-row main-wrapper--lg">
   <div class="grid-column-full">
 	  <details>

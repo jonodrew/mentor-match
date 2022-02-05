@@ -129,6 +129,6 @@ def get_status(task_id):
                 ),
             )
             result["task_result"] = (
-                f'<a class="button button--secondary" href={url_for("main.download", task_id=task_id)}>Download results</a>'
+                f'{url_for("main.download", task_id=task_id)}'
             )
     return result, 200
