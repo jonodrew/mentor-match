@@ -9,6 +9,7 @@ from flask import (
     url_for,
     send_from_directory,
     after_this_request,
+    session,
 )
 import pathlib
 import shutil
@@ -47,6 +48,7 @@ def upload():
                 file.save(
                     os.path.join(current_app.config["UPLOAD_FOLDER"], folder, filename)
                 )
+                session["data-folder"] = folder
             return jsonify(task_id="1"), 202
         else:
             if len(files) != 2:

@@ -1,7 +1,7 @@
 import io
 import pathlib
 import pytest
-from flask import current_app
+from flask import current_app, session
 
 
 class TestUpload:
@@ -91,3 +91,16 @@ class TestUpload:
         assert pathlib.Path(
             current_app.config["UPLOAD_FOLDER"], "abcdef", "mentors.csv"
         ).exists()
+
+    def test_session_has_folder_name(self, client):
+        client.post(
+            "/upload",
+            data={
+                "files": [
+                    (io.BytesIO(b"abcd"), "mentors.csv"),
+                    (io.BytesIO(b"abcd"), "mentees.csv"),
+                ]
+            },
+            content_type="multipart/form-data",
+        )
+        assert session["data-folder"] == "abcdef"
