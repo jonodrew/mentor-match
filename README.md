@@ -38,4 +38,4 @@ Now install the requirements for this project: `pip install -r requirements.txt`
 
 This software is best run in Docker, because it needs Redis and a Celery worker. You'll need to install `Docker` and
 `docker-compose`. [Docker instructions](https://docs.docker.com/engine/install/) and
-[docker-compose instructions](https://docs.docker.com/compose/install/). Once you've got those two installed, you'll need to run `docker-compose -up -d` to get things running, and `docker-compose down` to stop them again. You should see the app running at http://127.0.0.1:5001
+[docker-compose instructions](https://docs.docker.com/compose/install/). Once you've got those two installed, you'll need to run `docker-compose up -d` to get things running, and `docker-compose down` to stop them again. You should see the app running at http://127.0.0.1:5001
