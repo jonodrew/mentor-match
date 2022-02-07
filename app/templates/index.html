@@ -1,40 +1,66 @@
 {% extends "base.html" %}
-{% block title %}Index{% endblock %}
+{% block title %}Match mentees to mentors{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
 {% block content %}
 
-    <h1 class="home--heading">Mentor matcher</h1>
-    <p class="lead">Welcome to the mentor matcher.</p>
+<div class="grid-row">
+  <header class="page--header">
+	  <div class="grid-column-full">
+			<span class="page--caption">Tools</span>
+		  <h1 class="page--heading">Mentor matcher</h1>
+	  </div>
+	  <div class="grid-column-two-thirds">
+		  <p class="page--excerpt">This tool helps you to match mentors to mentees as part of the Civil Service LGBT+ mentoring programme.</p>
+	  </div>
+  </header>
+</div>
 
-	<hr>
+<div class="grid-row main-wrapper--lg">
+  <div class="grid-column-full">
+    <h2>Tasks</h2>
+    <div class="page--content">
+      <p>Pick a task length.</p>
+      <div class="button-group" role="group" aria-label="Basic example">
+		  <button type="button" class="button" onclick="handleClick('small')">50 participants</button>
+		  <button type="button" class="button" onclick="handleClick('large')">500 participants</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <div>
-	    <h2>Tasks</h2>
-	    <p>Pick a task length.</p>
-	    <div class="button-group" role="group" aria-label="Basic example">
-			<button type="button" class="button" onclick="handleClick('small')">50 participants</button>
-			<button type="button" class="button" onclick="handleClick('large')">500 participants</button>
-	    </div>
-	</div>
+<dialog class="dialog" id="dialog-box">
+  <!-- this dialog will only show when required -->
+  <!-- note that this won't work in Safari yet -->
+  <section class="dialog--header"><h2 class="heading-lg dialog--title">Matching complete</h2></section>
+	<section class="dialog--content">
+    <p>The matching process is complete.</p>
+    <p>Use the <kbd>Download matches</kbd> button to get the results.</p>
+	</section>
+	<footer class="dialog--actions">
+		<a href="" class="button button--dialog" id="download-matches" title="Download matching results" download>Download matches</a>
+		<button onclick="closeDialog('dialog-box')" class="button button--secondary button--dialog button--close">Close this dialog</button>
+	</footer>
+</dialog>
 
-	<hr>
-
-	<div>
-		<h2>Task Status</h2>
-
-		<table class="table">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Status</th>
-					<th>Result</th>
-				</tr>
-			</thead>
-			<tbody id="tasks">
-
-			</tbody>
-		</table>
-	</div>
+<div class="grid-row main-wrapper--lg">
+  <div class="grid-column-full">
+	  <details>
+		  <summary>Logging information</summary>
+		  <table class="table">
+			  <thead>
+				  <tr>
+					  <th width="50%">ID</th>
+					  <th width="20%">Status</th>
+					  <th width="30%">Result</th>
+				  </tr>
+			  </thead>
+			  <tbody id="tasks">
+  
+			  </tbody>
+		  </table>
+	  </details>
+  </div>
+</div>
 {% endblock %}
