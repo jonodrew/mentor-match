@@ -34,6 +34,10 @@ def index():
 def cookies():
     return render_template("cookies.html", title="Cookies")
 
+@main_bp.route("/privacy-and-data")
+def cookies():
+    return render_template("privacy-and-data.html", title="Privacy and data")
+
 
 @main_bp.route("/upload", methods=["GET", "POST"])
 def upload():
