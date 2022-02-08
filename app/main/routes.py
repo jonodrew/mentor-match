@@ -30,9 +30,11 @@ from matching.process import create_participant_list_from_path, create_mailing_l
 def index():
     return render_template("index.html", title="Mentor matcher")
 
+
 @main_bp.route("/cookies")
 def cookies():
     return render_template("cookies.html", title="Cookies")
+
 
 @main_bp.route("/privacy-and-data")
 def privacy():
