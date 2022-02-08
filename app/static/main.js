@@ -21,7 +21,7 @@ function getStatus(taskID) {
   .then(res => {
     const taskStatus = res.task_status;
     const taskResult = res.task_result;
-    
+
     const html = `
       <tr>
         <td>${taskID}</td>
@@ -31,11 +31,11 @@ function getStatus(taskID) {
     const newRow = document.getElementById('tasks').insertRow(0);
     newRow.innerHTML = html;
 
-    
-    
+
+
     if (taskStatus === 'SUCCESS') {
       const downloadURL = res.task_result;
-      const downloadButton = document.getElementById('dialog-box');
+        const downloadButton = document.getElementById('download-matches');
       downloadButton.href = downloadURL;
       showDialog('dialog-box');
     }
@@ -43,7 +43,7 @@ function getStatus(taskID) {
     setTimeout(function() {
       getStatus(res.task_id);
     }, 1000);
-    
+
   })
   .catch(err => console.log(err));
 }

@@ -128,7 +128,5 @@ def get_status(task_id):
                     os.path.join(current_app.config["UPLOAD_FOLDER"], task_id)
                 ),
             )
-            result["task_result"] = (
-                f'{url_for("main.download", task_id=task_id)}'
-            )
+            result["task_result"] = url_for("main.download", task_id=task_id)
     return result, 200
