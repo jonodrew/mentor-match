@@ -56,7 +56,10 @@ def upload():
                     "Number of files is incorrect. Please only upload two files"
                 )
             elif not valid_files(filenames):
-                error_message = "Filenames incorrect. Please label your files as 'mentees.csv and mentors.csv"
+                error_message = (
+                    "Filenames incorrect. Please label your files as 'mentees.csv and"
+                    " mentors.csv"
+                )
             else:
                 error_message = "Unspecified error. Please contact the admin team"
             return make_response(
@@ -66,29 +69,23 @@ def upload():
 
 @main_bp.route("/download/<task_id>", methods=["GET"])
 def download(task_id):
+    @after_this_request
+    def remove_files(response):
+        shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id))
+        os.remove(pathlib.Path(current_app.config["UPLOAD_FOLDER"], f"{task_id}.zip"))
+        return response
+
     data_path = pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id)
     current_app.logger.debug(data_path)
-    if request.method == "GET":
-
-        @after_this_request
-        def remove_file(response):
-            try:
-                shutil.rmtree(data_path)
-            except Exception as error:
-                current_app.logger.error(
-                    "Error removing or closing downloaded file handle", error
-                )
-            return response
-
-        shutil.make_archive(
-            base_name=f"{pathlib.Path(current_app.config['UPLOAD_FOLDER']).__str__()}/matches",
-            format="zip",
-            root_dir=data_path,
-        )
-        return send_from_directory(
-            directory=pathlib.Path(current_app.config["UPLOAD_FOLDER"]),
-            path="matches.zip",
-        )
+    shutil.make_archive(
+        base_name=data_path,
+        format="zip",
+        root_dir=data_path,
+    )
+    return send_from_directory(
+        directory=pathlib.Path(current_app.config["UPLOAD_FOLDER"]),
+        path=f"{task_id}.zip",
+    )
 
 
 @main_bp.route("/tasks", methods=["POST"])
@@ -110,6 +107,11 @@ def run_task():
 
 @main_bp.route("/tasks/<task_id>", methods=["GET"])
 def get_status(task_id):
+    """
+    This route checks the status of the long-running celery task. Once the task is complete it returns the
+    matched participants as JSON formatted data. This data is then fed into the `create_mailing_list` function,
+     where the mailing lists are saved to a folder that corresponds to the `task_id`.
+    """
     task_result = celery.AsyncResult(task_id)
     result = {
         "task_id": task_id,
