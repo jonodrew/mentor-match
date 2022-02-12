@@ -14,7 +14,7 @@ from flask import (
 import pathlib
 import shutil
 
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename, redirect
 
 from app.extensions import celery
 from app.main import main_bp
@@ -49,7 +49,7 @@ def upload():
                     os.path.join(current_app.config["UPLOAD_FOLDER"], folder, filename)
                 )
                 session["data-folder"] = folder
-            return jsonify(task_id="1"), 202
+            return redirect(url_for("main.process", folder_name=folder))
         else:
             if len(files) != 2:
                 error_message = (
@@ -88,11 +88,21 @@ def download(task_id):
     )
 
 
+@main_bp.route("/process", methods=["GET"])
+def process():
+    if not session.get("data-folder"):
+        return redirect(url_for("main.upload"))
+    else:
+        return render_template("process.html")
+
+
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
     current_app.logger.debug(request.get_json())
-    task_id = request.get_json()["task_id"]
-    folder = pathlib.Path(os.path.join(current_app.config["UPLOAD_FOLDER"], task_id))
+    data_folder = request.get_json()["data_folder"]
+    folder = pathlib.Path(
+        os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
+    )
     mentors = [
         mentor.to_dict()
         for mentor in create_participant_list_from_path(Mentor, path_to_data=folder)
