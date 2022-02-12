@@ -14,7 +14,7 @@ from flask import (
 import pathlib
 import shutil
 
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename, redirect
 
 from app.extensions import celery
 from app.main import main_bp
@@ -49,7 +49,7 @@ def upload():
                     os.path.join(current_app.config["UPLOAD_FOLDER"], folder, filename)
                 )
                 session["data-folder"] = folder
-            return jsonify(task_id="1"), 202
+            return redirect(url_for("main.process", folder_name=folder))
         else:
             if len(files) != 2:
                 error_message = (
@@ -86,6 +86,11 @@ def download(task_id):
         directory=pathlib.Path(current_app.config["UPLOAD_FOLDER"]),
         path=f"{task_id}.zip",
     )
+
+
+@main_bp.route("/process/<folder_name>", methods=["GET", "POST"])
+def process(folder_name):
+    return make_response("Hello world", 200)
 
 
 @main_bp.route("/tasks", methods=["POST"])
