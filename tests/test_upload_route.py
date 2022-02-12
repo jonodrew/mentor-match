@@ -1,12 +1,12 @@
 import io
 import pathlib
 import pytest
-from flask import current_app, session
+from flask import current_app, session, url_for
 
 
 class TestUpload:
     @pytest.mark.parametrize(
-        ["file_ending", "api_response"], (["csv", 202], ["doc", 415], ["csv.exe", 415])
+        ["file_ending", "api_response"], (["csv", 200], ["doc", 415], ["csv.exe", 415])
     )
     def test_can_only_upload_csv(self, client, file_ending, api_response):
         response = client.post(
@@ -18,6 +18,7 @@ class TestUpload:
                 ]
             },
             content_type="multipart/form-data",
+            follow_redirects=True,
         )
         assert response.status_code == api_response
 
@@ -29,7 +30,7 @@ class TestUpload:
                     (io.BytesIO(b"abcd"), "mentors.csv"),
                     (io.BytesIO(b"abcd"), "mentees.csv"),
                 ],
-                202,
+                200,
             ),
             ([(io.BytesIO(b"abcd"), "mentors.csv")], 415),
             ([(io.BytesIO(b"abcd"), "mentees.csv")], 415),
@@ -46,22 +47,25 @@ class TestUpload:
                     (io.BytesIO(b"abcd"), "unkown/random/path/mentors.csv"),
                     (io.BytesIO(b"abcd"), "unkown/random/path/mentees.csv"),
                 ],
-                202,
+                200,
             ),
         ],
     )
     def test_must_upload_two_files(self, client, files, api_response):
         response = client.post(
-            "/upload", data={"files": files}, content_type="multipart/form-data"
+            "/upload",
+            data={"files": files},
+            content_type="multipart/form-data",
+            follow_redirects=True,
         )
         assert response.status_code == api_response
 
     @pytest.mark.parametrize(
         ["filenames", "api_response"],
         (
-            (["mentors", "mentees"], 202),
+            (["mentors", "mentees"], 200),
             (["mentors", "menteees"], 415),
-            (["MENTORS", "MENTEES"], 202),
+            (["MENTORS", "MENTEES"], 200),
         ),
     )
     def test_filenames_are_mentors_and_mentees(self, client, filenames, api_response):
@@ -74,6 +78,7 @@ class TestUpload:
                 ]
             },
             content_type="multipart/form-data",
+            follow_redirects=True,
         )
         assert response.status_code == api_response
 
@@ -104,3 +109,17 @@ class TestUpload:
             content_type="multipart/form-data",
         )
         assert session["data-folder"] == "abcdef"
+
+    def test_valid_upload_redirects_to_process_page(self, client):
+        response = client.post(
+            "/upload",
+            data={
+                "files": [
+                    (io.BytesIO(b"abcd"), "mentors.csv"),
+                    (io.BytesIO(b"abcd"), "mentees.csv"),
+                ]
+            },
+            content_type="multipart/form-data",
+            follow_redirects=True,
+        )
+        assert response.request.path == url_for("main.process")

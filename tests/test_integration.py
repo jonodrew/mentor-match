@@ -1,9 +1,10 @@
 import os.path
 import pathlib
 import time
+from unittest.mock import patch
 
 import pytest
-from flask import current_app
+from flask import current_app, session
 from matching.mentee import Mentee
 from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path
@@ -29,6 +30,8 @@ class TestIntegration:
             test_data_path / "mentors.csv",
         )
         files = []
+        patched_random = patch("app.main.routes.random_string", return_value="abcdef")
+        patched_random.start()
         try:
             files = [open(fpath, "rb") for fpath in src_file_paths]
             resp = client.post(
@@ -36,15 +39,15 @@ class TestIntegration:
                 data={
                     "files": files,
                 },
+                follow_redirects=True,
             )
         finally:
             for fp in files:
                 fp.close()
-
-        content = resp.get_json()
-        task_id = content["task_id"]
-        assert resp.status_code == 202
-        assert task_id == "1"
+        patched_random.stop()
+        data_folder = session["data-folder"]
+        assert resp.status_code == 200
+        assert data_folder == "abcdef"
 
     def test_process_data(self, celery_app, celery_worker, known_file, test_data_path):
         known_file(test_data_path, "mentee", 50)
@@ -75,9 +78,9 @@ class TestIntegration:
     ):
         known_file(pathlib.Path(test_data_path, test_task), "mentee", output)
         known_file(pathlib.Path(test_data_path, test_task), "mentor", output)
-        processing_id = client.post("/tasks", json={"task_id": test_task}).get_json()[
-            "task_id"
-        ]
+        processing_id = client.post(
+            "/tasks", json={"data_folder": test_task}
+        ).get_json()["task_id"]
 
         resp = client.get(f"/tasks/{processing_id}")
         content = resp.get_json()

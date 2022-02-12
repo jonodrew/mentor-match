@@ -1,10 +1,10 @@
-function handleClick(task_id) {
+function handleClick(data_folder) {
   fetch('/tasks', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ task_id: task_id }),
+    body: JSON.stringify({ data_folder: data_folder }),
   })
   .then(response => response.json())
   .then(data => getStatus(data.task_id));
