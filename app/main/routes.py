@@ -99,8 +99,10 @@ def process():
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
     current_app.logger.debug(request.get_json())
-    task_id = request.get_json()["task_id"]
-    folder = pathlib.Path(os.path.join(current_app.config["UPLOAD_FOLDER"], task_id))
+    data_folder = request.get_json()["data_folder"]
+    folder = pathlib.Path(
+        os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
+    )
     mentors = [
         mentor.to_dict()
         for mentor in create_participant_list_from_path(Mentor, path_to_data=folder)

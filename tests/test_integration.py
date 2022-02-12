@@ -78,9 +78,9 @@ class TestIntegration:
     ):
         known_file(pathlib.Path(test_data_path, test_task), "mentee", output)
         known_file(pathlib.Path(test_data_path, test_task), "mentor", output)
-        processing_id = client.post("/tasks", json={"task_id": test_task}).get_json()[
-            "task_id"
-        ]
+        processing_id = client.post(
+            "/tasks", json={"data_folder": test_task}
+        ).get_json()["task_id"]
 
         resp = client.get(f"/tasks/{processing_id}")
         content = resp.get_json()
