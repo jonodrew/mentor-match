@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Process matches{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{%  block content %}
+<div class="grid-row">
+    <header class="page--header">
+        <div class="grid-column-full">
+            <h1 class="page--heading">
+                Process data
+            </h1>
+        </div>
+    </header>
+</div>
+<div class="grid-row main-wrapper--lg">
+    <div class="grid-column-full">
+        <button class="button" type="button" onclick="handleClick({{ session['data-folder'] }})">
+            Process your data
+        </button>
+    </div>
+</div>
+{% endblock %}

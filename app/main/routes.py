@@ -88,9 +88,12 @@ def download(task_id):
     )
 
 
-@main_bp.route("/process/<folder_name>", methods=["GET", "POST"])
-def process(folder_name):
-    return make_response("Hello world", 200)
+@main_bp.route("/process", methods=["GET"])
+def process():
+    if not session.get("data-folder"):
+        return redirect(url_for("main.upload"))
+    else:
+        return render_template("process.html")
 
 
 @main_bp.route("/tasks", methods=["POST"])

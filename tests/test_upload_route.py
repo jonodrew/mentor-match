@@ -122,4 +122,4 @@ class TestUpload:
             content_type="multipart/form-data",
             follow_redirects=True,
         )
-        assert response.request.path == url_for("main.process", folder_name="abcdef")
+        assert response.request.path == url_for("main.process")
