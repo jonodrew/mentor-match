@@ -57,8 +57,8 @@ def upload():
                 )
             elif not valid_files(filenames):
                 error_message = (
-                    "Filenames incorrect. Please label your files as 'mentees.csv and"
-                    " mentors.csv"
+                    "Filenames incorrect. Please label your files as 'mentees.csv' and"
+                    " 'mentors.csv'"
                 )
             else:
                 error_message = "Unspecified error. Please contact the admin team"
