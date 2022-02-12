@@ -4,17 +4,19 @@
 {{ super() }}
 {% endblock %}
 {% block content %}
-<h1>Upload</h1>
+<h1 class="heading-lg">Upload</h1>
 {% if error_message %}
-<p class=error><strong>Error:</strong> {{ error_message }}
-  {% endif %}
-<form method=post enctype=multipart/form-data action="{{ url_for('main.upload') }}">
-  <label class="label" for="file-upload-1">
-    Upload your files
-  </label>
-  <input type=file name=files multiple="" id="file-upload-1">
-  <br>
-  <br>
-  <input type="submit" class="button" value="upload">
-</form>
+  <blockquote class="error warning-text">
+    <strong>Error:</strong> {{ error_message }}
+  </blockquote>
+{% endif %}
+  <form method=post enctype=multipart/form-data action="{{ url_for('main.upload') }}">
+    <div class="form-group" style="padding-bottom: 20px;">
+      <label class="label label-md" for="files">
+        Select your files
+      </label>
+      <input type="file" name="files" multiple="" id="files">
+    </div>
+    <input type="submit" class="button button--action" value="Upload">
+  </form>
 {% endblock %}
