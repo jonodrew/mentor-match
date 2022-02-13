@@ -28,17 +28,7 @@ from matching.process import create_participant_list_from_path, create_mailing_l
 
 @main_bp.route("/", methods=["GET"])
 def index():
-    return render_template("index.html", title="Mentor matcher")
-
-
-@main_bp.route("/cookies")
-def cookies():
-    return render_template("cookies.html", title="Cookies")
-
-
-@main_bp.route("/privacy-and-data")
-def privacy():
-    return render_template("privacy-and-data.html", title="Privacy and data")
+    return render_template("index.html", title="Hello World!")
 
 
 @main_bp.route("/upload", methods=["GET", "POST"])
@@ -67,8 +57,8 @@ def upload():
                 )
             elif not valid_files(filenames):
                 error_message = (
-                    "Filenames incorrect. Please label your files as 'mentees.csv and"
-                    " mentors.csv"
+                    "Filenames incorrect. Please label your files as 'mentees.csv' and"
+                    " 'mentors.csv'"
                 )
             else:
                 error_message = "Unspecified error. Please contact the admin team"
