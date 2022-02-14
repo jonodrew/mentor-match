@@ -20,19 +20,6 @@ function getStatus(taskID) {
   .then(response => response.json())
   .then(res => {
     const taskStatus = res.task_status;
-    const taskResult = res.task_result;
-
-    const html = `
-      <tr>
-        <td>${taskID}</td>
-        <td>${taskStatus}</td>
-        <td>${taskResult}</td>
-      </tr>`;
-    const newRow = document.getElementById('tasks').insertRow(0);
-    newRow.innerHTML = html;
-
-
-
     if (taskStatus === 'SUCCESS') {
       const downloadURL = res.task_result;
         const downloadButton = document.getElementById('download-matches');

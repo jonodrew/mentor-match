@@ -1,11 +1,22 @@
 {% extends "base.html" %}
 {% block title %}Upload{% endblock %}
 {% block head %}
-    {{ super() }}
+{{ super() }}
 {% endblock %}
 {% block content %}
-    <h1>Upload</h1>
-    <p>
-      There should be a button here
-    </p>
+<h1 class="heading-lg">Upload</h1>
+{% if error_message %}
+  <blockquote class="error warning-text">
+    <strong>Error:</strong> {{ error_message }}
+  </blockquote>
+{% endif %}
+  <form method=post enctype=multipart/form-data action="{{ url_for('main.upload') }}">
+    <div class="form-group" style="padding-bottom: 20px;">
+      <label class="label label-md" for="files">
+        Select your files
+      </label>
+      <input type="file" name="files" multiple="" id="files">
+    </div>
+    <input type="submit" class="button button--action" value="Upload">
+  </form>
 {% endblock %}
