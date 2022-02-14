@@ -49,7 +49,7 @@ def upload():
                     os.path.join(current_app.config["UPLOAD_FOLDER"], folder, filename)
                 )
                 session["data-folder"] = folder
-            return redirect(url_for("main.process", folder_name=folder))
+            return redirect(url_for("main.process"))
         else:
             if len(files) != 2:
                 error_message = (
