@@ -68,12 +68,11 @@ def upload():
         else:
             if len(files) != 2:
                 error_message = (
-                    "Number of files is incorrect. Please only upload two files"
+                    "Number of files is incorrect. Please only upload two files."
                 )
             elif not valid_files(filenames):
                 error_message = (
-                    "Filenames incorrect. Please label your files as 'mentees.csv' and"
-                    " 'mentors.csv'"
+                    "Your filenames are incorrect. Please label your files as 'mentees.csv' and 'mentors.csv'."
                 )
             else:
                 error_message = "Unspecified error. Please contact the admin team"
