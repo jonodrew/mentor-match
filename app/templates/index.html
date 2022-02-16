@@ -5,34 +5,21 @@
 {% endblock %}
 {% block content %}
 
-<div class="grid-row main-wrapper--lg">
-	<div class="grid-column-full">
-		<h2>Tasks</h2>
-		<div class="page--content">
-			<p>Pick a task length.</p>
-			<div class="button-group" role="group" aria-label="Basic example">
-				<button type="button" class="button" onclick="handleClick('small')">50 participants</button>
-				<button type="button" class="button" onclick="handleClick('large')">500 participants</button>
-			</div>
-		</div>
-	</div>
+<div class="grid-row">
+  <div class="grid-column-two-thirds">
+    <div class="page--content">
+    <h2 class="heading-md">Before you start</h2>
+    <ol>
+      <li><strong>This tool will only work with data in specific formats.</strong> You must have two files – <code>mentees.csv</code> and <code>mentors.csv</code> – to start the matching process. Those files need to be formatted with specific column headings. You can <a href="https://github.com/jonodrew/mentor-match-package/blob/main/templates/participant.csv">download a template</a> from this website.</li>
+      <li><strong>Do not close your browser window during the matching process.</strong> Doing this may cause the matching process to fail and you to lose your matches.</li>
+      <li><strong>The larger the number of matches you need, the longer this takes.</strong> Matching mentors to mentees takes around 10 minutes to match 500 participants.</li>
+    </ol>
+    <hr>
+    <div class="button-group">
+      <a href="/upload" class="button button--action">Start now</a>
+    </div>
+    </div>
+  </div>
 </div>
 
-<dialog class="dialog" id="dialog-box">
-	<!-- this dialog will only show when required -->
-	<!-- note that this won't work in Safari yet -->
-	<section class="dialog--header">
-		<h2 class="heading-lg dialog--title">Matching complete</h2>
-	</section>
-	<section class="dialog--content">
-		<p>The matching process is complete.</p>
-		<p>Use the <kbd>Download matches</kbd> button to get the results.</p>
-	</section>
-	<footer class="dialog--actions">
-		<a class="button button--dialog" id="download-matches" title="Download matching results">Download
-			matches</a>
-		<button onclick="closeDialog('dialog-box')" class="button button--secondary button--dialog button--close">Close
-			this dialog</button>
-	</footer>
-</dialog>
 {% endblock %}

@@ -1,27 +1,24 @@
 {% extends 'base.html' %}
 {% block title %}Process matches{% endblock %}
 {% block head %}{{ super() }}{% endblock %}
+
+{% block pagecaption %}Mentor matcher{% endblock %}
+{% block pageheading %}Match mentors to mentees{% endblock %}
+{% block pageexcerpt %}Process the data and match mentors to mentees.{% endblock %}
+
 {%  block content %}
-<div class="grid-row">
-    <header class="page--header">
-        <div class="grid-column-full">
-            <h1 class="page--heading">
-                Process data
-            </h1>
-        </div>
-    </header>
-</div>
+
 <div class="grid-row main-wrapper--lg">
     <div class="grid-column-full">
-        <button class="button" type="button" onclick="handleClick('{{ session['data-folder'] }}')">
-            Process your data
+        <button class="button button--action" type="button" onclick="handleClick('{{ session['data-folder'] }}')">
+            Start matching
         </button>
     </div>
 </div>
 
 <dialog class="dialog" id="dialog-box">
 	<!-- this dialog will only show when required -->
-	<!-- note that this won't work in Safari yet -->
+	<!-- note that this won't work in Safari or Firefox without enabling specific flags as at Feb 2022 -->
 	<section class="dialog--header">
 		<h2 class="heading-lg dialog--title">Matching complete</h2>
 	</section>
