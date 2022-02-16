@@ -33,26 +33,16 @@
 		<main class="main-wrapper main-wrapper--auto-spacing" id="main-content" role="main">
 
       <article class="article--page">
-      
-        <div class="grid-row">
-	        <header class="page--header">
-		        <div class="grid-column-full">
-			        <span class="page--caption">{% block pagecaption %}Tools{% endblock %}</span>
-			        <h1 class="page--heading">{% block pageheading %}Mentor matcher{% endblock %}</h1>
-		        </div>
-		        <div class="grid-column-two-thirds">
-			        <p class="page--excerpt">{% block pageexcerpt %}This tool helps you to match mentors to mentees as part of the Civil Service LGBT+ mentoring programme.{% endblock %}</p>
-		        </div>
-	        </header>
-        </div>
-  
-			  <div id="content">{% block content %}{% endblock %}</div>
+        
+        {% block header %}{% endblock %}
 
+        {% block content %}{% endblock %}
+        
       </article>
 		</main>
 	</div>
 
-
+  
 
 	<footer class="footer" role="contentinfo">
 		<div class="width-container">
