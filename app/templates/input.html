@@ -1,7 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Upload{% endblock %}
+{% block title %}Upload data{% endblock %}
 {% block head %}
 {{ super() }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumbs--list-item">
+    <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+  </li>
 {% endblock %}
 
 {% block pagecaption %}Mentor matcher{% endblock %}
@@ -11,24 +17,21 @@
 {% block content %}
 <div class="grid-row">
   <div class="grid-column-two-thirds">
-    <div class="page--content">
-        <form method=post enctype=multipart/form-data action="{{ url_for('main.upload') }}">
-          {% if error_message %}
-            <blockquote class="error warning-text">
-              <p><strong>An error has occurred</strong></p>
-              <p>{{ error_message }}</p>
-            </blockquote>
-          {% endif %}
-          <div class="form-group">
-            <label class="label label-lg" for="files">
-              Select your files
-            </label>
-            <input type="file" name="files" multiple="" id="files">
-          </div>
-          <hr>
-          <input type="submit" class="button button--action" value="Upload the data ❯">
-        </form>
-    </div>
+    <form method=post enctype=multipart/form-data action="{{ url_for('main.upload') }}">
+      {% if error_message %}
+        <blockquote class="error warning-text">
+          <p><strong>An error has occurred</strong></p>
+          <p>{{ error_message }}</p>
+        </blockquote>
+      {% endif %}
+      <div class="form-group" style="padding-bottom: 45px;">
+        <label class="label label-lg" for="files">
+          Select your files
+        </label>
+        <input type="file" name="files" multiple="" id="files">
+      </div>
+      <input type="submit" class="button button--action" value="Upload the data ❯">
+    </form>
   </div>
 </div>
 {% endblock %}
