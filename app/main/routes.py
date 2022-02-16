@@ -31,11 +31,6 @@ def index():
     return render_template("index.html", title="Mentor matcher")
 
 
-@main_bp.route("/match", methods=["GET"])
-def match():
-    return render_template("match.html", title="Mentor matcher")
-
-
 @main_bp.route("/cookies")
 def cookies():
     return render_template("cookies.html", title="Cookies")
@@ -83,6 +78,7 @@ def upload():
 
 @main_bp.route("/download/<task_id>", methods=["GET"])
 def download(task_id):
+    return render_template("output.html", title="Download matches")
     @after_this_request
     def remove_files(response):
         shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id))
@@ -108,7 +104,6 @@ def process():
         return redirect(url_for("main.upload"))
     else:
         return render_template("process.html")
-
 
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
