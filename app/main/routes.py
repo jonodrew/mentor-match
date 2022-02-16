@@ -79,6 +79,7 @@ def upload():
 @main_bp.route("/download/<task_id>", methods=["GET"])
 def download(task_id):
     return render_template("output.html", title="Download matches")
+	
     @after_this_request
     def remove_files(response):
         shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id))
@@ -104,11 +105,12 @@ def process():
         return redirect(url_for("main.upload"))
     else:
         return render_template("process.html")
-        
+
 
 @main_bp.route("/finished", methods=["GET"])
 def finished():
     return render_template("done.html")
+
 
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
