@@ -104,6 +104,11 @@ def process():
         return redirect(url_for("main.upload"))
     else:
         return render_template("process.html")
+        
+
+@main_bp.route("/finished", methods=["GET"])
+def finished():
+    return render_template("done.html")
 
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
