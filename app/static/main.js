@@ -22,9 +22,10 @@ function getStatus(taskID) {
     const taskStatus = res.task_status;
     if (taskStatus === 'SUCCESS') {
       const downloadURL = res.task_result;
-        const downloadButton = document.getElementById('download-matches');
-      downloadButton.href = downloadURL;
-      showDialog('dialog-box');
+      // Redirect to the download page
+      window.location.replace(downloadURL)
+      // In the original code, the `download-button` would have been updated with the handleClick function.
+      // We'd need the button on the new 'download/etc' page to handle this now.
     }
     if (taskStatus === 'SUCCESS' || taskStatus === 'FAILURE') return false;
     setTimeout(function() {
@@ -33,16 +34,4 @@ function getStatus(taskID) {
 
   })
   .catch(err => console.log(err));
-}
-
-function showDialog(x) {
-	// show the dialog
-	var dialog = document.getElementById(x);
-	dialog.showModal();
-}
-
-function closeDialog(x) {
-	// hide the dialog
-	var dialog = document.getElementById(x);
-	dialog.close();
 }
