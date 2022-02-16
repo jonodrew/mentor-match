@@ -35,3 +35,9 @@ function getStatus(taskID) {
   })
   .catch(err => console.log(err));
 }
+
+function downloadMatches() {
+  // Redirect to the 'finished' page
+  // @jonodrew – this will need to also handle the download and deletion!
+  window.location.replace("/finished")
+}
