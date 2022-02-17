@@ -4,7 +4,7 @@ import time
 from unittest.mock import patch
 
 import pytest
-from flask import current_app, session
+from flask import current_app, session, url_for
 from matching.mentee import Mentee
 from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path
@@ -82,7 +82,7 @@ class TestIntegration:
             "/tasks", json={"data_folder": test_task}
         ).get_json()["task_id"]
 
-        resp = client.get(f"/tasks/{processing_id}")
+        resp = client.get(url_for("main.get_status", task_id=processing_id))
         content = resp.get_json()
         assert content == {
             "task_id": processing_id,
@@ -93,7 +93,7 @@ class TestIntegration:
         current_app.config["UPLOAD_FOLDER"] = test_data_path
         while content["task_status"] == "PENDING":
             time.sleep(1)
-            resp = client.get(f"/tasks/{processing_id}")
+            resp = client.get(url_for("main.get_status", task_id=processing_id))
             content = resp.get_json()
         assert pathlib.Path(
             os.path.join(current_app.config["UPLOAD_FOLDER"]), processing_id
