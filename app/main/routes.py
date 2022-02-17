@@ -72,7 +72,8 @@ def upload():
                 )
             elif not valid_files(filenames):
                 error_message = (
-                    "Your filenames are incorrect. Please label your files as 'mentees.csv' and 'mentors.csv'."
+                    "Your filenames are incorrect. Please label your files as"
+                    " 'mentees.csv' and 'mentors.csv'."
                 )
             else:
                 error_message = "Unspecified error. Please contact the admin team"
@@ -117,6 +118,12 @@ def run_task():
     folder = pathlib.Path(
         os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
     )
+
+    @after_this_request
+    def delete_upload(response):
+        shutil.rmtree(folder)
+        return response
+
     mentors = [
         mentor.to_dict()
         for mentor in create_participant_list_from_path(Mentor, path_to_data=folder)
