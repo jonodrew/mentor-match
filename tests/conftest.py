@@ -48,7 +48,8 @@ def known_file(base_data):
             headings = [
                 "Timestamp",
                 f"Do you want to sign up as a {role_type}?",
-                "Do you agree to us using the information you provide to us in this way?",
+                "Do you agree to us using the information you provide to us in this"
+                " way?",
                 "Your first name",
                 "Your last name",
                 "Your Civil Service email address",
@@ -88,6 +89,8 @@ def test_data_path(tmpdir_factory):
 def client(test_data_path):
     test_app = create_app(TestConfig)
     test_app.config["UPLOAD_FOLDER"] = test_data_path
+    test_app_context = test_app.test_request_context()
+    test_app_context.push()
     with test_app.test_client() as client:
         yield client
 
