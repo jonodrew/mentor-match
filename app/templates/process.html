@@ -1,36 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'page-with-header.html' %}
 {% block title %}Process matches{% endblock %}
 {% block head %}{{ super() }}{% endblock %}
 
+{% block breadcrumbs %}
+  <li class="breadcrumbs--list-item">
+    <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+  </li>
+{% endblock %}
+
 {% block pagecaption %}Mentor matcher{% endblock %}
-{% block pageheading %}Match mentors to mentees{% endblock %}
+{% block pageheading %}Start matching{% endblock %}
 {% block pageexcerpt %}Process the data and match mentors to mentees.{% endblock %}
 
 {%  block content %}
-
 <div class="grid-row main-wrapper--lg">
-    <div class="grid-column-full">
-        <button class="button button--action" type="button" onclick="handleClick('{{ session['data-folder'] }}')">
-            Start matching
-        </button>
-    </div>
+  <div class="grid-column-two-thirds">
+    <button class="button button--action" type="button" onclick="handleClick('{{ session['data-folder'] }}')">Start matching</button>
+  </div>
 </div>
-
-<dialog class="dialog" id="dialog-box">
-	<!-- this dialog will only show when required -->
-	<!-- note that this won't work in Safari or Firefox without enabling specific flags as at Feb 2022 -->
-	<section class="dialog--header">
-		<h2 class="heading-lg dialog--title">Matching complete</h2>
-	</section>
-	<section class="dialog--content">
-		<p>The matching process is complete.</p>
-		<p>Use the <kbd>Download matches</kbd> button to get the results.</p>
-	</section>
-	<footer class="dialog--actions">
-		<a class="button button--dialog" id="download-matches" title="Download matching results">Download
-			matches</a>
-		<button onclick="closeDialog('dialog-box')" class="button button--secondary button--dialog button--close">Close
-			this dialog</button>
-	</footer>
-</dialog>
 {% endblock %}

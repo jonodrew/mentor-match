@@ -1,12 +1,25 @@
-{% extends "base.html" %}
-{% block title %}Download{% endblock %}
+{% extends "page-with-header.html" %}
+{% block title %}Download matches{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
-{% block content %}
-    <h1>Download</h1>
-    <form action="" method="post">
-        <input type="submit" name="download" value="Download results"/>
-    </form>
 
+{% block breadcrumbs %}
+  <li class="breadcrumbs--list-item">
+    <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+  </li>
+{% endblock %}
+
+{% block pagecaption %}Mentor matcher{% endblock %}
+{% block pageheading %}Matching complete{% endblock %}
+{% block pageexcerpt %}Download the matching results.{% endblock %}
+
+{% block content %}
+
+<div class="grid-row">
+  <div class="grid-column-two-thirds">
+	<p>The matching process is now complete. Use the button to download your matches.</p>
+      <a href="{{ url_for("main.download_task", task_id=data_folder) }}" onclick="redirectToDone()" class="button button--action" id="download-matches" title="Download matching results">Download matches</a>
+  </div>
+</div>
 {% endblock %}

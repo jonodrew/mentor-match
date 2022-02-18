@@ -22,9 +22,8 @@ function getStatus(taskID) {
     const taskStatus = res.task_status;
     if (taskStatus === 'SUCCESS') {
       const downloadURL = res.task_result;
-        const downloadButton = document.getElementById('download-matches');
-      downloadButton.href = downloadURL;
-      showDialog('dialog-box');
+      // Redirect to the download page
+      window.location.replace(downloadURL)
     }
     if (taskStatus === 'SUCCESS' || taskStatus === 'FAILURE') return false;
     setTimeout(function() {
@@ -35,14 +34,11 @@ function getStatus(taskID) {
   .catch(err => console.log(err));
 }
 
-function showDialog(x) {
-	// show the dialog
-	var dialog = document.getElementById(x);
-	dialog.showModal();
-}
-
-function closeDialog(x) {
-	// hide the dialog
-	var dialog = document.getElementById(x);
-	dialog.close();
+function redirectToDone() {
+  // Redirect to the 'finished' page
+  // @jonodrew – this will need to also handle the download and deletion!
+    setTimeout(function () {
+        window.location.replace("/finished")
+    }, 1000);
+  // alert("Done")
 }
