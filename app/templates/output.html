@@ -19,10 +19,7 @@
 <div class="grid-row">
   <div class="grid-column-two-thirds">
 	<p>The matching process is now complete. Use the button to download your matches.</p>
-      <a href="{{ url_for("main.download_task", task_id=data_folder) }}">
-  <button class="button button--action" id="download-matches" title="Download matching results" >Download
-		matches</button>
-      </a>
+      <a href="{{ url_for("main.download_task", task_id=data_folder) }}" class="button button--action" id="download-matches" title="Download matching results" download>Download matches</a>
   </div>
 </div>
 {% endblock %}
