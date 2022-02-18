@@ -24,8 +24,6 @@ function getStatus(taskID) {
       const downloadURL = res.task_result;
       // Redirect to the download page
       window.location.replace(downloadURL)
-      // In the original code, the `download-button` would have been updated with the handleClick function.
-      // We'd need the button on the new 'download/etc' page to handle this now.
     }
     if (taskStatus === 'SUCCESS' || taskStatus === 'FAILURE') return false;
     setTimeout(function() {
@@ -36,8 +34,11 @@ function getStatus(taskID) {
   .catch(err => console.log(err));
 }
 
-function downloadMatches() {
+function redirectToDone() {
   // Redirect to the 'finished' page
   // @jonodrew – this will need to also handle the download and deletion!
-  window.location.replace("/finished")
+    setTimeout(function () {
+        window.location.replace("/finished")
+    }, 1000);
+  // alert("Done")
 }
