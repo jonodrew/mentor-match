@@ -70,7 +70,7 @@ class TestUpload:
     )
     def test_filenames_are_mentors_and_mentees(self, client, filenames, api_response):
         response = client.post(
-            "/upload",
+            url_for("main.upload"),
             data={
                 "files": [
                     (io.BytesIO(b"abcd"), f"{filenames[0]}.csv"),
@@ -84,7 +84,7 @@ class TestUpload:
 
     def test_upload_saves_file(self, client, test_data_path):
         client.post(
-            "/upload",
+            url_for("main.upload"),
             data={
                 "files": [
                     (io.BytesIO(b"abcd"), "mentors.csv"),
@@ -99,7 +99,7 @@ class TestUpload:
 
     def test_session_has_folder_name(self, client):
         client.post(
-            "/upload",
+            url_for("main.upload"),
             data={
                 "files": [
                     (io.BytesIO(b"abcd"), "mentors.csv"),
@@ -112,7 +112,7 @@ class TestUpload:
 
     def test_valid_upload_redirects_to_process_page(self, client):
         response = client.post(
-            "/upload",
+            url_for("main.upload"),
             data={
                 "files": [
                     (io.BytesIO(b"abcd"), "mentors.csv"),

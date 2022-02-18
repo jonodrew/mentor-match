@@ -67,7 +67,8 @@ def upload():
                 )
             elif not valid_files(filenames):
                 error_message = (
-                    "Your filenames are incorrect. Please label your files as 'mentees.csv' and 'mentors.csv'."
+                    "Your filenames are incorrect. Please label your files as"
+                    " 'mentees.csv' and 'mentors.csv'."
                 )
             else:
                 error_message = "Unspecified error. Please contact the admin team"
@@ -78,8 +79,11 @@ def upload():
 
 @main_bp.route("/download/<task_id>", methods=["GET"])
 def download(task_id):
-    return render_template("output.html", title="Download matches")
-	
+    return render_template("output.html", title="Download matches", data_folder=task_id)
+
+
+@main_bp.route("/<task_id>", methods=["GET"])
+def download_task(task_id):
     @after_this_request
     def remove_files(response):
         shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id))
@@ -119,6 +123,12 @@ def run_task():
     folder = pathlib.Path(
         os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
     )
+
+    @after_this_request
+    def delete_upload(response):
+        shutil.rmtree(folder)
+        return response
+
     mentors = [
         mentor.to_dict()
         for mentor in create_participant_list_from_path(Mentor, path_to_data=folder)
