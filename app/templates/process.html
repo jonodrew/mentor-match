@@ -13,9 +13,11 @@
 {% block pageexcerpt %}Process the data and match mentors to mentees.{% endblock %}
 
 {%  block content %}
-<div class="grid-row main-wrapper--lg">
-  <div class="grid-column-two-thirds">
-    <button class="button button--action" type="button" onclick="handleClick('{{ session['data-folder'] }}')">Start matching</button>
+<div class="grid-row">
+  <div class="grid-column-two-thirds" id="matching">
+    
+    <button id="match-button" class="button button--action" type="button" onclick="handleClick('{{ session['data-folder'] }}')">Start matching</button>
   </div>
 </div>
 {% endblock %}
+
