@@ -1,4 +1,10 @@
 function handleClick(data_folder) {
+  
+  const matching = document.getElementById('matching');
+
+  matching.innerHTML = '<blockquote class="warning-text"><h2 class="heading-sm">Matching has started</h2><p>Your matches are being made. This can take a few minutes. You will be automatically redirected when matching is complete.</p></blockquote>';
+
+  
   fetch('/tasks', {
     method: 'POST',
     headers: {
@@ -23,7 +29,13 @@ function getStatus(taskID) {
     if (taskStatus === 'SUCCESS') {
       const downloadURL = res.task_result;
       // Redirect to the download page
-      window.location.replace(downloadURL)
+      const matchButton = document.getElementById('match-button');
+      const waitMessage = document.getElementById('wait-message');
+      
+      matching.innerHTML = '<blockquote class="warning-text"><h2 class="heading-sm">Matching is complete</h2><p>Mentors and mentees have been matched. You will be redirected in 3 seconds.</p></blockquote>';
+      setTimeout(function() {
+        window.location.replace(downloadURL)
+      }, 3000);
     }
     if (taskStatus === 'SUCCESS' || taskStatus === 'FAILURE') return false;
     setTimeout(function() {
@@ -35,8 +47,6 @@ function getStatus(taskID) {
 }
 
 function redirectToDone() {
-  // Redirect to the 'finished' page
-  // @jonodrew – this will need to also handle the download and deletion!
     setTimeout(function () {
         window.location.replace("/finished")
     }, 1000);
