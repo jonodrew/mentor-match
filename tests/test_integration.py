@@ -12,10 +12,7 @@ from matching.process import create_participant_list_from_path
 from app.tasks.tasks import async_process_data
 
 
-@pytest.mark.skipif(
-    os.environ.get("ENV") != "integration",
-    reason="These tests require a running instance of a backing service",
-)
+@pytest.mark.integration
 class TestIntegration:
     def test_input_data(
         self,

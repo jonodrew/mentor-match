@@ -1,9 +1,11 @@
 import pathlib
 from unittest.mock import patch, Mock
 
+import pytest
 from flask import url_for, session
 
 
+@pytest.mark.unit
 def test_when_processing_uploaded_data_deleted(client, test_data_path, write_test_file):
     for filename in ("mentors.csv", "mentees.csv"):
         write_test_file(filename)
