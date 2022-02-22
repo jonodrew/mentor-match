@@ -95,3 +95,18 @@ class TestIntegration:
         assert pathlib.Path(
             os.path.join(current_app.config["UPLOAD_FOLDER"]), processing_id
         ).exists()
+
+    def test_delete_route(self, client, known_file, test_data_path):
+        for participant in ("mentor", "mentee"):
+            known_file(
+                pathlib.Path(current_app.config["UPLOAD_FOLDER"], "12345"),
+                participant,
+                50,
+            )
+        assert os.path.exists(
+            pathlib.Path(current_app.config["UPLOAD_FOLDER"], "12345", "mentors.csv")
+        )
+        client.delete(url_for("main.delete_data_folder", data_folder="12345"))
+        assert not os.path.exists(
+            pathlib.Path(current_app.config["UPLOAD_FOLDER"], "12345", "mentors.csv")
+        )

@@ -12,6 +12,7 @@ from flask import (
     send_from_directory,
     after_this_request,
     session,
+    Response,
 )
 import pathlib
 import shutil
@@ -177,3 +178,14 @@ def get_status(task_id):
             )
             result["task_result"] = url_for("main.download", task_id=task_id)
     return result, 200
+
+
+@main_bp.route("/<data_folder>:str", methods=["DELETE"])
+def delete_data_folder(data_folder):
+    try:
+        shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], data_folder))
+        status_code = 202
+    except FileNotFoundError:
+        status_code = 404
+    finally:
+        return Response(status=status_code)
