@@ -1,4 +1,6 @@
+import datetime
 import os.path
+from datetime import timedelta
 
 from flask import (
     make_response,
@@ -19,7 +21,7 @@ from werkzeug.utils import secure_filename, redirect
 from app.extensions import celery
 from app.main import main_bp
 from app.helpers import valid_files, random_string
-from app.tasks.tasks import async_process_data
+from app.tasks.tasks import async_process_data, delete_mailing_lists_after_period
 from matching.factory import ParticipantFactory
 from matching.mentee import Mentee
 from matching.mentor import Mentor
@@ -79,6 +81,13 @@ def upload():
 
 @main_bp.route("/download/<task_id>", methods=["GET"])
 def download(task_id):
+    @after_this_request
+    def delete_files(response):
+        delete_mailing_lists_after_period.apply_async(
+            (task_id,), eta=datetime.datetime.now() + timedelta(minutes=15)
+        )
+        return response
+
     return render_template("output.html", title="Download matches", data_folder=task_id)
 
 
