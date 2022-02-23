@@ -20,7 +20,10 @@ def test_when_processing_uploaded_data_deleted(client, test_data_path, write_tes
 
 
 @pytest.mark.unit
-@patch("app.tasks.tasks.requests.delete", return_value=MagicMock, autospec=True)
-def test_delete_calls_correct_path(patched_delete):
-    delete_mailing_lists_after_period("12345")
-    patched_delete.assert_called_with("localhost:5001/12345")
+def test_delete_calls_correct_path():
+    with patch(
+        "app.tasks.tasks.requests.delete", return_value=MagicMock()
+    ) as patched_delete:
+        patched_delete.status_code.return_value = 202
+        delete_mailing_lists_after_period("12345")
+        patched_delete.assert_called_with("http://app:5000/tasks/12345")

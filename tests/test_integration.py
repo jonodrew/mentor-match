@@ -106,7 +106,7 @@ class TestIntegration:
         assert os.path.exists(
             pathlib.Path(current_app.config["UPLOAD_FOLDER"], "12345", "mentors.csv")
         )
-        client.delete(url_for("main.delete_data_folder", data_folder="12345"))
+        client.delete(url_for("main.tasks", task_id="12345"))
         assert not os.path.exists(
             pathlib.Path(current_app.config["UPLOAD_FOLDER"], "12345", "mentors.csv")
         )
