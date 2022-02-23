@@ -1,10 +1,10 @@
 function handleClick(data_folder) {
-  
+
   const matching = document.getElementById('matching');
 
   matching.innerHTML = '<blockquote class="warning-text"><h2 class="heading-sm">Matching has started</h2><p>Your matches are being made. This can take a few minutes. You will be automatically redirected when matching is complete.</p></blockquote>';
 
-  
+
   fetch('/tasks', {
     method: 'POST',
     headers: {
@@ -17,7 +17,7 @@ function handleClick(data_folder) {
 }
 
 function getStatus(taskID) {
-  fetch(`/tasks/${taskID}`, {
+  fetch(`/tasks/status/${taskID}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ function getStatus(taskID) {
       // Redirect to the download page
       const matchButton = document.getElementById('match-button');
       const waitMessage = document.getElementById('wait-message');
-      
+
       matching.innerHTML = '<blockquote class="warning-text"><h2 class="heading-sm">Matching is complete</h2><p>Mentors and mentees have been matched. You will be redirected in 3 seconds.</p></blockquote>';
       setTimeout(function() {
         window.location.replace(downloadURL)

@@ -1,4 +1,6 @@
+import datetime
 import os.path
+from datetime import timedelta
 
 from flask import (
     make_response,
@@ -19,7 +21,7 @@ from werkzeug.utils import secure_filename, redirect
 from app.extensions import celery
 from app.main import main_bp
 from app.helpers import valid_files, random_string
-from app.tasks.tasks import async_process_data
+from app.tasks.tasks import async_process_data, delete_mailing_lists_after_period
 from matching.factory import ParticipantFactory
 from matching.mentee import Mentee
 from matching.mentor import Mentor
@@ -79,41 +81,15 @@ def upload():
 
 @main_bp.route("/download/<task_id>", methods=["GET"])
 def download(task_id):
-    return render_template("output.html", title="Download matches", data_folder=task_id)
-
-
-@main_bp.route("/<task_id>", methods=["GET"])
-def download_task(task_id):
     @after_this_request
-    def remove_files(response):
-        shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id))
-        os.remove(pathlib.Path(current_app.config["UPLOAD_FOLDER"], f"{task_id}.zip"))
+    def delete_files(response):
+        period = int(os.getenv("DATA_STORAGE_PERIOD_SECS", 900))
+        delete_mailing_lists_after_period.apply_async(
+            (task_id,), eta=datetime.datetime.now() + timedelta(seconds=period)
+        )
         return response
 
-    data_path = pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id)
-    current_app.logger.debug(data_path)
-    shutil.make_archive(
-        base_name=data_path,
-        format="zip",
-        root_dir=data_path,
-    )
-    return send_from_directory(
-        directory=pathlib.Path(current_app.config["UPLOAD_FOLDER"]),
-        path=f"{task_id}.zip",
-    )
-
-
-@main_bp.route("/process", methods=["GET"])
-def process():
-    if not session.get("data-folder"):
-        return redirect(url_for("main.upload"))
-    else:
-        return render_template("process.html")
-
-
-@main_bp.route("/finished", methods=["GET"])
-def finished():
-    return render_template("done.html")
+    return render_template("output.html", title="Download matches", data_folder=task_id)
 
 
 @main_bp.route("/tasks", methods=["POST"])
@@ -141,7 +117,7 @@ def run_task():
     return jsonify(task_id=task.id), 202
 
 
-@main_bp.route("/tasks/<task_id>", methods=["GET"])
+@main_bp.route("/tasks/status/<task_id>", methods=["GET"])
 def get_status(task_id):
     """
     This route checks the status of the long-running celery task. Once the task is complete it returns the
@@ -168,3 +144,58 @@ def get_status(task_id):
             )
             result["task_result"] = url_for("main.download", task_id=task_id)
     return result, 200
+
+
+@main_bp.route("/tasks/<task_id>", methods=["GET", "DELETE"])
+def tasks(task_id):
+    """
+    This does two things:
+    on GET: the data in the path `pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id)` is zipped and served to
+    the  user. Following this request, the data and the zipped data are deleted.
+    on DELETE: the server attempts to delete the data in the path
+    `pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id) and returns either a 202 if successful or a 404 if the
+    file doesn't exist
+    :param task_id:
+    :return:
+    """
+    if request.method == "GET":
+
+        @after_this_request
+        def remove_files(response):
+            shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id))
+            os.remove(
+                pathlib.Path(current_app.config["UPLOAD_FOLDER"], f"{task_id}.zip")
+            )
+            return response
+
+        data_path = pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id)
+        current_app.logger.debug(data_path)
+        shutil.make_archive(
+            base_name=data_path,
+            format="zip",
+            root_dir=data_path,
+        )
+        return send_from_directory(
+            directory=pathlib.Path(current_app.config["UPLOAD_FOLDER"]),
+            path=f"{task_id}.zip",
+        )
+    elif request.method == "DELETE":
+        try:
+            shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id))
+            status_code = 202
+        except FileNotFoundError:
+            status_code = 404
+        return jsonify(), status_code
+
+
+@main_bp.route("/process", methods=["GET"])
+def process():
+    if not session.get("data-folder"):
+        return redirect(url_for("main.upload"))
+    else:
+        return render_template("process.html")
+
+
+@main_bp.route("/finished", methods=["GET"])
+def finished():
+    return render_template("done.html")

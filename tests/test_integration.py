@@ -12,10 +12,7 @@ from matching.process import create_participant_list_from_path
 from app.tasks.tasks import async_process_data
 
 
-@pytest.mark.skipif(
-    os.environ.get("ENV") != "integration",
-    reason="These tests require a running instance of a backing service",
-)
+@pytest.mark.integration
 class TestIntegration:
     def test_input_data(
         self,
@@ -98,3 +95,18 @@ class TestIntegration:
         assert pathlib.Path(
             os.path.join(current_app.config["UPLOAD_FOLDER"]), processing_id
         ).exists()
+
+    def test_delete_route(self, client, known_file, test_data_path):
+        for participant in ("mentor", "mentee"):
+            known_file(
+                pathlib.Path(current_app.config["UPLOAD_FOLDER"], "12345"),
+                participant,
+                50,
+            )
+        assert os.path.exists(
+            pathlib.Path(current_app.config["UPLOAD_FOLDER"], "12345", "mentors.csv")
+        )
+        client.delete(url_for("main.tasks", task_id="12345"))
+        assert not os.path.exists(
+            pathlib.Path(current_app.config["UPLOAD_FOLDER"], "12345", "mentors.csv")
+        )

@@ -1,5 +1,6 @@
 import csv
 import math
+import os
 import pathlib
 from datetime import datetime
 import pytest as pytest
@@ -110,3 +111,15 @@ def predictable_random_string(monkeypatch):
         return "abcdef"
 
     monkeypatch.setattr(app.helpers, "random_string", predictable_string)
+
+
+@pytest.fixture
+def write_test_file(test_data_path):
+    def _write_test_file(filename):
+        filepath = pathlib.Path(test_data_path, "12345", filename)
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        f = open(filepath, "w")
+        f.write("Fake data")
+        f.close()
+
+    return _write_test_file

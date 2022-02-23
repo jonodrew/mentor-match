@@ -4,6 +4,7 @@ import pytest
 from flask import current_app, session, url_for
 
 
+@pytest.mark.unit
 class TestUpload:
     @pytest.mark.parametrize(
         ["file_ending", "api_response"], (["csv", 200], ["doc", 415], ["csv.exe", 415])
