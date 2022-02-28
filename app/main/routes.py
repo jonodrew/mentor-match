@@ -11,7 +11,6 @@ from flask import (
     url_for,
     send_from_directory,
     after_this_request,
-    session,
 )
 import pathlib
 import shutil
@@ -60,8 +59,13 @@ def upload():
                 file.save(
                     os.path.join(current_app.config["UPLOAD_FOLDER"], folder, filename)
                 )
-                session["data-folder"] = folder
-            return redirect(url_for("main.process"))
+            response = make_response(redirect(url_for("main.process")))
+            response.set_cookie(
+                "data-folder",
+                folder,
+                expires=datetime.datetime.now() + timedelta(minutes=30),
+            )
+            return response
         else:
             if len(files) != 2:
                 error_message = (
@@ -190,7 +194,7 @@ def tasks(task_id):
 
 @main_bp.route("/process", methods=["GET"])
 def process():
-    if not session.get("data-folder"):
+    if not request.cookies.get("data-folder"):
         return redirect(url_for("main.upload"))
     else:
         return render_template("process.html")

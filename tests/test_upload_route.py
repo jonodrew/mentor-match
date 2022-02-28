@@ -1,7 +1,7 @@
 import io
 import pathlib
 import pytest
-from flask import current_app, session, url_for
+from flask import current_app, url_for, request
 
 
 @pytest.mark.unit
@@ -108,8 +108,9 @@ class TestUpload:
                 ]
             },
             content_type="multipart/form-data",
+            follow_redirects=True,
         )
-        assert session["data-folder"] == "abcdef"
+        assert request.cookies.get("data-folder") == "abcdef"
 
     def test_valid_upload_redirects_to_process_page(self, client):
         response = client.post(

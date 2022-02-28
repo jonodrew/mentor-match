@@ -4,7 +4,7 @@ import time
 from unittest.mock import patch
 
 import pytest
-from flask import current_app, session, url_for
+from flask import current_app, url_for, request
 from matching.mentee import Mentee
 from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path
@@ -42,9 +42,9 @@ class TestIntegration:
             for fp in files:
                 fp.close()
         patched_random.stop()
-        data_folder = session["data-folder"]
+        cookie_value = request.cookies.get("data-folder")
         assert resp.status_code == 200
-        assert data_folder == "abcdef"
+        assert cookie_value == "abcdef"
 
     def test_process_data(self, celery_app, celery_worker, known_file, test_data_path):
         known_file(test_data_path, "mentee", 50)
