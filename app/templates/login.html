@@ -1,0 +1,41 @@
+{% extends "page-with-header.html" %}
+{% block title %}Log in{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumbs--list-item">
+    <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+  </li>
+{% endblock %}
+
+{% block pagecaption %}Mentor matcher{% endblock %}
+{% block pageheading %}Log in{% endblock %}
+{% block pageexcerpt %}This service is still in development. Please login to view it.{% endblock %}
+
+{% block content %}
+<div class="grid-row">
+  <div class="grid-column-two-thirds">
+    <form method=post enctype=multipart/form-data action="{{ url_for('auth.login') }}">
+      {% if error_message %}
+        <blockquote class="error warning-text">
+          <p><strong>An error has occurred</strong></p>
+          <p>{{ error_message }}</p>
+        </blockquote>
+      {% endif %}
+      <div class="form-group" style="padding-bottom: 45px;">
+        <label class="label label-lg" for="username">
+          Username
+        </label>
+          <input class="input" type="text" name="username" id="username">
+          <label class="label label-lg" for="password">
+              Password
+          </label>
+        <input class="input" type="password" name="password" id="password">
+      </div>
+      <input type="submit" class="button button--action" value="Login ❯">
+    </form>
+  </div>
+</div>
+{% endblock %}
