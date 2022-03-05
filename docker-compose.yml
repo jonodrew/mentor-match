@@ -19,8 +19,6 @@ services:
       - FLASK_ENV=development
       - REDIS_URL=redis://redis:6379/0
       - OAUTHLIB_INSECURE_TRANSPORT=1
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
 
     volumes:
       - ./tests:/tests
