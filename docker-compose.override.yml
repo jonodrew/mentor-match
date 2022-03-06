@@ -3,3 +3,6 @@ services:
   app:
     volumes:
       - ./app:/app
+    environment:
+      - USERNAME=CSLGBT
+      - PASSWORD=HorseBatteryStapleCorrect
