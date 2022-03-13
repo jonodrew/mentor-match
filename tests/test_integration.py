@@ -57,7 +57,7 @@ class TestIntegration:
             mentor.to_dict()
             for mentor in create_participant_list_from_path(Mentor, test_data_path)
         ]
-        task = async_process_data.delay((mentors, mentees))
+        task = async_process_data.delay((mentors, mentees), [])
         while not task.state == "SUCCESS":
             time.sleep(1)
         assert len(task.result[0]) == 50
