@@ -117,7 +117,14 @@ def run_task():
         mentee.to_dict()
         for mentee in create_participant_list_from_path(Mentee, path_to_data=folder)
     ]
-    task = async_process_data.delay((mentors, mentees))
+    task = async_process_data.delay(
+        (mentors, mentees),
+        [
+            {"profession": 4, "grade": 3, "unmatched bonus": 0},
+            {"profession": 4, "grade": 3, "unmatched bonus": 50},
+            {"profession": 0, "grade": 3, "unmatched bonus": 100},
+        ],
+    )
     return jsonify(task_id=task.id), 202
 
 
