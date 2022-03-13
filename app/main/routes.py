@@ -194,10 +194,11 @@ def tasks(task_id):
 
 @main_bp.route("/process", methods=["GET"])
 def process():
-    if not request.cookies.get("data-folder"):
+    data_folder = request.cookies.get("data-folder")
+    if not data_folder:
         return redirect(url_for("main.upload"))
     else:
-        return render_template("process.html")
+        return render_template("process.html", data_folder=data_folder)
 
 
 @main_bp.route("/finished", methods=["GET"])
