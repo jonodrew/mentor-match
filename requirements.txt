@@ -46,7 +46,7 @@ kombu==5.2.3
 lettuce==0.2.23
 Mako==1.1.6
 MarkupSafe==2.0.1
-mentor-match==3.0.0
+mentor-match==4.0.1
 mock==4.0.3
 munkres==1.1.4
 mypy==0.910
