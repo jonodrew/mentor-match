@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+
+## [1.0.2] - 2022-04-15
+
+## Changed
+
+- There's now a mapping function to convert the csv file the CS LGBT+ network uses into the format required by the
+  underlying library. Remember to update this when the headings in the csv file change.
+
 ## [1.0.0] - 2022-03-12
 Welcome to version 1 of this interface to the mentor-matching project! Thanks to a change in the underlying package we use, we've had to make a bit of a tweak to the package. So we figured why not actually write a changelog for this, for the first time ever?
 
