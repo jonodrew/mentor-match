@@ -1,3 +1,4 @@
+import csv
 import os.path
 import pathlib
 import time
@@ -9,6 +10,7 @@ from matching.mentee import Mentee
 from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path
 
+import app.helpers
 from app.tasks.tasks import async_process_data
 from app.helpers import form_to_library_mapping
 
@@ -100,6 +102,17 @@ class TestIntegration:
         assert pathlib.Path(
             os.path.join(current_app.config["UPLOAD_FOLDER"]), processing_id
         ).exists()
+        with open(
+            pathlib.Path(
+                os.path.join(current_app.config["UPLOAD_FOLDER"]),
+                processing_id,
+                "mentors-list.csv",
+            )
+        ) as csv_file:
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                assert row["grade"] in app.helpers.grades()
+                assert row.get("match 1 grade") in app.helpers.grades()
 
     def test_delete_route(self, client, known_file, test_data_path):
         for participant in ("mentor", "mentee"):
