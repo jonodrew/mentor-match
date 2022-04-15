@@ -5,7 +5,7 @@ on:
 env:
   REDIS_URL: redis@redis
 jobs:
-  unit-test:
+  well-written-test:
     runs-on: ubuntu-20.04
 
     steps:
@@ -27,15 +27,9 @@ jobs:
       - name: Test with flake8
         run: flake8 --max-line-length=131 --extend-ignore=E203 tests/ app/
 
-      - name: Test with pytest and generate coverage
-        run: |
-          pytest -m unit --cache-clear --cov=app tests/ > pytest-coverage.txt
-
-      - name: Comment coverage
-        uses: coroo/pytest-coverage-commentator@v1.0.2
 
   get-commit-tag:
-    needs: unit-test
+    needs: well-written-test
     runs-on: ubuntu-20.04
     outputs:
       image_commit_tag: ${{ steps.vars.outputs.image_commit_tag }}
@@ -50,7 +44,7 @@ jobs:
           echo "::set-output name=image_commit_tag::$(git rev-parse --short HEAD)"
 
 
-  integration-tests:
+  all-tests:
     needs:
       - get-commit-tag
     env:
@@ -68,8 +62,12 @@ jobs:
 
       - name: Compose environment
         run: docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
-      - name: Test
-        run: docker-compose exec -T app pytest tests -m integration --cache-clear --cov-apend --cov=app tests/ > pytest-coverage.txt
+
+      - name: Full test suite
+        run: docker-compose exec -T app pytest tests --cache-clear --cov=app tests/ > pytest-coverage.txt
+
+      - name: Comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2
 
       - name: Stop docker
         if: ${{ env.ACT }}
