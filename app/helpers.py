@@ -2,6 +2,24 @@ import string
 import random
 from typing import Union
 
+from matching.person import Person
+
+
+def grades() -> list[str]:
+    return [
+        "AA",
+        "AO",
+        "EO",
+        "HEO",
+        "SEO",
+        "Grade 7",
+        "Grade 6",
+        "SCS1",
+        "SCS2",
+        "SCS3",
+        "SCS4",
+    ]
+
 
 def valid_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() == "csv"
@@ -56,17 +74,17 @@ def form_to_library_mapping(
 
 
 def convert_grade_to_int(grade: str) -> int:
-    grades = [
-        "AA",
-        "AO",
-        "EO",
-        "HEO",
-        "SEO",
-        "Grade 7",
-        "Grade 6",
-        "SCS1",
-        "SCS2",
-        "SCS3",
-        "SCS4",
-    ]
-    return grades.index(grade)
+    return grades().index(grade)
+
+
+def make_participant_grade_human_readable(participant: Person) -> Person:
+    """
+    This function takes a participant and translates their grade, as well as all the grades pf their connections
+    :param participant:
+    :return:
+    """
+    participant.grade = grades()[participant.grade]
+    if len(participant.connections) != 0:
+        for connection in participant.connections:
+            connection.grade = grades()[connection.grade]
+    return participant
