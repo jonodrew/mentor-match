@@ -25,6 +25,8 @@ from matching.factory import ParticipantFactory
 from matching.mentee import Mentee
 from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path, create_mailing_list
+from app.helpers import form_to_library_mapping as mapping_func
+from app.helpers import make_participant_grade_human_readable
 
 
 @main_bp.route("/", methods=["GET"])
@@ -111,11 +113,15 @@ def run_task():
 
     mentors = [
         mentor.to_dict()
-        for mentor in create_participant_list_from_path(Mentor, path_to_data=folder)
+        for mentor in create_participant_list_from_path(
+            Mentor, path_to_data=folder, mapping_func=mapping_func
+        )
     ]
     mentees = [
         mentee.to_dict()
-        for mentee in create_participant_list_from_path(Mentee, path_to_data=folder)
+        for mentee in create_participant_list_from_path(
+            Mentee, path_to_data=folder, mapping_func=mapping_func
+        )
     ]
     task = async_process_data.delay(
         (mentors, mentees),
@@ -146,6 +152,10 @@ def get_status(task_id):
             participants = [
                 ParticipantFactory.create_from_dict(participant_dict)
                 for participant_dict in matched_participant_list
+            ]
+            participants = [
+                make_participant_grade_human_readable(participant)
+                for participant in participants
             ]
             create_mailing_list(
                 participants,
