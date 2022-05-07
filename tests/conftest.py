@@ -1,5 +1,3 @@
-import csv
-import math
 import os
 import pathlib
 import pytest as pytest
@@ -8,6 +6,7 @@ from app import create_app
 from app.config import TestConfig
 from matching.process import create_participant_list_from_path
 from app.classes import CSMentee, CSMentor
+from app.helpers import known_file as kf
 
 
 @pytest.fixture(scope="function")
@@ -52,44 +51,44 @@ def base_mentor(base_mentor_data):
 
 @pytest.fixture(scope="function")
 def known_file(base_data):
-    def _known_file(path_to_file, role_type: str, quantity=50):
-        padding_size = int(math.log10(quantity)) + 1
-        pathlib.Path(path_to_file).mkdir(parents=True, exist_ok=True)
-        data_path = path_to_file / f"{role_type}s.csv"
-        with open(data_path, "w", newline="") as test_data:
-            data = {
-                "first name": role_type,
-                "last name": "",
-                "email address": "",
-                "both mentor and mentee": "no",
-                "job title": "Some role",
-                "grade": "EO" if role_type == "mentor" else "AA",
-                "organisation": f"Department of {role_type.capitalize()}s",
-                "biography": "Test biography",
-            }
-            if role_type == "mentor":
-                data["profession"] = "Policy"
-                data["characteristics"] = "bisexual, transgender"
-            elif role_type == "mentee":
-                data["target profession"] = "Policy"
-                data["match with similar identity"] = "yes"
-                data["identity to match"] = "bisexual"
-            else:
-                raise ValueError
-            rows = []
-            for i in range(quantity):
-                data["last name"] = str(i).zfill(padding_size)
-                data[
-                    "email address"
-                ] = f"{role_type}.{str(i).zfill(padding_size)}@gov.uk"
-                rows.append(data.copy())
-            file_writer: csv.DictWriter[str] = csv.DictWriter(
-                test_data, list(data.keys())
-            )
-            file_writer.writeheader()
-            file_writer.writerows(rows)
-
-    return _known_file
+    return kf
+    # def _known_file(path_to_file, role_type: str, quantity=50):
+    #     padding_size = int(math.log10(quantity)) + 1
+    #     pathlib.Path(path_to_file).mkdir(parents=True, exist_ok=True)
+    #     data_path = path_to_file / f"{role_type}s.csv"
+    #     with open(data_path, "w", newline="") as test_data:
+    #         data = {
+    #             "first name": role_type,
+    #             "last name": "",
+    #             "email address": "",
+    #             "both mentor and mentee": "no",
+    #             "job title": "Some role",
+    #             "grade": "EO" if role_type == "mentor" else "AA",
+    #             "organisation": f"Department of {role_type.capitalize()}s",
+    #             "biography": "Test biography",
+    #         }
+    #         if role_type == "mentor":
+    #             data["profession"] = "Policy"
+    #             data["characteristics"] = "bisexual, transgender"
+    #         elif role_type == "mentee":
+    #             data["target profession"] = "Policy"
+    #             data["match with similar identity"] = "yes"
+    #             data["identity to match"] = "bisexual"
+    #         else:
+    #             raise ValueError
+    #         rows = []
+    #         for i in range(quantity):
+    #             data["last name"] = str(i).zfill(padding_size)
+    #             data[
+    #                 "email address"
+    #             ] = f"{role_type}.{str(i).zfill(padding_size)}@gov.uk"
+    #             rows.append(data.copy())
+    #         file_writer: csv.DictWriter[str] = csv.DictWriter(
+    #             test_data, list(data.keys())
+    #         )
+    #         file_writer.writeheader()
+    #         file_writer.writerows(rows)
+    # return _known_file
 
 
 @pytest.fixture(scope="function")
