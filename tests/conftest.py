@@ -3,7 +3,6 @@ import math
 import os
 import pathlib
 import pytest as pytest
-
 import app.helpers
 from app import create_app
 from app.config import TestConfig
@@ -12,7 +11,7 @@ from app.helpers import form_to_library_mapping
 from app.classes import CSMentee, CSMentor
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def base_data() -> dict:
     return {
         "first name": "Test",
@@ -51,7 +50,8 @@ def base_mentee(base_mentee_data):
 def base_mentor(base_mentor_data):
     return CSMentor(**base_mentor_data)
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture(scope="function")
 def known_file(base_data):
     def _known_file(path_to_file, role_type: str, quantity=50):
         padding_size = int(math.log10(quantity)) + 1
@@ -93,7 +93,7 @@ def known_file(base_data):
     return _known_file
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def test_data_path(tmpdir_factory):
     return tmpdir_factory.mktemp("data")
 
@@ -109,7 +109,7 @@ def client(test_data_path):
         yield client
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def test_participants(test_data_path, known_file):
     known_file(test_data_path, "mentee", 50)
     known_file(test_data_path, "mentor", 50)
