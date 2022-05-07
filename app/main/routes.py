@@ -23,7 +23,6 @@ from app.main import main_bp
 from app.helpers import valid_files, random_string
 from app.tasks.tasks import async_process_data, delete_mailing_lists_after_period
 from matching.process import create_participant_list_from_path, create_mailing_list
-from app.helpers import make_participant_grade_human_readable
 
 
 @main_bp.route("/", methods=["GET"])
@@ -151,10 +150,6 @@ def get_status(task_id):
             participants = [
                 CSParticipantFactory.create_from_dict(participant_dict)
                 for participant_dict in matched_participant_list
-            ]
-            participants = [
-                make_participant_grade_human_readable(participant)
-                for participant in participants
             ]
             create_mailing_list(
                 participants,

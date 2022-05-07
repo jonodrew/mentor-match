@@ -2,8 +2,6 @@ import string
 import random
 from typing import Union
 
-from matching.person import Person
-
 
 def grades() -> list[str]:
     return [
@@ -75,16 +73,3 @@ def form_to_library_mapping(
 
 def convert_grade_to_int(grade: str) -> int:
     return grades().index(grade)
-
-
-def make_participant_grade_human_readable(participant: Person) -> Person:
-    """
-    This function takes a participant and translates their grade, as well as all the grades pf their connections
-    :param participant:
-    :return:
-    """
-    participant.grade = grades()[participant.grade]
-    if len(participant.connections) != 0:
-        for connection in participant.connections:
-            connection.grade = grades()[connection.grade]
-    return participant
