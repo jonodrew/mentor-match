@@ -11,7 +11,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="mentor-match",
-    version="1.0.2",
+    version="1.1.0",
     description="A web interface for the mentor-match-package",
     long_description=README,
     long_description_content_type="text/markdown",

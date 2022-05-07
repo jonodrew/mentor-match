@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock, MagicMock
 
 import pytest
 from flask import url_for, session
-from app.tasks.tasks import delete_mailing_lists_after_period
+from app.tasks.tasks import delete_mailing_lists_after_period, async_process_data
 
 
 @pytest.mark.unit
@@ -27,3 +27,12 @@ def test_delete_calls_correct_path():
         patched_delete.status_code.return_value = 202
         delete_mailing_lists_after_period("12345")
         patched_delete.assert_called_with("http://app:5000/tasks/12345")
+
+
+@pytest.mark.unit
+def test_async_process_data(base_mentee_data, base_mentor_data):
+    test_data = ([{"csmentor": base_mentor_data}], [{"csmentee": base_mentee_data}])
+    test_weightings = []
+    assert async_process_data(
+        data_to_process=test_data, weightings_list=test_weightings
+    )

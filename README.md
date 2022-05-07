@@ -22,6 +22,8 @@ You will need:
 - admin rights, or at least enough rights to install stuff
 - `git`
 - a file of mentors and mentees. These files should be called "mentees.csv" and "mentors.csv", and align to the template in [the data folder](./app/static/data/small)
+  - you can add any columns you want, but if you change any of the existing column headings things will go sideways
+    quickly. So don't do that
 
 Start by [cloning this repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository).
 Then [set up a virtual environment](https://docs.python.org/3/library/venv.html), to make sure the things you're about to

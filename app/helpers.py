@@ -1,8 +1,8 @@
+import csv
+import math
+import pathlib
 import string
 import random
-from typing import Union
-
-from matching.person import Person
 
 
 def grades() -> list[str]:
@@ -48,43 +48,35 @@ def random_string():
     return "".join(random.choice(string.ascii_lowercase) for _ in range(10))
 
 
-def form_to_library_mapping(
-    form_dict: dict[str, str], participant_type: str
-) -> dict[str, Union[str, int]]:
-    mapping = {
-        f"Do you want to sign up as a {participant_type}?": participant_type,
-        "Your first name": "first name",
-        "Your last name": "last name",
-        "Your Civil Service email address": "email",
-        "Your job title or role": "role",
-        "Your department or agency": "organisation",
-        "Your grade": "grade",
-        "Your profession": "current profession",
-    }
-    new_dict: dict[str, Union[str, int]] = {}
-    for key, value in form_dict.items():
-        if key in mapping:
-            if key == "Your grade":
-                new_dict[mapping[key]] = convert_grade_to_int(value)
-            else:
-                new_dict[mapping[key]] = value
+def known_file(path_to_file, role_type: str, quantity=50):
+    padding_size = int(math.log10(quantity)) + 1
+    pathlib.Path(path_to_file).mkdir(parents=True, exist_ok=True)
+    data_path = path_to_file / f"{role_type}s.csv"
+    with open(data_path, "w", newline="") as test_data:
+        data = {
+            "first name": role_type,
+            "last name": "",
+            "email address": "",
+            "both mentor and mentee": "no",
+            "job title": "Some role",
+            "grade": "EO" if role_type == "mentor" else "AA",
+            "organisation": f"Department of {role_type.capitalize()}s",
+            "biography": "Test biography",
+        }
+        if role_type == "mentor":
+            data["profession"] = "Policy"
+            data["characteristics"] = "bisexual, transgender"
+        elif role_type == "mentee":
+            data["target profession"] = "Policy"
+            data["match with similar identity"] = "yes"
+            data["identity to match"] = "bisexual"
         else:
-            new_dict[key] = value
-    return new_dict
-
-
-def convert_grade_to_int(grade: str) -> int:
-    return grades().index(grade)
-
-
-def make_participant_grade_human_readable(participant: Person) -> Person:
-    """
-    This function takes a participant and translates their grade, as well as all the grades pf their connections
-    :param participant:
-    :return:
-    """
-    participant.grade = grades()[participant.grade]
-    if len(participant.connections) != 0:
-        for connection in participant.connections:
-            connection.grade = grades()[connection.grade]
-    return participant
+            raise ValueError
+        rows = []
+        for i in range(quantity):
+            data["last name"] = str(i).zfill(padding_size)
+            data["email address"] = f"{role_type}.{str(i).zfill(padding_size)}@gov.uk"
+            rows.append(data.copy())
+        file_writer: csv.DictWriter[str] = csv.DictWriter(test_data, list(data.keys()))
+        file_writer.writeheader()
+        file_writer.writerows(rows)
