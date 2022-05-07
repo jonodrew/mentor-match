@@ -17,15 +17,12 @@ import shutil
 
 from werkzeug.utils import secure_filename, redirect
 
+from app.classes import CSMentor, CSMentee, CSParticipantFactory
 from app.extensions import celery
 from app.main import main_bp
 from app.helpers import valid_files, random_string
 from app.tasks.tasks import async_process_data, delete_mailing_lists_after_period
-from matching.factory import ParticipantFactory
-from matching.mentee import Mentee
-from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path, create_mailing_list
-from app.helpers import form_to_library_mapping as mapping_func
 from app.helpers import make_participant_grade_human_readable
 
 
@@ -114,13 +111,15 @@ def run_task():
     mentors = [
         mentor.to_dict()
         for mentor in create_participant_list_from_path(
-            Mentor, path_to_data=folder, mapping_func=mapping_func
+            CSMentor,
+            path_to_data=folder,
         )
     ]
     mentees = [
         mentee.to_dict()
         for mentee in create_participant_list_from_path(
-            Mentee, path_to_data=folder, mapping_func=mapping_func
+            CSMentee,
+            path_to_data=folder,
         )
     ]
     task = async_process_data.delay(
@@ -150,7 +149,7 @@ def get_status(task_id):
     if task_result.status == "SUCCESS":
         for matched_participant_list in task_result.result:
             participants = [
-                ParticipantFactory.create_from_dict(participant_dict)
+                CSParticipantFactory.create_from_dict(participant_dict)
                 for participant_dict in matched_participant_list
             ]
             participants = [
