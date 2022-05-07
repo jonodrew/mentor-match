@@ -7,7 +7,6 @@ import app.helpers
 from app import create_app
 from app.config import TestConfig
 from matching.process import create_participant_list_from_path
-from app.helpers import form_to_library_mapping
 from app.classes import CSMentee, CSMentor
 
 
@@ -113,8 +112,8 @@ def client(test_data_path):
 def test_participants(test_data_path, known_file):
     known_file(test_data_path, "mentee", 50)
     known_file(test_data_path, "mentor", 50)
-    create_participant_list_from_path(CSMentee, test_data_path, form_to_library_mapping)
-    create_participant_list_from_path(CSMentor, test_data_path, form_to_library_mapping)
+    create_participant_list_from_path(CSMentee, test_data_path)
+    create_participant_list_from_path(CSMentor, test_data_path)
     yield
 
 

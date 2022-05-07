@@ -1,6 +1,5 @@
 import string
 import random
-from typing import Union
 
 
 def grades() -> list[str]:
@@ -44,32 +43,3 @@ def valid_files(filenames: list[str]) -> bool:
 
 def random_string():
     return "".join(random.choice(string.ascii_lowercase) for _ in range(10))
-
-
-def form_to_library_mapping(
-    form_dict: dict[str, str], participant_type: str
-) -> dict[str, Union[str, int]]:
-    mapping = {
-        f"Do you want to sign up as a {participant_type}?": participant_type,
-        "Your first name": "first name",
-        "Your last name": "last name",
-        "Your Civil Service email address": "email",
-        "Your job title or role": "role",
-        "Your department or agency": "organisation",
-        "Your grade": "grade",
-        "Your profession": "current profession",
-    }
-    new_dict: dict[str, Union[str, int]] = {}
-    for key, value in form_dict.items():
-        if key in mapping:
-            if key == "Your grade":
-                new_dict[mapping[key]] = convert_grade_to_int(value)
-            else:
-                new_dict[mapping[key]] = value
-        else:
-            new_dict[key] = value
-    return new_dict
-
-
-def convert_grade_to_int(grade: str) -> int:
-    return grades().index(grade)

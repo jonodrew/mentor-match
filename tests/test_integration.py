@@ -11,7 +11,6 @@ from matching.process import create_participant_list_from_path
 import app.helpers
 from app.classes import CSMentee, CSMentor
 from app.tasks.tasks import async_process_data
-from app.helpers import form_to_library_mapping
 
 
 @pytest.mark.integration
@@ -53,15 +52,11 @@ class TestIntegration:
         known_file(test_data_path, "mentor", 50)
         mentees = [
             mentee.to_dict()
-            for mentee in create_participant_list_from_path(
-                CSMentee, test_data_path, form_to_library_mapping
-            )
+            for mentee in create_participant_list_from_path(CSMentee, test_data_path)
         ]
         mentors = [
             mentor.to_dict()
-            for mentor in create_participant_list_from_path(
-                CSMentor, test_data_path, form_to_library_mapping
-            )
+            for mentor in create_participant_list_from_path(CSMentor, test_data_path)
         ]
         task = async_process_data.delay((mentors, mentees), [])
         while not task.state == "SUCCESS":
