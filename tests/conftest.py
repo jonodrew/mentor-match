@@ -2,8 +2,6 @@ import csv
 import math
 import os
 import pathlib
-from datetime import datetime
-
 import pytest as pytest
 
 import app.helpers
@@ -17,13 +15,14 @@ from app.classes import CSMentee, CSMentor
 @pytest.fixture(scope="session")
 def base_data() -> dict:
     return {
-        "Your first name": "Test",
-        "Your last name": "Data",
-        "Your Civil Service email address": "test@data.com",
-        "Your job title or role": "N/A",
-        "Your department or agency": "Department of Fun",
-        "Your grade": "Grade 7",
-        "Your profession": "Policy",
+        "first name": "Test",
+        "last name": "Data",
+        "email address": "test@data.com",
+        "job title": "N/A",
+        "organisation": "Department of Fun",
+        "grade": "Grade 7",
+        "profession": "Policy",
+        "biography": "Test biography",
     }
 
 
@@ -59,37 +58,37 @@ def known_file(base_data):
         pathlib.Path(path_to_file).mkdir(parents=True, exist_ok=True)
         data_path = path_to_file / f"{role_type}s.csv"
         with open(data_path, "w", newline="") as test_data:
-            headings = [
-                "Timestamp",
-                f"Do you want to sign up as a {role_type}?",
-                "Do you agree to us using the information you provide to us in this"
-                " way?",
-                "Your first name",
-                "Your last name",
-                "Your Civil Service email address",
-                "Your job title or role",
-                "Your department or agency",
-                "Your grade",
-                "Your profession",
-            ]
-            data = [headings]
+            data = {
+                "first name": role_type,
+                "last name": "",
+                "email address": "",
+                "both mentor and mentee": "no",
+                "job title": "Some role",
+                "grade": "EO" if role_type == "mentor" else "AA",
+                "organisation": f"Department of {role_type.capitalize()}s",
+                "biography": "Test biography",
+            }
+            if role_type == "mentor":
+                data["profession"] = "Policy"
+                data["characteristics"] = "bisexual, transgender"
+            elif role_type == "mentee":
+                data["target profession"] = "Policy"
+                data["match with similar identity"] = "yes"
+                data["identity to match"] = "bisexual"
+            else:
+                raise ValueError
+            rows = []
             for i in range(quantity):
-                data.append(
-                    [
-                        str(datetime.now()),
-                        "yes",
-                        "yes",
-                        role_type,
-                        str(i).zfill(padding_size),
-                        f"{role_type}.{str(i).zfill(padding_size)}@gov.uk",
-                        "Some role",
-                        f"Department of {role_type.capitalize()}s",
-                        "EO" if role_type == "mentor" else "AA",
-                        "Participant",
-                    ]
-                )
-            file_writer = csv.writer(test_data)
-            file_writer.writerows(data)
+                data["last name"] = str(i).zfill(padding_size)
+                data[
+                    "email address"
+                ] = f"{role_type}.{str(i).zfill(padding_size)}@gov.uk"
+                rows.append(data.copy())
+            file_writer: csv.DictWriter[str] = csv.DictWriter(
+                test_data, list(data.keys())
+            )
+            file_writer.writeheader()
+            file_writer.writerows(rows)
 
     return _known_file
 
