@@ -6,11 +6,10 @@ from unittest.mock import patch
 
 import pytest
 from flask import current_app, url_for, request
-from matching.mentee import Mentee
-from matching.mentor import Mentor
 from matching.process import create_participant_list_from_path
 
 import app.helpers
+from app.classes import CSMentee, CSMentor
 from app.tasks.tasks import async_process_data
 from app.helpers import form_to_library_mapping
 
@@ -55,13 +54,13 @@ class TestIntegration:
         mentees = [
             mentee.to_dict()
             for mentee in create_participant_list_from_path(
-                Mentee, test_data_path, form_to_library_mapping
+                CSMentee, test_data_path, form_to_library_mapping
             )
         ]
         mentors = [
             mentor.to_dict()
             for mentor in create_participant_list_from_path(
-                Mentor, test_data_path, form_to_library_mapping
+                CSMentor, test_data_path, form_to_library_mapping
             )
         ]
         task = async_process_data.delay((mentors, mentees), [])
