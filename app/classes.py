@@ -26,6 +26,7 @@ class CSPerson:
 
     def __init__(self, **kwargs):
         self.biography = kwargs.get("biography")
+        self.both = True if kwargs.get("both mentor and mentee") == "yes" else False
         self.map_input_to_model(kwargs)
         super(CSPerson, self).__init__(**kwargs)
 
