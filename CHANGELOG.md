@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+## [1.1.0]
+
+### Added
+
+- New classes! There's now a CSMentor and a CSMentee, to reflect the specific needs of these users.
+
+### Changed
+
+- The input spreadsheet has changed again, which is why this is a minor update on 1.0.2. This reflects the 2022/23
+  round of mentoring, where we're including more data and tweaking how we match people
 
 ## [1.0.2] - 2022-04-15
 
