@@ -49,6 +49,7 @@ class CSPerson:
         data["email address"] = data.pop("email")
         data["grade"] = self.val_grade_to_str(int(data.get("grade", "0")))
         data["biography"] = self.biography
+        data["both mentor and mentee"] = "yes" if self.both else "no"
 
 
 class CSMentee(CSPerson, Mentee):

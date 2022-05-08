@@ -20,6 +20,7 @@ def base_data() -> dict:
         "grade": "Grade 7",
         "profession": "Policy",
         "biography": "Test biography",
+        "both mentor and mentee": "no",
     }
 
 
