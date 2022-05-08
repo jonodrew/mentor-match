@@ -3,9 +3,10 @@ from typing import Union
 from matching.factory import ParticipantFactory
 from matching.mentee import Mentee
 from matching.mentor import Mentor
+from matching.person import Person
 
 
-class CSPerson:
+class CSPerson(Person):
     """
     This interface contains methods for mapping CS-specific grades, as well as the specific fields in the CS spreadsheet
     """
@@ -51,6 +52,24 @@ class CSPerson:
         data["biography"] = self.biography
         data["both mentor and mentee"] = "yes" if self.both else "no"
 
+    def to_dict_for_output(self, depth=1) -> dict:
+        return {
+            "first name": self.first_name,
+            "last name": self.last_name,
+            "email address": self.email,
+            "number of matches": len(self.connections),
+            "mentor only": "no",
+            "mentee only": "no",
+            "both mentor and mentee": "yes" if self.both else "no",
+            **{
+                f"match {i} biography": match.biography
+                for i, match in enumerate(self.connections)
+            },
+            "match details": "\n".join([match.biography for match in self.connections])
+            if self.connections
+            else None,
+        }
+
 
 class CSMentee(CSPerson, Mentee):
     def __init__(self, **kwargs):
@@ -63,6 +82,12 @@ class CSMentee(CSPerson, Mentee):
         self.map_model_to_output(data)
         data["identity to match"] = self.characteristic
         return core
+
+    def to_dict_for_output(self, depth=1) -> dict:
+        output = super(CSMentee, self).to_dict_for_output()
+        if not self.both:
+            output["mentee only"] = "yes"
+        return output
 
 
 class CSMentor(CSPerson, Mentor):
@@ -78,6 +103,12 @@ class CSMentor(CSPerson, Mentor):
         data["characteristics"] = ", ".join(self.characteristics)
         data["profession"] = self.current_profession
         return core
+
+    def to_dict_for_output(self, depth=1) -> dict:
+        output = super(CSMentor, self).to_dict_for_output()
+        if not self.both:
+            output["mentor only"] = "yes"
+        return output
 
 
 class CSParticipantFactory(ParticipantFactory):
