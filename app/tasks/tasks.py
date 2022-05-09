@@ -37,7 +37,8 @@ def async_process_data(
         ),
         rl.Generic(
             {True: 4, False: 0},
-            lambda match: match.mentee.characteristic in match.mentor.characteristics,
+            lambda match: match.mentee.characteristic in match.mentor.characteristics
+            and match.mentee.characteristic != "",
         ),
     ]
     all_rules = [base_rules for _ in range(3)]
