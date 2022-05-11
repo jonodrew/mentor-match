@@ -28,10 +28,10 @@ def async_process_data(
         ),
         rl.Disqualify(rl.Grade(target_diff=2, logical_operator=operator.gt).evaluate),
         rl.Disqualify(rl.Grade(target_diff=0, logical_operator=operator.le).evaluate),
-        rl.Grade(1, operator.eq, {True: 3, False: 0}),
-        rl.Grade(2, operator.eq, {True: 6, False: 0}),
+        rl.Grade(1, operator.eq, {True: 10, False: 0}),
+        rl.Grade(2, operator.eq, {True: 7, False: 0}),
         rl.Generic(
-            {True: 5, False: 0},
+            {True: 8, False: 0},
             lambda match: match.mentee.target_profession
             == match.mentor.current_profession,
         ),
