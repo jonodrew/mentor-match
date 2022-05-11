@@ -101,7 +101,6 @@ def random_data(role_type: str):
             "Department of"
             f" {random.choice(['Fun', 'Truth', 'Joy', 'Love', 'Virtue', 'Peace'])}"
         ),
-        "biography": "Test biography",
         "profession": random.choice(["Policy", "DDaT", "Operations", "HR", "Security"]),
     }
     if role_type == "mentor":
@@ -151,6 +150,12 @@ def random_file(role_type: str, quantity: int = 50):
             data = random_data(role_type)
             data["last name"] = str(i).zfill(padding_size)
             data["email address"] = f"{role_type}.{str(i).zfill(padding_size)}@gov.uk"
+            data["biography"] = (
+                f'My name is {data["first name"]} {data["last name"]}. I am a'
+                f' {data["grade"]}. I am in the {data["organisation"]}, in the'
+                f' {data["profession"]} profession. My characteristics is/are'
+                f' {data.get("characteristics", data.get("identity to match"))}. '
+            )
             rows.append(data.copy())
         file_writer: csv.DictWriter[str] = csv.DictWriter(test_data, list(data.keys()))
         file_writer.writeheader()
