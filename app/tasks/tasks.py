@@ -28,22 +28,21 @@ def async_process_data(
         ),
         rl.Disqualify(rl.Grade(target_diff=2, logical_operator=operator.gt).evaluate),
         rl.Disqualify(rl.Grade(target_diff=0, logical_operator=operator.le).evaluate),
-        rl.Grade(1, operator.eq, {True: 10, False: 0}),
-        rl.Grade(2, operator.eq, {True: 7, False: 0}),
+        rl.Grade(1, operator.eq, {True: 12, False: 0}),
+        rl.Grade(2, operator.eq, {True: 9, False: 0}),
         rl.Generic(
-            {True: 8, False: 0},
+            {True: 10, False: 0},
             lambda match: match.mentee.target_profession
             == match.mentor.current_profession,
         ),
         rl.Generic(
-            {True: 4, False: 0},
+            {True: 6, False: 0},
             lambda match: match.mentee.characteristic in match.mentor.characteristics
             and match.mentee.characteristic != "",
         ),
+        rl.UnmatchedBonus(2),
     ]
     all_rules = [base_rules for _ in range(3)]
-    for i, rules in enumerate(all_rules):
-        rules.append(rl.UnmatchedBonus(10**i))
     matched_mentors, matched_mentees = process.process_data(
         mentors, mentees, weightings_list, all_rules=all_rules
     )
