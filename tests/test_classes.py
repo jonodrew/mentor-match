@@ -15,7 +15,7 @@ def test_CSMentor_to_dict(base_data):
 
 @pytest.mark.unit
 def test_CSMentee_to_dict(base_data):
-    base_data["target profession"] = base_data.pop("profession")
+    base_data["target profession"] = base_data.get("profession")
     mentor = CSMentee(**base_data)
     for key, value in base_data.items():
         assert value in mentor.to_dict()[mentor.class_name()].values()
