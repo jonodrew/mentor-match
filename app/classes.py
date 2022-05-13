@@ -75,12 +75,14 @@ class CSMentee(CSPerson, Mentee):
     def __init__(self, **kwargs):
         self.characteristic = kwargs.get("identity to match")
         super(CSMentee, self).__init__(**kwargs)
+        self.target_profession = kwargs.get("profession")
 
     def core_to_dict(self) -> dict[str, dict[str, Union[str, list]]]:
         core = super(CSMentee, self).core_to_dict()
         data = core[self.class_name()]
         self.map_model_to_output(data)
         data["identity to match"] = self.characteristic
+        data["profession"] = self.target_profession
         return core
 
     def to_dict_for_output(self, depth=1) -> dict:
