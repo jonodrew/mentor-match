@@ -15,7 +15,7 @@ def test_CSMentor_to_dict(base_data):
 
 @pytest.mark.unit
 def test_CSMentee_to_dict(base_data):
-    base_data["target profession"] = base_data.pop("profession")
+    base_data["target profession"] = base_data.get("profession")
     mentor = CSMentee(**base_data)
     for key, value in base_data.items():
         assert value in mentor.to_dict()[mentor.class_name()].values()
@@ -44,3 +44,20 @@ def test_matches_and_rules(base_mentor, base_mentee):
     match.rules = [rule]
     match.calculate_match()
     assert match.score == 3
+
+
+@pytest.mark.unit
+def test_export(base_mentor, base_mentee, base_mentor_data):
+    base_mentor.connections.extend([base_mentee, base_mentee])
+    assert base_mentor.to_dict_for_output() == {
+        "both mentor and mentee": "no",
+        "email address": "test@data.com",
+        "first name": "Test",
+        "last name": "Data",
+        "match 0 biography": "Test biography",
+        "match 1 biography": "Test biography",
+        "match details": "Test biography\nTest biography",
+        "mentee only": "no",
+        "mentor only": "yes",
+        "number of matches": 2,
+    }

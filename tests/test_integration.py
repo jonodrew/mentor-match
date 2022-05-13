@@ -8,7 +8,6 @@ import pytest
 from flask import current_app, url_for, request
 from matching.process import create_participant_list_from_path
 
-import app.helpers
 from app.classes import CSMentee, CSMentor
 from app.tasks.tasks import async_process_data
 
@@ -104,9 +103,19 @@ class TestIntegration:
             )
         ) as csv_file:
             reader = csv.DictReader(csv_file)
-            for row in reader:
-                assert row["grade"] in app.helpers.grades()
-                assert row.get("match 1 grade") in app.helpers.grades()
+            assert list(next(reader).keys()) == [
+                "first name",
+                "last name",
+                "email address",
+                "number of matches",
+                "mentor only",
+                "mentee only",
+                "both mentor and mentee",
+                "match 0 biography",
+                "match 1 biography",
+                "match 2 biography",
+                "match details",
+            ]
 
     def test_delete_route(self, client, known_file, test_data_path):
         for participant in ("mentor", "mentee"):

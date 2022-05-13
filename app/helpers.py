@@ -1,8 +1,11 @@
 import csv
 import math
+import operator
 import pathlib
 import string
 import random
+from matching.rules.rule import AbstractRule
+import matching.rules.rule as rl
 
 
 def grades() -> list[str]:
@@ -96,12 +99,11 @@ def random_data(role_type: str):
         "job title": "Some role",
         "grade": grades()[random.randint(2, len(grades()) - 1)]
         if role_type == "mentor"
-        else grades()[random.randint(0, len(grades()) - 3)],
+        else grades()[random.randint(0, len(grades()) - 2)],
         "organisation": (
             "Department of"
             f" {random.choice(['Fun', 'Truth', 'Joy', 'Love', 'Virtue', 'Peace'])}"
         ),
-        "biography": "Test biography",
         "profession": random.choice(["Policy", "DDaT", "Operations", "HR", "Security"]),
     }
     if role_type == "mentor":
@@ -118,7 +120,7 @@ def random_data(role_type: str):
                             "Transgender",
                             "Non-binary",
                         ],
-                        random.randint(1, 3),
+                        random.randint(1, 2),
                     )
                 ),
             ]
@@ -142,16 +144,53 @@ def random_data(role_type: str):
     return data
 
 
+def rows_of_random_data(role_type: str, quantity: int = 50):
+    rows = []
+    padding_size = int(math.log10(quantity)) + 1
+    for i in range(quantity):
+        data = random_data(role_type)
+        data["last name"] = str(i).zfill(padding_size)
+        data["email address"] = f"{role_type}.{str(i).zfill(padding_size)}@gov.uk"
+        data["biography"] = (
+            f'My name is {data["first name"]} {data["last name"]}. I am a'
+            f' {data["grade"]}. I am in the {data["organisation"]}, in the'
+            f' {data["profession"]} profession. My characteristics is/are'
+            f' {data.get("characteristics", data.get("identity to match"))}. '
+        )
+        rows.append(data.copy())
+    return rows
+
+
 def random_file(role_type: str, quantity: int = 50):
     data_path = f"{role_type}s.csv"
     with open(data_path, "w", newline="") as test_data:
-        rows = []
-        padding_size = int(math.log10(quantity)) + 1
-        for i in range(quantity):
-            data = random_data(role_type)
-            data["last name"] = str(i).zfill(padding_size)
-            data["email address"] = f"{role_type}.{str(i).zfill(padding_size)}@gov.uk"
-            rows.append(data.copy())
-        file_writer: csv.DictWriter[str] = csv.DictWriter(test_data, list(data.keys()))
+        rows = rows_of_random_data(role_type, quantity)
+        file_writer: csv.DictWriter[str] = csv.DictWriter(
+            test_data, list(rows[0].keys())
+        )
         file_writer.writeheader()
         file_writer.writerows(rows)
+
+
+def base_rules() -> list[AbstractRule]:
+    return [
+        rl.Disqualify(
+            lambda match: match.mentee.organisation == match.mentor.organisation
+        ),
+        rl.Disqualify(rl.Grade(target_diff=2, logical_operator=operator.gt).evaluate),
+        rl.Disqualify(rl.Grade(target_diff=0, logical_operator=operator.le).evaluate),
+        rl.Disqualify(lambda match: match.mentee in match.mentor.mentees),
+        rl.Grade(1, operator.eq, {True: 12, False: 0}),
+        rl.Grade(2, operator.eq, {True: 9, False: 0}),
+        rl.Generic(
+            {True: 10, False: 0},
+            lambda match: match.mentee.target_profession
+            == match.mentor.current_profession,
+        ),
+        rl.Generic(
+            {True: 3, False: 0},
+            lambda match: match.mentee.characteristic in match.mentor.characteristics
+            and match.mentee.characteristic != "",
+        ),
+        rl.UnmatchedBonus(2),
+    ]

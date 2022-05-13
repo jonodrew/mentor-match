@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+## [2.0.0] - 2022-05-08
+
+### Changed
+
+- The spreadsheet outputs have radically changed. This aligns with changes needed by the CSLGBTQ+ network for the next
+  round of mentoring. In future releases, I'm going to try to generalise these changes so that other networks can
+  use the system with greater ease. However, if you relied on the old spreadsheet, **DO NOT UPDATE TO THIS VERSION**.
+  The new headings are:
+
+| first name | last name | email address | number of matches | mentor only | mentee only | both mentor and mentee | match details |
+|------------|-----------|---------------|-------------------|-------------|-------------|------------------------|---------------|
+
+- the weightings have also changed:
+
+| quality                    | old weighting | new weighting |
+|----------------------------|---------------|---------------|
+| exactly 2 grades different | 6             | 12            |
+| exactly 1 grade different  | 3             | 9             |
+| target profession          | 5             | 10            |
+| characteristic match       | 4             | 6             |
+
 ## [1.1.0]
 
 ### Added
