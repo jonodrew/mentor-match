@@ -4,9 +4,8 @@ import requests
 from typing import Tuple, List, Dict
 from app.extensions import celery
 from matching import process
-import matching.rules.rule as rl
-import operator
 from app.classes import CSParticipantFactory
+from app.helpers import base_rules
 
 
 @celery.task(name="async_process_data", bind=True)
@@ -21,28 +20,7 @@ def async_process_data(
     mentees = [
         CSParticipantFactory.create_from_dict(data) for data in data_to_process[1]
     ]
-    # hard-code the Rules in here, and work out how to pass them over as JSON/pickle later
-    base_rules: List[rl.AbstractRule] = [
-        rl.Disqualify(
-            lambda match: match.mentee.organisation == match.mentor.organisation
-        ),
-        rl.Disqualify(rl.Grade(target_diff=2, logical_operator=operator.gt).evaluate),
-        rl.Disqualify(rl.Grade(target_diff=0, logical_operator=operator.le).evaluate),
-        rl.Grade(1, operator.eq, {True: 12, False: 0}),
-        rl.Grade(2, operator.eq, {True: 9, False: 0}),
-        rl.Generic(
-            {True: 10, False: 0},
-            lambda match: match.mentee.target_profession
-            == match.mentor.current_profession,
-        ),
-        rl.Generic(
-            {True: 6, False: 0},
-            lambda match: match.mentee.characteristic in match.mentor.characteristics
-            and match.mentee.characteristic != "",
-        ),
-        rl.UnmatchedBonus(2),
-    ]
-    all_rules = [base_rules for _ in range(3)]
+    all_rules = [base_rules() for _ in range(3)]
     matched_mentors, matched_mentees = process.process_data(
         mentors, mentees, weightings_list, all_rules=all_rules
     )
