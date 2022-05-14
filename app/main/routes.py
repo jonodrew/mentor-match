@@ -123,11 +123,6 @@ def run_task():
     ]
     task = async_process_data.delay(
         (mentors, mentees),
-        [
-            {"profession": 4, "grade": 3, "unmatched bonus": 0},
-            {"profession": 4, "grade": 3, "unmatched bonus": 50},
-            {"profession": 0, "grade": 3, "unmatched bonus": 100},
-        ],
     )
     return jsonify(task_id=task.id), 202
 

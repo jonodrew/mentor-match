@@ -40,7 +40,7 @@ def test_matches_and_rules(base_mentor, base_mentee):
         {True: 3, False: 0},
         lambda match: match.mentee.characteristic in match.mentor.characteristics,
     )
-    match = Match(base_mentor, base_mentee, {}, [])
+    match = Match(base_mentor, base_mentee, [])
     match.rules = [rule]
     match.calculate_match()
     assert match.score == 3
