@@ -1,7 +1,7 @@
 import os
 
 import requests
-from typing import Tuple, List, Dict
+from typing import Tuple, List
 from app.extensions import celery
 from matching import process
 from app.classes import CSParticipantFactory
@@ -12,17 +12,13 @@ from app.helpers import base_rules
 def async_process_data(
     self,
     data_to_process: Tuple[List[dict], List[dict]],
-    weightings_list: List[Dict[str, int]],
 ) -> Tuple[List[dict], List[dict]]:
-    mentors = [
-        CSParticipantFactory.create_from_dict(data) for data in data_to_process[0]
-    ]
-    mentees = [
-        CSParticipantFactory.create_from_dict(data) for data in data_to_process[1]
-    ]
+    mentor_data, mentee_data = data_to_process
+    mentors = map(CSParticipantFactory.create_from_dict, mentor_data)
+    mentees = map(CSParticipantFactory.create_from_dict, mentee_data)
     all_rules = [base_rules() for _ in range(3)]
     matched_mentors, matched_mentees = process.process_data(
-        mentors, mentees, weightings_list, all_rules=all_rules
+        list(mentors), list(mentees), all_rules=all_rules
     )
     matched_as_dict = [participant.to_dict() for participant in matched_mentors], [
         participant.to_dict() for participant in matched_mentees
