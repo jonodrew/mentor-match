@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+## [2.0.1] - 2022-05-19
+
+### Changed
+
+- the spreadsheet output filenames have changed from "mentee" to "csmentee" and "mentor" to "csmentor"
+
 ## [2.0.0] - 2022-05-08
 
 ### Changed
