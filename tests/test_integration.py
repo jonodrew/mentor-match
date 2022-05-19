@@ -99,7 +99,7 @@ class TestIntegration:
             pathlib.Path(
                 os.path.join(current_app.config["UPLOAD_FOLDER"]),
                 processing_id,
-                "mentors-list.csv",
+                "csmentors-list.csv",
             )
         ) as csv_file:
             reader = csv.DictReader(csv_file)
