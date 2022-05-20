@@ -34,7 +34,7 @@ def base_mentor_data(base_data):
 
 @pytest.fixture
 def base_mentee_data(base_data):
-    base_data["target profession"] = "Policy"
+    # base_data["target profession"] = "Policy"
     base_data["match with similar identity"] = "yes"
     base_data["identity to match"] = "bisexual"
     return base_data
