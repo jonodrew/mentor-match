@@ -30,6 +30,7 @@ class CSPerson(Person):
         self.both = True if kwargs.get("both mentor and mentee") == "yes" else False
         self.map_input_to_model(kwargs)
         super(CSPerson, self).__init__(**kwargs)
+        self._connections: list[Union[None, CSPerson]] = []
 
     @classmethod
     def str_grade_to_val(cls, grade: str):
@@ -38,6 +39,10 @@ class CSPerson(Person):
     @classmethod
     def val_grade_to_str(cls, grade: int):
         return cls.grade_mapping[grade]
+
+    @property
+    def connections(self) -> list["CSPerson"]:
+        return self._connections
 
     @staticmethod
     def map_input_to_model(data: dict):
@@ -75,14 +80,20 @@ class CSMentee(CSPerson, Mentee):
     def __init__(self, **kwargs):
         self.characteristic = kwargs.get("identity to match")
         super(CSMentee, self).__init__(**kwargs)
-        self.target_profession = kwargs.get("profession")
+
+    @property
+    def target_profession(self):
+        return self.profession
+
+    @target_profession.setter
+    def target_profession(self, profession: str):
+        self.profession = profession
 
     def core_to_dict(self) -> dict[str, dict[str, Union[str, list]]]:
         core = super(CSMentee, self).core_to_dict()
         data = core[self.class_name()]
         self.map_model_to_output(data)
         data["identity to match"] = self.characteristic
-        data["profession"] = self.target_profession
         return core
 
     def to_dict_for_output(self, depth=1) -> dict:
@@ -95,15 +106,21 @@ class CSMentee(CSPerson, Mentee):
 class CSMentor(CSPerson, Mentor):
     def __init__(self, **kwargs):
         self.characteristics: list[str] = kwargs.get("characteristics", "").split(", ")
-        kwargs["current profession"] = kwargs["profession"]
         super(CSMentor, self).__init__(**kwargs)
+
+    @property
+    def current_profession(self):
+        return self.profession
+
+    @current_profession.setter
+    def current_profession(self, profession: str):
+        self.profession = profession
 
     def core_to_dict(self) -> dict[str, dict[str, Union[str, list]]]:
         core = super(CSMentor, self).core_to_dict()
         data = core[self.class_name()]
         self.map_model_to_output(data)
         data["characteristics"] = ", ".join(self.characteristics)
-        data["profession"] = self.current_profession
         return core
 
     def to_dict_for_output(self, depth=1) -> dict:
