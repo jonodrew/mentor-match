@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+## [2.1.0] - 2022-05-20
+
+### Changed
+
+- The `CSMentee`/`CSMentor` classes now expose `target_profession` and `current_profession` as properties. This
+  doesn't impact the running of the service.
+
 ## [2.0.2] - 2022-05-19
 
 ### Changed
