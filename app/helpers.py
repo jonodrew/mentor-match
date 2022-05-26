@@ -192,5 +192,5 @@ def base_rules() -> list[AbstractRule]:
             lambda match: match.mentee.characteristic in match.mentor.characteristics
             and match.mentee.characteristic != "",
         ),
-        rl.UnmatchedBonus(2),
+        rl.UnmatchedBonus(6),
     ]
