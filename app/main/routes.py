@@ -1,4 +1,5 @@
 import datetime
+import json
 import os.path
 from datetime import timedelta
 
@@ -92,7 +93,7 @@ def download(task_id):
         return response
 
     if request.method == "GET":
-        count_data = request.args.get("count_data")
+        count_data = json.loads(request.args.to_dict().get("count_data"))
         return render_template(
             "output.html",
             title="Download matches",
@@ -169,7 +170,7 @@ def get_status(task_id):
                 ),
             )
             result["task_result"] = url_for(
-                "main.download", task_id=task_id, count_data=outputs
+                "main.download", task_id=task_id, count_data=json.dumps(outputs)
             )
         current_app.logger.debug(outputs)
     return result, 200
