@@ -18,20 +18,107 @@
 
 <div class="grid-row">
   <div class="grid-column-two-thirds">
-	<p>The matching process is now complete.
+	  <p>The matching process is now complete. Use the button to download your matches.</p>
+    
+    <a href="{{ url_for("main.tasks", task_id=data_folder) }}" onclick="redirectToDone()" class="button button--action" id="download-matches" title="Download matching results">Download matches</a>
 
-        {% set counts = overview["csmentor"] %}
-        <br>
-        There were {{ counts["0_matches"] }} mentors with no matches, {{ counts["1_matches"] }} with one match,
-        {{ counts["2_matches"] }} with two matches, and {{ counts["3_matches"] }} with four matches.
+    <hr>
 
-        {% set counts = overview["csmentee"] %}
-        <br>
-        There were {{ counts["0_matches"] }} mentees with no matches, {{ counts["1_matches"] }} with one match,
-        {{ counts["2_matches"] }} with two matches, and {{ counts["3_matches"] }} with four matches.
-        <br>
-        Use the button to download your matches.</p>
-      <a href="{{ url_for("main.tasks", task_id=data_folder) }}" onclick="redirectToDone()" class="button button--action" id="download-matches" title="Download matching results">Download matches</a>
+    <h2>Matching results summary</h2>
+    
+    {% set counts = overview["csmentor"] %}
+    
+    <h3>Mentor matches</h3>
+    
+    <table>
+      <thead>
+        <th>
+          Mentors with
+        </th>
+        <th>
+          Count
+        </th>
+      </thead>
+      <tr>
+        <td>
+          No matches
+        </td>
+        <td>
+          {{ counts["0_matches"] }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          1 match
+        </td>
+        <td>
+          {{ counts["1_matches"] }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          2 matches
+        </td>
+        <td>
+          {{ counts["2_matches"] }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          3 matchs
+        </td>
+        <td>
+          {{ counts["3_matches"] }}
+        </td>
+      </tr>
+    </table>
+
+    {% set counts = overview["csmentee"] %}
+    
+    <h3>Mentee matches</h3>
+    
+    <table>
+      <thead>
+        <th>
+          Mentees with
+        </th>
+        <th>
+          Count
+        </th>
+      </thead>
+      <tr>
+        <td>
+          No matches
+        </td>
+        <td>
+          {{ counts["0_matches"] }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          1 match
+        </td>
+        <td>
+          {{ counts["1_matches"] }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          2 matches
+        </td>
+        <td>
+          {{ counts["2_matches"] }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          3 matchs
+        </td>
+        <td>
+          {{ counts["3_matches"] }}
+        </td>
+      </tr>
+    </table>
   </div>
 </div>
 {% endblock %}
