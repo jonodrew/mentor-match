@@ -81,7 +81,7 @@ def upload():
             )
 
 
-@main_bp.route("/download/<task_id>", methods=["GET"])
+@main_bp.route("/download/<task_id>", methods=["GET", "POST"])
 def download(task_id):
     @after_this_request
     def delete_files(response):
@@ -91,7 +91,17 @@ def download(task_id):
         )
         return response
 
-    return render_template("output.html", title="Download matches", data_folder=task_id)
+    if request.method == "GET":
+        count_data = request.args.get("count_data")
+        return render_template(
+            "output.html",
+            title="Download matches",
+            data_folder=task_id,
+            overview=count_data,
+        )
+    elif request.method == "POST":
+        # we'll ask if the user wants to go again?
+        pass
 
 
 @main_bp.route("/tasks", methods=["POST"])
@@ -141,18 +151,27 @@ def get_status(task_id):
         "task_result": "processing",
     }
     if task_result.status == "SUCCESS":
+        outputs = {}
         for matched_participant_list in task_result.result:
             participants = [
                 CSParticipantFactory.create_from_dict(participant_dict)
                 for participant_dict in matched_participant_list
             ]
+            participant_class = participants[0].class_name()
+            connections = [len(p.connections) for p in participants]
+            outputs[participant_class] = {
+                f"{i}_matches": connections.count(i) for i in range(4)
+            }
             create_mailing_list(
                 participants,
                 pathlib.Path(
                     os.path.join(current_app.config["UPLOAD_FOLDER"], task_id)
                 ),
             )
-            result["task_result"] = url_for("main.download", task_id=task_id)
+            result["task_result"] = url_for(
+                "main.download", task_id=task_id, count_data=outputs
+            )
+        current_app.logger.debug(outputs)
     return result, 200
 
 
