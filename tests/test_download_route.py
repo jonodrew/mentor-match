@@ -1,4 +1,5 @@
 import datetime
+import json
 import os
 import pathlib
 from unittest.mock import patch
@@ -32,7 +33,10 @@ def test_mailing_lists_deleted_after_get_request(
 @patch("app.main.routes.delete_mailing_lists_after_period.apply_async")
 def test_download_also_calls_async_delete_method(patched_async_delete, client):
     with freezegun.freeze_time(datetime.datetime(2022, 2, 22, 12, 1)):
-        client.get(url_for("main.download", task_id="12345"))
-        patched_async_delete.assert_called_with(
-            ("12345",), eta=datetime.datetime(2022, 2, 22, 12, 16)
-        )
+        with patch("app.main.routes.render_template", return_value="patched_page"):
+            client.get(
+                url_for("main.download", task_id="12345", count_data=json.dumps({}))
+            )
+            patched_async_delete.assert_called_with(
+                ("12345",), eta=datetime.datetime(2022, 2, 22, 12, 16)
+            )
