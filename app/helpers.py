@@ -180,17 +180,17 @@ def base_rules() -> list[AbstractRule]:
         rl.Disqualify(rl.Grade(target_diff=2, logical_operator=operator.gt).evaluate),
         rl.Disqualify(rl.Grade(target_diff=0, logical_operator=operator.le).evaluate),
         rl.Disqualify(lambda match: match.mentee in match.mentor.mentees),
-        rl.Grade(1, operator.eq, {True: 12, False: 0}),
-        rl.Grade(2, operator.eq, {True: 9, False: 0}),
+        rl.Grade(2, operator.eq, {True: 12, False: 0}),
+        rl.Grade(1, operator.eq, {True: 9, False: 0}),
         rl.Generic(
             {True: 10, False: 0},
             lambda match: match.mentee.target_profession
             == match.mentor.current_profession,
         ),
         rl.Generic(
-            {True: 3, False: 0},
+            {True: 6, False: 0},
             lambda match: match.mentee.characteristic in match.mentor.characteristics
             and match.mentee.characteristic != "",
         ),
-        rl.UnmatchedBonus(2),
+        rl.UnmatchedBonus(6),
     ]
