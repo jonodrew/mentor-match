@@ -188,7 +188,7 @@ def base_rules() -> list[AbstractRule]:
             == match.mentor.current_profession,
         ),
         rl.Generic(
-            {True: 3, False: 0},
+            {True: 6, False: 0},
             lambda match: match.mentee.characteristic in match.mentor.characteristics
             and match.mentee.characteristic != "",
         ),
