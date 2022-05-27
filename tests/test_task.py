@@ -31,5 +31,6 @@ def test_delete_calls_correct_path():
 
 @pytest.mark.unit
 def test_async_process_data(base_mentee_data, base_mentor_data):
-    test_data = ([{"csmentor": base_mentor_data}], [{"csmentee": base_mentee_data}])
-    assert async_process_data(data_to_process=test_data)
+    assert async_process_data(
+        [{"csmentor": base_mentor_data}], [{"csmentee": base_mentee_data}]
+    )

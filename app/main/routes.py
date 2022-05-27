@@ -107,8 +107,12 @@ def download(task_id):
 
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
+    """
+    This route only accepts JSON encoded requests
+    """
     current_app.logger.debug(request.get_json())
     data_folder = request.get_json()["data_folder"]
+    unmatched_value = request.form.get("unmatched_value", 6)
     folder = pathlib.Path(
         os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
     )
@@ -132,9 +136,7 @@ def run_task():
             path_to_data=folder,
         )
     ]
-    task = async_process_data.delay(
-        (mentors, mentees),
-    )
+    task = async_process_data.delay(mentors, mentees, unmatched_value)
     return jsonify(task_id=task.id), 202
 
 

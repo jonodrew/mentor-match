@@ -4,7 +4,6 @@ import operator
 import pathlib
 import string
 import random
-from matching.rules.rule import AbstractRule
 import matching.rules.rule as rl
 
 
@@ -172,7 +171,7 @@ def random_file(role_type: str, quantity: int = 50):
         file_writer.writerows(rows)
 
 
-def base_rules() -> list[AbstractRule]:
+def base_rules() -> list[rl.Rule]:
     return [
         rl.Disqualify(
             lambda match: match.mentee.organisation == match.mentor.organisation
@@ -192,5 +191,4 @@ def base_rules() -> list[AbstractRule]:
             lambda match: match.mentee.characteristic in match.mentor.characteristics
             and match.mentee.characteristic != "",
         ),
-        rl.UnmatchedBonus(6),
     ]
