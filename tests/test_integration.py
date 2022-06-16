@@ -18,8 +18,6 @@ class TestIntegration:
         self,
         test_participants,
         test_data_path,
-        celery_worker,
-        celery_app,
         client,
     ):
         src_file_paths = (
@@ -73,6 +71,7 @@ class TestIntegration:
         output,
         client,
     ):
+        print(celery_app)
         known_file(pathlib.Path(test_data_path, test_task), "mentee", output)
         known_file(pathlib.Path(test_data_path, test_task), "mentor", output)
         processing_id = client.post(
