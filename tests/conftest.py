@@ -1,3 +1,4 @@
+import logging
 import os
 import pathlib
 
@@ -101,10 +102,12 @@ def write_test_file(test_data_path):
     return _write_test_file
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def celery_config():
+    logging.debug("CALLED!")
     return {
         "broker_url": "redis://redis:6379/0",
         "result_backend": "redis://redis:6379/0",
         "accept_content": ["pickle", "json"],
+        "task_serializer": "pickle",
     }

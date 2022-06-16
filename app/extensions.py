@@ -8,4 +8,5 @@ celery = Celery(
     broker=os.environ["REDIS_URL"],
     include=["app.tasks.tasks"],
     accept_content=["pickle", "json"],
+    task_serializer="pickle",
 )

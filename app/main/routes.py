@@ -122,20 +122,14 @@ def run_task():
         shutil.rmtree(folder)
         return response
 
-    mentors = [
-        mentor.to_dict()
-        for mentor in create_participant_list_from_path(
-            CSMentor,
-            path_to_data=folder,
-        )
-    ]
-    mentees = [
-        mentee.to_dict()
-        for mentee in create_participant_list_from_path(
-            CSMentee,
-            path_to_data=folder,
-        )
-    ]
+    mentors = create_participant_list_from_path(
+        CSMentor,
+        path_to_data=folder,
+    )
+    mentees = create_participant_list_from_path(
+        CSMentee,
+        path_to_data=folder,
+    )
     task = async_process_data.delay(mentors, mentees, unmatched_value)
     return jsonify(task_id=task.id), 202
 

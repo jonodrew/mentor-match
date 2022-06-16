@@ -47,15 +47,10 @@ class TestIntegration:
     def test_process_data(self, celery_app, celery_worker, known_file, test_data_path):
         known_file(test_data_path, "mentee", 50)
         known_file(test_data_path, "mentor", 50)
-        mentees = [
-            mentee.to_dict()
-            for mentee in create_participant_list_from_path(CSMentee, test_data_path)
-        ]
-        mentors = [
-            mentor.to_dict()
-            for mentor in create_participant_list_from_path(CSMentor, test_data_path)
-        ]
-        task = async_process_data.delay(mentors, mentees)
+        task = async_process_data.delay(
+            create_participant_list_from_path(CSMentor, test_data_path),
+            create_participant_list_from_path(CSMentee, test_data_path),
+        )
         while not task.state == "SUCCESS":
             time.sleep(1)
         assert len(task.result[0]) == 50
@@ -71,7 +66,6 @@ class TestIntegration:
         output,
         client,
     ):
-        print(celery_app)
         known_file(pathlib.Path(test_data_path, test_task), "mentee", output)
         known_file(pathlib.Path(test_data_path, test_task), "mentor", output)
         processing_id = client.post(
