@@ -5,6 +5,3 @@ services:
     environment:
       - ENV=${ENV}
       - GH_IMAGE_COMMIT_TAG=${GH_IMAGE_COMMIT_TAG}
-
-  worker:
-    image: worker:${GH_IMAGE_COMMIT_TAG}
