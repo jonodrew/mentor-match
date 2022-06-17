@@ -1,16 +1,17 @@
 import os
-
+from copy import deepcopy
 import celery
 import requests
 from typing import Tuple, List
-from app.extensions import celery as celery_app
+
+from app.classes import CSMentor, CSMentee
+from app.extensions import celery_app as celery_app
 from matching import process
 from app.helpers import base_rules
 from matching.rules.rule import UnmatchedBonus
 
 
-@celery.shared_task
-@celery_app.task(name="async_process_data", bind=True, serializer="pickle")
+@celery_app.task(name="async_process_data", bind=True)
 def async_process_data(
     self,
     mentors,
@@ -23,10 +24,24 @@ def async_process_data(
     matched_mentors, matched_mentees = process.process_data(
         list(mentors), list(mentees), all_rules=all_rules
     )
-    matched_as_dict = [participant.to_dict() for participant in matched_mentors], [
-        participant.to_dict() for participant in matched_mentees
-    ]
-    return matched_as_dict
+    return matched_mentors, matched_mentees
+
+
+@celery.shared_task
+@celery_app.task
+def process_data_with_floor(
+    mentors: list[CSMentor], mentees: list[CSMentee], floor=0.7
+):
+    max_score = sum(rule.results.get(True) for rule in base_rules())
+    return celery.group(
+        async_process_data.s(deepcopy(mentors), deepcopy(mentees), i)
+        for i in range(max_score)
+    )()
+
+
+@celery_app.task
+def find_best_output(group_result):
+    pass
 
 
 @celery_app.task(name="delete_mailing_lists_after_period", bind=True)

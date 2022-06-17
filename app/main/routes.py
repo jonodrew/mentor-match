@@ -18,8 +18,8 @@ import shutil
 
 from werkzeug.utils import secure_filename, redirect
 
-from app.classes import CSMentor, CSMentee, CSParticipantFactory
-from app.extensions import celery
+from app.classes import CSMentor, CSMentee
+from app.extensions import celery_app
 from app.main import main_bp
 from app.helpers import valid_files, random_string
 from app.tasks.tasks import async_process_data, delete_mailing_lists_after_period
@@ -131,6 +131,7 @@ def run_task():
         path_to_data=folder,
     )
     task = async_process_data.delay(mentors, mentees, unmatched_value)
+    # current_app.logger.debug(process_data_with_floor.delay(mentors, mentees))
     return jsonify(task_id=task.id), 202
 
 
@@ -141,7 +142,7 @@ def get_status(task_id):
     matched participants as JSON formatted data. This data is then fed into the `create_mailing_list` function,
      where the mailing lists are saved to a folder that corresponds to the `task_id`.
     """
-    task_result = celery.AsyncResult(task_id)
+    task_result = celery_app.AsyncResult(task_id)
     result = {
         "task_id": task_id,
         "task_status": task_result.status,
@@ -149,11 +150,7 @@ def get_status(task_id):
     }
     if task_result.status == "SUCCESS":
         outputs = {}
-        for matched_participant_list in task_result.result:
-            participants = [
-                CSParticipantFactory.create_from_dict(participant_dict)
-                for participant_dict in matched_participant_list
-            ]
+        for participants in task_result.result:
             participant_class = participants[0].class_name()
             connections = [len(p.connections) for p in participants]
             outputs[participant_class] = {
@@ -168,7 +165,6 @@ def get_status(task_id):
             result["task_result"] = url_for(
                 "main.download", task_id=task_id, count_data=json.dumps(outputs)
             )
-        current_app.logger.debug(outputs)
     return result, 200
 
 

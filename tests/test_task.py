@@ -3,7 +3,11 @@ from unittest.mock import patch, Mock, MagicMock
 
 import pytest
 from flask import url_for, session
-from app.tasks.tasks import delete_mailing_lists_after_period, async_process_data
+from app.tasks.tasks import (
+    delete_mailing_lists_after_period,
+    async_process_data,
+    process_data_with_floor,
+)
 
 
 @pytest.mark.unit
@@ -32,3 +36,7 @@ def test_delete_calls_correct_path():
 @pytest.mark.unit
 def test_async_process_data(base_mentee, base_mentor):
     assert async_process_data([base_mentor], [base_mentee])
+
+
+def test_async_floor(base_mentee, base_mentor):
+    assert process_data_with_floor([base_mentor], [base_mentee]) == 5

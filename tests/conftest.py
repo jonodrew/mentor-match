@@ -110,4 +110,5 @@ def celery_config():
         "result_backend": "redis://redis:6379/0",
         "accept_content": ["pickle", "json"],
         "task_serializer": "pickle",
+        "result_serializer": "pickle",
     }
