@@ -74,11 +74,6 @@ class TestIntegration:
 
         resp = client.get(url_for("main.get_status", task_id=processing_id))
         content = resp.get_json()
-        assert content == {
-            "task_id": processing_id,
-            "task_status": "PENDING",
-            "task_result": "processing",
-        }
         assert resp.status_code == 200
         current_app.config["UPLOAD_FOLDER"] = test_data_path
         while content["task_status"] == "PENDING":
