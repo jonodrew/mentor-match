@@ -75,14 +75,11 @@ def client(test_data_path):
 
 @pytest.fixture(scope="function")
 def test_participants(test_data_path, known_file):
-    def _test_participants() -> tuple[list[CSMentor], list[CSMentee]]:
-        known_file(test_data_path, "mentee", 50)
-        known_file(test_data_path, "mentor", 50)
-        return create_participant_list_from_path(
-            CSMentor, test_data_path
-        ), create_participant_list_from_path(CSMentee, test_data_path)
-
-    return _test_participants
+    known_file(test_data_path, "mentee", 50)
+    known_file(test_data_path, "mentor", 50)
+    create_participant_list_from_path(CSMentee, test_data_path)
+    create_participant_list_from_path(CSMentor, test_data_path)
+    yield
 
 
 @pytest.fixture(autouse=True)
@@ -109,8 +106,8 @@ def write_test_file(test_data_path):
 def celery_config():
     logging.debug("CALLED!")
     return {
-        "broker_url": "redis://localhost:6379/0",
-        "result_backend": "redis://localhost:6379/0",
+        "broker_url": "redis://redis:6379/0",
+        "result_backend": "redis://redis:6379/0",
         "accept_content": ["pickle", "json"],
         "task_serializer": "pickle",
         "result_serializer": "pickle",
