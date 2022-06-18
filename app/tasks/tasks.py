@@ -17,14 +17,14 @@ def async_process_data(
     mentors,
     mentees,
     unmatched_bonus: int = 6,
-) -> Tuple[List[CSMentor], List[CSMentee]]:
+) -> Tuple[List[CSMentor], List[CSMentee], int]:
     all_rules = [base_rules() for _ in range(3)]
     for ruleset in all_rules:
         ruleset.append(UnmatchedBonus(unmatched_bonus))
     matched_mentors, matched_mentees = process.process_data(
         list(mentors), list(mentees), all_rules=all_rules
     )
-    return matched_mentors, matched_mentees
+    return matched_mentors, matched_mentees, unmatched_bonus
 
 
 @celery_app.task(bind=True)
@@ -54,7 +54,7 @@ def find_best_output(group_result: Sequence[tuple[list[CSMentor], list[CSMentee]
             best_outcome = participant_tuple
             highest = total_mentors
     if not best_outcome:
-        best_outcome = group_result[0]
+        best_outcome = group_result[0][:2]
     return best_outcome
 
 

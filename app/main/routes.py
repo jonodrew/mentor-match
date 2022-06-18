@@ -150,7 +150,7 @@ def get_status(task_id):
     }
     if task_result.status == "SUCCESS":
         outputs = {}
-        for participants in task_result.result:
+        for participants in task_result.result[:2]:
             participant_class = participants[0].class_name()
             connections = [len(p.connections) for p in participants]
             outputs[participant_class] = {
