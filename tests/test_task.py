@@ -50,7 +50,7 @@ def test_async_floor(base_mentor, base_mentee, celery_app, celery_worker):
 def test_find_best_outcome(base_mentor, base_mentee):
     base_mentor.mentees = base_mentee
     base_mentee.mentors = base_mentor
-    assert find_best_output([([base_mentor], [base_mentee])]) == (
+    assert find_best_output([([base_mentor], [base_mentee], 0)]) == (
         [base_mentor],
         [base_mentee],
     )

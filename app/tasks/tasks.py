@@ -1,4 +1,5 @@
 import os
+import sys
 from copy import deepcopy
 import celery
 import requests
@@ -43,16 +44,23 @@ def process_data_with_floor(
 
 
 @celery_app.task
-def find_best_output(group_result: Sequence[tuple[list[CSMentor], list[CSMentee]]]):
-    highest = 0
+def find_best_output(
+    group_result: Sequence[tuple[list[CSMentor], list[CSMentee], int]]
+) -> tuple[list[CSMentor], list[CSMentee]]:
+    highest_count_mentees_with_mentor = 0
     best_outcome = None
+    unmatched_bonus = sys.maxsize
     for participant_tuple in group_result:
-        total_mentors = sum(
-            map(lambda mentee: len(mentee.mentors), participant_tuple[1])
+        count_mentees_with_at_least_one_mentor = sum(
+            map(lambda mentee: len(mentee.mentors) > 0, participant_tuple[1])
         )
-        if total_mentors > highest:
-            best_outcome = participant_tuple
-            highest = total_mentors
+        if (
+            count_mentees_with_at_least_one_mentor > highest_count_mentees_with_mentor
+            and participant_tuple[2] <= unmatched_bonus
+        ):
+            best_outcome = participant_tuple[:2]
+            highest_count_mentees_with_mentor = count_mentees_with_at_least_one_mentor
+            unmatched_bonus = participant_tuple[2]
     if not best_outcome:
         best_outcome = group_result[0][:2]
     return best_outcome
