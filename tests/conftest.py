@@ -14,6 +14,9 @@ from app.helpers import known_data
 
 @pytest.fixture(scope="function")
 def base_data() -> dict:
+    """
+    This is a `dict` representation of the data in the CSV file presented to the system
+    """
     return {
         "first name": "Test",
         "last name": "Data",
@@ -37,7 +40,6 @@ def base_mentor_data(base_data):
 
 @pytest.fixture
 def base_mentee_data(base_data):
-    base_data["profession"] = "Policy"
     base_data["match with similar identity"] = "yes"
     base_data["identity to match"] = "bisexual"
     return base_data
@@ -112,6 +114,14 @@ def celery_config():
         "accept_content": ["pickle", "json"],
         "task_serializer": "pickle",
         "result_serializer": "pickle",
+    }
+
+
+@pytest.fixture(scope="session")
+def celery_worker_parameters():
+    return {
+        # 'queues': ('default'),
+        "perform_ping_check": False
     }
 
 

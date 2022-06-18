@@ -22,7 +22,11 @@ from app.classes import CSMentor, CSMentee
 from app.extensions import celery_app
 from app.main import main_bp
 from app.helpers import valid_files, random_string
-from app.tasks.tasks import async_process_data, delete_mailing_lists_after_period
+from app.tasks.tasks import (
+    async_process_data,
+    delete_mailing_lists_after_period,
+    process_data_with_floor,
+)
 from matching.process import create_participant_list_from_path, create_mailing_list
 
 
@@ -112,7 +116,10 @@ def run_task():
     """
     current_app.logger.debug(request.get_json())
     data_folder = request.get_json()["data_folder"]
-    unmatched_value = request.form.get("unmatched_value", 6)
+    try:
+        optimise_for_pairing = request.get_json()["pairing"]
+    except KeyError:
+        optimise_for_pairing = False
     folder = pathlib.Path(
         os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
     )
@@ -130,8 +137,10 @@ def run_task():
         CSMentee,
         path_to_data=folder,
     )
-    task = async_process_data.delay(mentors, mentees, unmatched_value)
-    # current_app.logger.debug(process_data_with_floor.delay(mentors, mentees))
+    if optimise_for_pairing:
+        task = process_data_with_floor.delay(mentors, mentees)
+    else:
+        task = async_process_data.delay(mentors, mentees)
     return jsonify(task_id=task.id), 202
 
 
@@ -148,8 +157,15 @@ def get_status(task_id):
         "task_status": task_result.status,
         "task_result": "processing",
     }
-    if task_result.status == "SUCCESS":
+    if task_result.ready():
+        # if task_result.status == "SUCCESS":
         outputs = {}
+        # if not isinstance(task_result.result, tuple):
+        #     task_result = task_result.result
+        print(task_result.get())
+        # TODO: This fails when we use the id returned from the chord
+        # TODO: the task_result.result is another AsyncResult - that of the group we use
+        # TODO: that result doesn't necessarily finish when the chord id returns, which makes me think I've got something wrong
         for participants in task_result.result[:2]:
             participant_class = participants[0].class_name()
             connections = [len(p.connections) for p in participants]

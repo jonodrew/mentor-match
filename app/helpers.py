@@ -52,7 +52,7 @@ def random_string():
     return "".join(random.choice(string.ascii_lowercase) for _ in range(10))
 
 
-@functools.cache
+@functools.lru_cache
 def known_file(path_to_file, role_type: str, quantity=50):
     padding_size = int(math.log10(quantity)) + 1
     pathlib.Path(path_to_file).mkdir(parents=True, exist_ok=True)
@@ -79,12 +79,11 @@ def known_data(role_type: str):
         "grade": "EO" if role_type == "mentor" else "AA",
         "organisation": f"Department of {role_type.capitalize()}s",
         "biography": "Test biography",
+        "profession": "Policy",
     }
     if role_type == "mentor":
-        data["profession"] = "Policy"
         data["characteristics"] = "bisexual, transgender"
     elif role_type == "mentee":
-        data["target profession"] = "Policy"
         data["match with similar identity"] = "yes"
         data["identity to match"] = "bisexual"
     else:

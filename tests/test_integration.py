@@ -47,17 +47,18 @@ class TestIntegration:
     def test_process_data(self, celery_app, celery_worker, known_file, test_data_path):
         known_file(test_data_path, "mentee", 50)
         known_file(test_data_path, "mentor", 50)
-        task = async_process_data.delay(
+        mentors, mentees, unmatched_bonus = async_process_data(
             create_participant_list_from_path(CSMentor, test_data_path),
             create_participant_list_from_path(CSMentee, test_data_path),
         )
-        while not task.state == "SUCCESS":
-            time.sleep(1)
-        assert len(task.result[0]) == 50
 
+        assert len(mentors) == 50 and len(mentees) == 50
+
+    @pytest.mark.parametrize("testing_value", (True, False))
     @pytest.mark.parametrize(["test_task", "output"], [("small", 10), ("large", 100)])
     def test_create_mailing_list(
         self,
+        testing_value,
         celery_app,
         celery_worker,
         known_file,
@@ -69,7 +70,7 @@ class TestIntegration:
         known_file(pathlib.Path(test_data_path, test_task), "mentee", output)
         known_file(pathlib.Path(test_data_path, test_task), "mentor", output)
         processing_id = client.post(
-            "/tasks", json={"data_folder": test_task}
+            "/tasks", json={"data_folder": test_task, "pairing": testing_value}
         ).get_json()["task_id"]
 
         resp = client.get(url_for("main.get_status", task_id=processing_id))

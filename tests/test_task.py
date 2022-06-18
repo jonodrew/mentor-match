@@ -5,8 +5,6 @@ import pytest
 from flask import url_for, session
 from app.tasks.tasks import (
     delete_mailing_lists_after_period,
-    async_process_data,
-    process_data_with_floor,
     find_best_output,
 )
 
@@ -20,7 +18,9 @@ def test_when_processing_uploaded_data_deleted(client, test_data_path, write_tes
     mock_task = Mock()
     mock_task.id = 1
     with patch("app.main.routes.async_process_data.delay", return_value=mock_task):
-        client.post(url_for("main.run_task"), json={"data_folder": "12345"})
+        client.post(
+            url_for("main.run_task"), json={"data_folder": "12345", "pairing": False}
+        )
         assert not pathlib.Path(test_data_path, "12345").exists()
 
 
@@ -32,18 +32,6 @@ def test_delete_calls_correct_path():
         patched_delete.status_code.return_value = 202
         delete_mailing_lists_after_period("12345")
         patched_delete.assert_called_with("http://app:5000/tasks/12345")
-
-
-@pytest.mark.unit
-def test_async_process_data(base_mentee, base_mentor):
-    assert async_process_data([base_mentor], [base_mentee])
-
-
-@pytest.mark.integration
-def test_async_floor(base_mentor, base_mentee, celery_app, celery_worker):
-    res = process_data_with_floor([base_mentor], [base_mentee])
-    a = res.get()
-    assert len(a) == 2
 
 
 @pytest.mark.unit

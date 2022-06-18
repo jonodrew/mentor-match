@@ -11,6 +11,8 @@ from matching import process
 from app.helpers import base_rules
 from matching.rules.rule import UnmatchedBonus
 
+sys.setrecursionlimit(10000)
+
 
 @celery_app.task(name="async_process_data", bind=True)
 def async_process_data(
@@ -33,14 +35,12 @@ def process_data_with_floor(
     self, mentors: list[CSMentor], mentees: list[CSMentee], floor=0.7
 ):
     max_score = sum(rule.results.get(True) for rule in base_rules())
-    all_permutations = celery.chord(
-        (
-            async_process_data.s(deepcopy(mentors), deepcopy(mentees), i)
-            for i in range(max_score)
-        ),
-        find_best_output.s(),
+    copies = [(deepcopy(mentors), deepcopy(mentees), i) for i in range(max_score)]
+    # group = celery.group(async_process_data.si(*data) for data in copies)
+    chord = celery.chord(
+        (async_process_data.si(*data) for data in copies), find_best_output.s()
     )
-    return all_permutations()
+    return chord()
 
 
 @celery_app.task
