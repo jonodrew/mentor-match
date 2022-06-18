@@ -17,7 +17,7 @@ def async_process_data(
     mentors,
     mentees,
     unmatched_bonus: int = 6,
-) -> Tuple[List[dict], List[dict]]:
+) -> Tuple[List[CSMentor], List[CSMentee]]:
     all_rules = [base_rules() for _ in range(3)]
     for ruleset in all_rules:
         ruleset.append(UnmatchedBonus(unmatched_bonus))
@@ -27,21 +27,33 @@ def async_process_data(
     return matched_mentors, matched_mentees
 
 
-@celery.shared_task
-@celery_app.task
+@celery_app.task(bind=True)
 def process_data_with_floor(
-    mentors: list[CSMentor], mentees: list[CSMentee], floor=0.7
+    self, mentors: list[CSMentor], mentees: list[CSMentee], floor=0.7
 ):
     max_score = sum(rule.results.get(True) for rule in base_rules())
-    return celery.group(
-        async_process_data.s(deepcopy(mentors), deepcopy(mentees), i)
-        for i in range(max_score)
-    )()
+    all_permutations = celery.chord(
+        (
+            async_process_data.s(deepcopy(mentors), deepcopy(mentees), i)
+            for i in range(max_score)
+        ),
+        find_best_output.s(),
+    )
+    return all_permutations()
 
 
 @celery_app.task
-def find_best_output(group_result):
-    pass
+def find_best_output(group_result: celery.Celery.GroupResult):
+    highest = 0
+    best_outcome = None
+    for participant_tuple in group_result:
+        total_mentors = sum(
+            map(lambda mentee: len(mentee.mentors), participant_tuple[1])
+        )
+        if total_mentors > highest:
+            best_outcome = participant_tuple
+            highest = total_mentors
+    return best_outcome
 
 
 @celery_app.task(name="delete_mailing_lists_after_period", bind=True)

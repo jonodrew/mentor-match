@@ -38,5 +38,7 @@ def test_async_process_data(base_mentee, base_mentor):
     assert async_process_data([base_mentor], [base_mentee])
 
 
-def test_async_floor(base_mentee, base_mentor):
-    assert process_data_with_floor([base_mentor], [base_mentee]) == 5
+def test_async_floor(test_participants, celery_app, celery_worker):
+    res = process_data_with_floor(*test_participants(50))
+    a = res.get()
+    assert len(a) == 2
