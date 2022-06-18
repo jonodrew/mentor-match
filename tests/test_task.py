@@ -7,6 +7,7 @@ from app.tasks.tasks import (
     delete_mailing_lists_after_period,
     async_process_data,
     process_data_with_floor,
+    find_best_output,
 )
 
 
@@ -38,7 +39,18 @@ def test_async_process_data(base_mentee, base_mentor):
     assert async_process_data([base_mentor], [base_mentee])
 
 
-def test_async_floor(test_participants, celery_app, celery_worker):
-    res = process_data_with_floor(*test_participants(50))
+@pytest.mark.integration
+def test_async_floor(base_mentor, base_mentee, celery_app, celery_worker):
+    res = process_data_with_floor([base_mentor], [base_mentee])
     a = res.get()
     assert len(a) == 2
+
+
+@pytest.mark.unit
+def test_find_best_outcome(base_mentor, base_mentee):
+    base_mentor.mentees = base_mentee
+    base_mentee.mentors = base_mentor
+    assert find_best_output([([base_mentor], [base_mentee])]) == (
+        [base_mentor],
+        [base_mentee],
+    )

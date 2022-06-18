@@ -1,9 +1,11 @@
 import csv
+import functools
 import math
 import operator
 import pathlib
 import string
 import random
+
 import matching.rules.rule as rl
 
 
@@ -50,6 +52,7 @@ def random_string():
     return "".join(random.choice(string.ascii_lowercase) for _ in range(10))
 
 
+@functools.cache
 def known_file(path_to_file, role_type: str, quantity=50):
     padding_size = int(math.log10(quantity)) + 1
     pathlib.Path(path_to_file).mkdir(parents=True, exist_ok=True)

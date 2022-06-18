@@ -2,7 +2,7 @@ import os
 from copy import deepcopy
 import celery
 import requests
-from typing import Tuple, List
+from typing import Tuple, List, Sequence
 
 from app.classes import CSMentor, CSMentee
 from app.extensions import celery_app as celery_app
@@ -43,7 +43,7 @@ def process_data_with_floor(
 
 
 @celery_app.task
-def find_best_output(group_result: celery.Celery.GroupResult):
+def find_best_output(group_result: Sequence[tuple[list[CSMentor], list[CSMentee]]]):
     highest = 0
     best_outcome = None
     for participant_tuple in group_result:
@@ -53,6 +53,8 @@ def find_best_output(group_result: celery.Celery.GroupResult):
         if total_mentors > highest:
             best_outcome = participant_tuple
             highest = total_mentors
+    if not best_outcome:
+        best_outcome = group_result[0]
     return best_outcome
 
 
