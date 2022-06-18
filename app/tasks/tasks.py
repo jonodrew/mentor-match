@@ -1,7 +1,5 @@
 import os
 import sys
-from copy import deepcopy
-import celery
 import requests
 from typing import Tuple, List, Sequence
 
@@ -28,19 +26,6 @@ def async_process_data(
         list(mentors), list(mentees), all_rules=all_rules
     )
     return matched_mentors, matched_mentees, unmatched_bonus
-
-
-@celery_app.task(bind=True)
-def process_data_with_floor(
-    self, mentors: list[CSMentor], mentees: list[CSMentee], floor=0.7
-):
-    max_score = sum(rule.results.get(True) for rule in base_rules())
-    copies = [(deepcopy(mentors), deepcopy(mentees), i) for i in range(max_score)]
-    # group = celery.group(async_process_data.si(*data) for data in copies)
-    chord = celery.chord(
-        (async_process_data.si(*data) for data in copies), find_best_output.s()
-    )
-    return chord()
 
 
 @celery_app.task
