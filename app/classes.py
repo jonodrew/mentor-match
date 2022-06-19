@@ -44,10 +44,14 @@ class CSPerson(Person):
     def connections(self) -> list["CSPerson"]:
         return self._connections
 
+    @connections.setter
+    def connections(self, new_connections):
+        self._connections = new_connections
+
     @staticmethod
     def map_input_to_model(data: dict):
         data["role"] = data["job title"]
-        data["email"] = data["email address"]
+        data["email"] = data.get("email address", data.get("email"))
         data["grade"] = CSPerson.str_grade_to_val(data.get("grade", ""))
 
     def map_model_to_output(self, data: dict):

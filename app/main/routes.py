@@ -15,14 +15,17 @@ from flask import (
 )
 import pathlib
 import shutil
-
 from werkzeug.utils import secure_filename, redirect
 
-from app.classes import CSMentor, CSMentee, CSParticipantFactory
-from app.extensions import celery
+from app.classes import CSMentor, CSMentee
+from app.extensions import celery_app
 from app.main import main_bp
 from app.helpers import valid_files, random_string
-from app.tasks.tasks import async_process_data, delete_mailing_lists_after_period
+from app.tasks.tasks import (
+    async_process_data,
+    delete_mailing_lists_after_period,
+)
+from app.tasks.helpers import most_mentees_with_at_least_one_mentor
 from matching.process import create_participant_list_from_path, create_mailing_list
 
 
@@ -107,8 +110,15 @@ def download(task_id):
 
 @main_bp.route("/tasks", methods=["POST"])
 def run_task():
+    """
+    This route only accepts JSON encoded requests
+    """
     current_app.logger.debug(request.get_json())
     data_folder = request.get_json()["data_folder"]
+    try:
+        optimise_for_pairing = request.get_json()["pairing"]
+    except KeyError:
+        optimise_for_pairing = False
     folder = pathlib.Path(
         os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
     )
@@ -118,23 +128,18 @@ def run_task():
         shutil.rmtree(folder)
         return response
 
-    mentors = [
-        mentor.to_dict()
-        for mentor in create_participant_list_from_path(
-            CSMentor,
-            path_to_data=folder,
-        )
-    ]
-    mentees = [
-        mentee.to_dict()
-        for mentee in create_participant_list_from_path(
-            CSMentee,
-            path_to_data=folder,
-        )
-    ]
-    task = async_process_data.delay(
-        (mentors, mentees),
+    mentors = create_participant_list_from_path(
+        CSMentor,
+        path_to_data=folder,
     )
+    mentees = create_participant_list_from_path(
+        CSMentee,
+        path_to_data=folder,
+    )
+    if optimise_for_pairing:
+        task = most_mentees_with_at_least_one_mentor(mentors, mentees)
+    else:
+        task = async_process_data.delay(mentors, mentees)
     return jsonify(task_id=task.id), 202
 
 
@@ -145,19 +150,15 @@ def get_status(task_id):
     matched participants as JSON formatted data. This data is then fed into the `create_mailing_list` function,
      where the mailing lists are saved to a folder that corresponds to the `task_id`.
     """
-    task_result = celery.AsyncResult(task_id)
+    task_result = celery_app.AsyncResult(task_id)
     result = {
         "task_id": task_id,
         "task_status": task_result.status,
         "task_result": "processing",
     }
-    if task_result.status == "SUCCESS":
+    if task_result.ready():
         outputs = {}
-        for matched_participant_list in task_result.result:
-            participants = [
-                CSParticipantFactory.create_from_dict(participant_dict)
-                for participant_dict in matched_participant_list
-            ]
+        for participants in task_result.result[:2]:
             participant_class = participants[0].class_name()
             connections = [len(p.connections) for p in participants]
             outputs[participant_class] = {
@@ -169,10 +170,9 @@ def get_status(task_id):
                     os.path.join(current_app.config["UPLOAD_FOLDER"], task_id)
                 ),
             )
-            result["task_result"] = url_for(
-                "main.download", task_id=task_id, count_data=json.dumps(outputs)
-            )
-        current_app.logger.debug(outputs)
+        result["task_result"] = url_for(
+            "main.download", task_id=task_id, count_data=json.dumps(outputs)
+        )
     return result, 200
 
 
