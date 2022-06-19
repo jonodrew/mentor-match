@@ -1,0 +1,58 @@
+{% extends 'page-with-header.html' %}
+{% block title %}Choose options{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumbs--list-item">
+    <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+  </li>
+{% endblock %}
+
+{% block pagecaption %}Mentor matcher{% endblock %}
+{% block pageheading %}Options{% endblock %}
+{% block pageexcerpt %}Choose how mentors and mentees are matched.{% endblock %}
+
+{%  block content %}
+<div class="grid-row">
+  <div class="grid-column-two-thirds" id="options">
+    
+    <form method=post enctype=multipart/form-data action="">
+      {% if error_message %}
+        <blockquote class="error warning-text">
+          <p><strong>An error has occurred</strong></p>
+          <p>{{ error_message }}</p>
+        </blockquote>
+      {% endif %}
+      <div class="form-group">
+        
+        <fieldset id="fieldset-outcomes" aria-describedby="fieldset-outcomes--title" class="fieldset">
+            <legend id="fieldset-outcomes--title" class="legend-md">
+              Weightings
+            </legend>
+            
+            <div class="radios">
+              
+              <div class="radios--item">
+                  <input class="radios--input" id="radios--outcomes--higher-quality-matches" name="radios--outcomes" type="radio" value="quality" checked>
+                  <label class="radios--label" for="radios--outcomes--higher-quality-matches">
+                    <strong>Optimise for the best possible matches</strong>
+                  </label>
+                  <p class="hint radios--hint">This is the fastest option. Some mentees might not receive a match.</p>
+              </div>
+              
+              <div class="radios--item">
+                  <input class="radios--input" id="radios--outcomes--fewer-unmatched-mentees" name="radios--outcomes" type="radio" value="quantity">
+                  <label class="radios--label" for="radios--outcomes--fewer-unmatched-mentees">
+                      <strong>Optimise so that the most number of mentees receive a match</strong>
+                  </label>
+                  <p class="hint radios--hint">This is a slower option but will mean more mentees receive a match than the default.</p>
+              </div>
+            
+        </fieldset>
+        
+      </div>
+      <input type="submit" class="button button--action" value="Set these options ❯">
+    </form>
+  </div>
+</div>
+{% endblock %}
