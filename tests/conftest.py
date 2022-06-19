@@ -5,12 +5,16 @@ import app.helpers
 from app import create_app
 from app.config import TestConfig
 from matching.process import create_participant_list_from_path
-from app.classes import CSMentee, CSMentor
+from app.classes import CSMentee, CSMentor, CSParticipantFactory
 from app.helpers import known_file as kf
+from app.helpers import known_data
 
 
 @pytest.fixture(scope="function")
 def base_data() -> dict:
+    """
+    This is a `dict` representation of the data in the CSV file presented to the system
+    """
     return {
         "first name": "Test",
         "last name": "Data",
@@ -34,7 +38,6 @@ def base_mentor_data(base_data):
 
 @pytest.fixture
 def base_mentee_data(base_data):
-    # base_data["target profession"] = "Policy"
     base_data["match with similar identity"] = "yes"
     base_data["identity to match"] = "bisexual"
     return base_data
@@ -98,3 +101,35 @@ def write_test_file(test_data_path):
         f.close()
 
     return _write_test_file
+
+
+@pytest.fixture(scope="session")
+def celery_config():
+    return {
+        "broker_url": os.environ.get("REDIS_URL", "redis://localhost:6379/0"),
+        "result_backend": os.environ.get("REDIS_URL", "redis://localhost:6379/0"),
+        "accept_content": ["pickle", "json"],
+        "task_serializer": "pickle",
+        "result_serializer": "pickle",
+    }
+
+
+@pytest.fixture(scope="session")
+def celery_worker_parameters():
+    return {"perform_ping_check": False}
+
+
+@pytest.fixture(scope="session")
+def known_participants():
+    def _known_participants(quantity=50) -> tuple[list[CSMentor], list[CSMentee]]:
+        mentors = [
+            CSParticipantFactory.create_from_dict({"mentor": known_data("mentor")})
+            for i in range(quantity)
+        ]
+        mentees = [
+            CSParticipantFactory.create_from_dict({"mentee": known_data("mentee")})
+            for i in range(quantity)
+        ]
+        return mentors, mentees
+
+    return _known_participants
