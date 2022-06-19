@@ -3,7 +3,10 @@ from unittest.mock import patch, Mock, MagicMock
 
 import pytest
 from flask import url_for, session
-from app.tasks.tasks import delete_mailing_lists_after_period, async_process_data
+from app.tasks.tasks import (
+    delete_mailing_lists_after_period,
+    find_best_output,
+)
 
 
 @pytest.mark.unit
@@ -15,7 +18,9 @@ def test_when_processing_uploaded_data_deleted(client, test_data_path, write_tes
     mock_task = Mock()
     mock_task.id = 1
     with patch("app.main.routes.async_process_data.delay", return_value=mock_task):
-        client.post(url_for("main.run_task"), json={"data_folder": "12345"})
+        client.post(
+            url_for("main.run_task"), json={"data_folder": "12345", "pairing": False}
+        )
         assert not pathlib.Path(test_data_path, "12345").exists()
 
 
@@ -30,6 +35,10 @@ def test_delete_calls_correct_path():
 
 
 @pytest.mark.unit
-def test_async_process_data(base_mentee_data, base_mentor_data):
-    test_data = ([{"csmentor": base_mentor_data}], [{"csmentee": base_mentee_data}])
-    assert async_process_data(data_to_process=test_data)
+def test_find_best_outcome(base_mentor, base_mentee):
+    base_mentor.mentees = base_mentee
+    base_mentee.mentors = base_mentor
+    assert find_best_output([([base_mentor], [base_mentee], 0)]) == (
+        [base_mentor],
+        [base_mentee],
+    )
