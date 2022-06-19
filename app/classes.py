@@ -28,7 +28,7 @@ class CSPerson(Person):
     def __init__(self, **kwargs):
         self.biography = kwargs.get("biography")
         self.both = True if kwargs.get("both mentor and mentee") == "yes" else False
-        self.map_input_to_model(kwargs)
+        kwargs = self.map_input_to_model(kwargs)
         super(CSPerson, self).__init__(**kwargs)
         self._connections: list[CSPerson] = []
 
@@ -44,18 +44,23 @@ class CSPerson(Person):
     def connections(self) -> list["CSPerson"]:
         return self._connections
 
+    @connections.setter
+    def connections(self, new_connections):
+        self._connections = new_connections
+
     @staticmethod
     def map_input_to_model(data: dict):
         data["role"] = data["job title"]
-        data["email"] = data["email address"]
+        data["email"] = data.get("email address", data.get("email"))
         data["grade"] = CSPerson.str_grade_to_val(data.get("grade", ""))
+        return data
 
     def map_model_to_output(self, data: dict):
         data["job title"] = data.pop("role")
-        data["email address"] = data.pop("email")
         data["grade"] = self.val_grade_to_str(int(data.get("grade", "0")))
         data["biography"] = self.biography
         data["both mentor and mentee"] = "yes" if self.both else "no"
+        return data
 
     def to_dict_for_output(self, depth=1) -> dict:
         return {

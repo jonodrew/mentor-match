@@ -26,10 +26,11 @@ services:
     command: flask run -h 0.0.0.0
 
   worker:
+    user: nobody
     build:
       context: "."
       target: worker
-    command: celery --app=app.extensions.celery worker --loglevel=info
+    command: celery --app=app.extensions.celery_app worker --loglevel=info
 
     environment:
       - FLASK_ENV=development

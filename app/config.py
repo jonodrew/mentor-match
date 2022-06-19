@@ -16,4 +16,4 @@ class TestConfig(Config):
         "interval_max": 0.5,
     }
     if os.environ.get("REDIS_URL") is None:
-        os.environ["REDIS_URL"] = "redis@redis"
+        os.environ["REDIS_URL"] = "redis://localhost:6379/0"

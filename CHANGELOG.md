@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+## [2.3.0] - 2022-06-19
+
+### Changed
+- The system now uses pickle under the hood, so please be careful - if you've not secured the connections between
+  the machines you're running this on you could really get yourself into trouble.
+- However, it has made it significantly faster - a single matching exercise is now down to just 40s, from a best of
+  97s when we were using JSON to serialize data.
+
+### Added
+
+- This is the big one. We've added functionality that will creep up an `UnmatchedBonus`. This functionality is
+  useful if you want to ensure everyone gets at least one mentor. It calculates a lot of values - one client is
+  calculating 37 different iterations of a three-round program, requiring 111 rounds of matching - so it takes a bit
+  longer to calculate. Exposing this functionality in the front end will be patched very soon, but in the meantime
+  dig around in the routes section or add a `"pairing": True` key-value pair to your JSON call to the appropriate
+  endpoint.
+- Given the huge amount of processing happening, this functionality takes a lot longer than you're expecting. It's
+  enough time to make several cups of tea - on my hardware, it's clocking in at around 7 or 8 minutes. That's a long
+  time to stare at the same screen. We'll be updating the frontend to give more feedback soon, but for the moment,
+  either check the logs from celery or accept that you'll be here a little while.
+- A note about the approach: I could have built a system that iterated over potential outcomes sequentially,
+  stopping when it got to the approach that scored above a specific threshold. I see two problems with this. First,
+  assuming that each matching process takes _n_ seconds, in the worst case iterating upwards takes _Mn_ seconds. In
+  the best case, of course, it takes _n_ seconds!
+- My approach batches up the number of approaches into chunks of ten (_M_/10) that are done simultaneously (_Mn_/10).
+  This is therefore generally faster, although not in the case where the first outcome is the one we want. Given
+  that I can't predict things will be perfect every time, I've opted for the apparently longer approach.
+
 ## [2.2.0] - 2022-05-26
 
 ### Changed
