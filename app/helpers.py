@@ -1,10 +1,11 @@
 import csv
+import functools
 import math
 import operator
 import pathlib
 import string
 import random
-from matching.rules.rule import AbstractRule
+
 import matching.rules.rule as rl
 
 
@@ -51,6 +52,7 @@ def random_string():
     return "".join(random.choice(string.ascii_lowercase) for _ in range(10))
 
 
+@functools.lru_cache
 def known_file(path_to_file, role_type: str, quantity=50):
     padding_size = int(math.log10(quantity)) + 1
     pathlib.Path(path_to_file).mkdir(parents=True, exist_ok=True)
@@ -77,12 +79,11 @@ def known_data(role_type: str):
         "grade": "EO" if role_type == "mentor" else "AA",
         "organisation": f"Department of {role_type.capitalize()}s",
         "biography": "Test biography",
+        "profession": "Policy",
     }
     if role_type == "mentor":
-        data["profession"] = "Policy"
         data["characteristics"] = "bisexual, transgender"
     elif role_type == "mentee":
-        data["target profession"] = "Policy"
         data["match with similar identity"] = "yes"
         data["identity to match"] = "bisexual"
     else:
@@ -172,7 +173,7 @@ def random_file(role_type: str, quantity: int = 50):
         file_writer.writerows(rows)
 
 
-def base_rules() -> list[AbstractRule]:
+def base_rules() -> list[rl.Rule]:
     return [
         rl.Disqualify(
             lambda match: match.mentee.organisation == match.mentor.organisation
@@ -192,5 +193,4 @@ def base_rules() -> list[AbstractRule]:
             lambda match: match.mentee.characteristic in match.mentor.characteristics
             and match.mentee.characteristic != "",
         ),
-        rl.UnmatchedBonus(6),
     ]
