@@ -8,4 +8,4 @@ FROM parent AS web
 CMD ["gunicorn", "app:create_app()"]
 
 FROM parent AS worker
-CMD celery --app=app.extensions.celery worker --loglevel=info
+CMD celery --app=app.extensions.celery_app worker --loglevel=info
