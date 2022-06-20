@@ -61,7 +61,7 @@ def upload():
                 file.save(
                     os.path.join(current_app.config["UPLOAD_FOLDER"], folder, filename)
                 )
-            response = make_response(redirect(url_for("main.process")))
+            response = make_response(redirect(url_for("main.options")))
             response.set_cookie(
                 "data-folder",
                 folder,
