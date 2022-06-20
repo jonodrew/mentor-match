@@ -56,7 +56,7 @@ class TestIntegration:
 
         assert len(mentors) == 50 and len(mentees) == 50
 
-    @pytest.mark.parametrize("testing_value", (True, False))
+    @pytest.mark.parametrize("testing_value", ("quantity", "quality"))
     @pytest.mark.parametrize(["test_task", "output"], [("small", 10), ("large", 100)])
     def test_create_mailing_list(
         self,
