@@ -1,4 +1,4 @@
-function handleClick(data_folder) {
+function handleClick(data_folder, matching_function) {
 
   const matching = document.getElementById('matching');
 
@@ -10,7 +10,7 @@ function handleClick(data_folder) {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ data_folder: data_folder }),
+    body: JSON.stringify({ data_folder: data_folder, matching_function: matching_function }),
   })
   .then(response => response.json())
   .then(data => getStatus(data.task_id));
