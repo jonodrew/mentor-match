@@ -218,7 +218,7 @@ def tasks(task_id):
         return jsonify(), status_code
 
 @main_bp.route("/options")
-## This route will need fixing!
+# This route will need fixing!
 def options():
     return render_template("options.html")
              
