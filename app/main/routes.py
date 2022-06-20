@@ -116,9 +116,9 @@ def run_task():
     current_app.logger.debug(request.get_json())
     data_folder = request.get_json()["data_folder"]
     try:
-        optimise_for_pairing = request.get_json()["pairing"]
+        matching_approach = request.get_json()["matching_function"]
     except KeyError:
-        optimise_for_pairing = False
+        matching_approach = "quality"
     folder = pathlib.Path(
         os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
     )
@@ -136,7 +136,7 @@ def run_task():
         CSMentee,
         path_to_data=folder,
     )
-    if optimise_for_pairing:
+    if matching_approach == "quantity":
         task = most_mentees_with_at_least_one_mentor(mentors, mentees)
     else:
         task = async_process_data.delay(mentors, mentees)
