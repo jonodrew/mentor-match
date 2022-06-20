@@ -61,7 +61,7 @@ def upload():
                 file.save(
                     os.path.join(current_app.config["UPLOAD_FOLDER"], folder, filename)
                 )
-            response = make_response(redirect(url_for("main.process")))
+            response = make_response(redirect(url_for("main.options")))
             response.set_cookie(
                 "data-folder",
                 folder,
@@ -116,9 +116,9 @@ def run_task():
     current_app.logger.debug(request.get_json())
     data_folder = request.get_json()["data_folder"]
     try:
-        optimise_for_pairing = request.get_json()["pairing"]
+        matching_approach = request.get_json()["matching_function"]
     except KeyError:
-        optimise_for_pairing = False
+        matching_approach = "quality"
     folder = pathlib.Path(
         os.path.join(current_app.config["UPLOAD_FOLDER"], data_folder)
     )
@@ -136,7 +136,7 @@ def run_task():
         CSMentee,
         path_to_data=folder,
     )
-    if optimise_for_pairing:
+    if matching_approach == "quantity":
         task = most_mentees_with_at_least_one_mentor(mentors, mentees)
     else:
         task = async_process_data.delay(mentors, mentees)
@@ -218,13 +218,31 @@ def tasks(task_id):
         return jsonify(), status_code
 
 
+@main_bp.route("/options", methods=["GET", "POST"])
+def options():
+    if request.method == "GET":
+        return render_template("options.html")
+    else:
+        matching_function = request.form.get("radios--outcomes", "quality")
+        response = make_response(redirect(url_for("main.process")))
+        response.set_cookie(
+            "matching_func",
+            matching_function,
+            expires=datetime.datetime.now() + timedelta(minutes=30),
+        )
+        return response
+
+
 @main_bp.route("/process", methods=["GET"])
 def process():
     data_folder = request.cookies.get("data-folder")
+    matching_function = request.cookies.get("matching_func")
     if not data_folder:
         return redirect(url_for("main.upload"))
     else:
-        return render_template("process.html", data_folder=data_folder)
+        return render_template(
+            "process.html", data_folder=data_folder, matching=matching_function
+        )
 
 
 @main_bp.route("/finished", methods=["GET"])
