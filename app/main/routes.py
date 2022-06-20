@@ -218,19 +218,31 @@ def tasks(task_id):
         return jsonify(), status_code
 
 
-@main_bp.route("/options")
-# This route will need fixing!
+@main_bp.route("/options", methods=["GET", "POST"])
 def options():
-    return render_template("options.html")
+    if request.method == "GET":
+        return render_template("options.html")
+    else:
+        matching_function = request.form.get("radios--outcomes", "quality")
+        response = make_response(redirect(url_for("main.process")))
+        response.set_cookie(
+            "matching_func",
+            matching_function,
+            expires=datetime.datetime.now() + timedelta(minutes=30),
+        )
+        return response
 
 
 @main_bp.route("/process", methods=["GET"])
 def process():
     data_folder = request.cookies.get("data-folder")
+    matching_function = request.cookies.get("matching_func")
     if not data_folder:
         return redirect(url_for("main.upload"))
     else:
-        return render_template("process.html", data_folder=data_folder)
+        return render_template(
+            "process.html", data_folder=data_folder, matching=matching_function
+        )
 
 
 @main_bp.route("/finished", methods=["GET"])
