@@ -13,5 +13,5 @@ run:
     image: web
   worker:
     command:
-      - celery --app=app.extensions.celery worker --loglevel=info
+      - celery --app=app.extensions.celery_app worker --loglevel=info
     image: web
