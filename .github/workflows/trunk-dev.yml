@@ -64,7 +64,7 @@ jobs:
         run: docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
 
       - name: Full test suite
-        run: docker-compose exec -T app pytest tests --cache-clear --cov=app tests/ > pytest-coverage.txt
+        run: docker-compose exec -T app pytest tests -n 3 --cache-clear --cov=app tests/ > pytest-coverage.txt
 
       - name: Comment coverage
         uses: coroo/pytest-coverage-commentator@v1.0.2
