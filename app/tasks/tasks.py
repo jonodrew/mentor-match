@@ -33,20 +33,25 @@ def async_process_data(
 def find_best_output(
     group_result: Sequence[tuple[list[CSMentor], list[CSMentee], int]]
 ) -> tuple[list[CSMentor], list[CSMentee], int]:
-    highest_count = (0, 0)
+    """
+    This function gathers all the outcomes together and finds the best. The best is defined as the outcome where the
+    most mentees have at least one mentor, and the most possible mentors have at least one mentee
+    """
+    highest_count = {"mentors": 0, "mentees": 0}
     best_outcome = group_result[0]
     for participant_tuple in group_result:
         mentors, mentees, unmatched_bonus = participant_tuple
         one_connection_min_func = functools.partial(
             map, lambda participant: len(participant.connections) > 0
         )
-        current_count = (
-            sum(one_connection_min_func(mentors)),
-            sum(one_connection_min_func(mentees)),
-        )
-        if all(
-            current > highest for current, highest in zip(current_count, highest_count)  # type: ignore
-        ):
+        current_count = {
+            "mentors": sum(one_connection_min_func(mentors)),
+            "mentees": sum(one_connection_min_func(mentees)),
+        }
+        if (current_count["mentees"] > highest_count["mentees"]) or (  # type: ignore
+            current_count["mentees"] == highest_count["mentees"]
+            and current_count["mentors"] > highest_count["mentors"]  # type: ignore
+        ):  # type: ignore
             best_outcome = participant_tuple
             highest_count = current_count  # type: ignore
     return best_outcome
