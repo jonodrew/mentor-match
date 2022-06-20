@@ -217,11 +217,13 @@ def tasks(task_id):
             status_code = 404
         return jsonify(), status_code
 
+
 @main_bp.route("/options")
 # This route will need fixing!
 def options():
     return render_template("options.html")
-             
+
+
 @main_bp.route("/process", methods=["GET"])
 def process():
     data_folder = request.cookies.get("data-folder")
