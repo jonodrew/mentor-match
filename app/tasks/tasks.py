@@ -5,6 +5,7 @@ import requests
 from typing import Tuple, List, Sequence
 
 from app.classes import CSMentor, CSMentee
+from app.export import Exporter
 from app.extensions import celery_app as celery_app
 from matching import process
 from app.helpers import base_rules
@@ -61,3 +62,8 @@ def find_best_output(
 def delete_mailing_lists_after_period(self, task_id: str):
     url = f"{os.environ.get('SERVICE_URL', 'http://app:5000')}/tasks/{task_id}"
     return requests.delete(url).status_code
+
+
+@celery_app.task
+def send_notification(exporter: Exporter, participant_data: dict[str, str]):
+    return exporter.send_email(participant_data.get("email", ""), **participant_data)
