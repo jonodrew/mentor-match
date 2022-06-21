@@ -43,3 +43,11 @@ def test_find_best_outcome(base_mentor, base_mentee):
         [base_mentee],
         0,
     )
+
+
+def test_notification_task():
+    """
+    This test checks whether a task, when given an `ExporterProtocol` implementing object and the necessary parameters,
+    calls it appropriately
+    """
+    assert False
