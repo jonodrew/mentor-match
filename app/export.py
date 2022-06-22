@@ -14,11 +14,11 @@ class NotifyClient(NotificationsAPIClient):
         self.template_id: str = kwargs.get("template-id")
         self.email_reply_to_id: str = kwargs.get("reply-id")
 
-    def send_email(self, recipient: str, **kwargs):
+    def send_email(self, recipient: str, **personalisation_data):
         self.send_email_notification(
             email_address=recipient,
             template_id=self.template_id,
-            personalisation=kwargs,
+            personalisation=personalisation_data,
             email_reply_to_id=self.email_reply_to_id,
         )
 
