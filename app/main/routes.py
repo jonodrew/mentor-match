@@ -13,6 +13,7 @@ from flask import (
     url_for,
     send_from_directory,
     after_this_request,
+    Response,
 )
 import pathlib
 import shutil
@@ -251,3 +252,19 @@ def process():
 @main_bp.route("/finished", methods=["GET"])
 def finished():
     return render_template("done.html")
+
+
+@main_bp.route("/notify-participants", methods=["GET", "POST"])
+def notify_participants():
+    if request.method == "GET":
+        return render_template("notify-settings.html")
+
+    else:
+        form = request.form.to_dict()
+        service = form.pop("service", "notify")
+        data_folder = request.cookies.get("data-folder")
+        exporter = ExportFactory.create_exporter(service, **form)
+        celery.group(
+            send_notification.si(exporter, participant) for participant in data_folder
+        ).apply_async()
+        return Response(status=200)
