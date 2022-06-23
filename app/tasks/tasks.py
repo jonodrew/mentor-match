@@ -2,16 +2,20 @@ import functools
 import os
 import sys
 import requests
-from typing import Tuple, List, Sequence
+from typing import Tuple, List, Sequence, Protocol
 
 from app.classes import CSMentor, CSMentee
-from app.export import Exporter
 from app.extensions import celery_app as celery_app
 from matching import process
 from app.helpers import base_rules
 from matching.rules.rule import UnmatchedBonus
 
 sys.setrecursionlimit(10000)
+
+
+class Exporter(Protocol):
+    def send_email(self, recipient: str, **kwargs):
+        ...
 
 
 @celery_app.task(name="async_process_data", bind=True)
