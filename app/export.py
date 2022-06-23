@@ -1,11 +1,4 @@
-from typing import Protocol
-
 from notifications_python_client import NotificationsAPIClient
-
-
-class Exporter(Protocol):
-    def send_email(self, recipient: str, **kwargs):
-        ...
 
 
 class NotifyClient(NotificationsAPIClient):
@@ -27,6 +20,6 @@ class ExportFactory:
     available_services = {"notify": NotifyClient}
 
     @classmethod
-    def create_exporter(cls, service_name: str, **kwargs) -> Exporter:
+    def create_exporter(cls, service_name: str, **kwargs):
         exporter_class = cls.available_services[service_name]
         return exporter_class(**kwargs)
