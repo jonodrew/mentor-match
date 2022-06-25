@@ -3,6 +3,7 @@ MAINTAINER CS LGBTQ+
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r requirements.txt
 COPY ./app /app
+COPY ./.bumpversion.cfg /.bumpversion.cfg
 
 FROM parent AS web
 CMD ["gunicorn", "app:create_app()"]

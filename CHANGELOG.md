@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+## [2.3.2] - 2022-06-25
+
+### Added
+
+- the flask application, accessed via `current_app`, now exposes the current version of this software at
+  `current_app.config["VERSION]`
+
 ## [2.3.1] - 2022-06-20
 
 ### Added
