@@ -1,3 +1,4 @@
+import configparser
 import os
 
 from flask import Flask
@@ -12,6 +13,9 @@ def create_app(configuration=Config):
 
     app.config.from_object(configuration)
     app.config["UPLOAD_FOLDER"] = os.path.join(app.static_folder, "data")
+    parser = configparser.ConfigParser()
+    parser.read("./.bumpversion.cfg")
+    app.config["VERSION"] = parser["bumpversion"]["current_version"]
 
     from app.main import main_bp
     from app.auth import auth_bp
