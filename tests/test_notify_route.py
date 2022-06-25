@@ -70,3 +70,14 @@ class TestNotifyRoute:
             },
         )
         assert response.status_code == 404
+
+    @pytest.mark.unit
+    def test_route_raises_error_if_bad_api_key(self, client):
+        response = client.post(
+            url_for("main.notify_participants"),
+            data={
+                "service": "notify",
+                "api-key": "".join(str(_) for _ in range(10)),
+            },
+        )
+        assert response.status_code == 400
