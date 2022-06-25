@@ -59,3 +59,14 @@ class TestNotifyRoute:
                 assert len(calls) == 10
                 notification_args = patched_notification.call_args
                 assert notification_args[1] == {}
+
+    @pytest.mark.unit
+    def test_notify_route_raises_404_if_no_data(self, notify_client):
+        response = notify_client.post(
+            url_for("main.notify_participants"),
+            data={
+                "service": "notify",
+                "api-key": "".join(str(_) for _ in range(100)),
+            },
+        )
+        assert response.status_code == 404
