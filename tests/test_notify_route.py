@@ -1,4 +1,5 @@
 from unittest.mock import patch
+
 import mock
 import pytest
 from flask import url_for
@@ -17,6 +18,12 @@ def patch_open_file():
         yield
 
 
+@pytest.fixture
+def patch_csv_reader():
+    with patch("app.main.routes.csv.DictReader", return_value=({} for _ in range(10))):
+        yield
+
+
 class TestNotifyRoute:
     @pytest.mark.unit
     @patch("app.main.routes.ExportFactory", autospec=True)
@@ -28,6 +35,27 @@ class TestNotifyRoute:
                 client.post(
                     url_for("main.notify_participants"), data={"service": "notify"}
                 )
-                patched_creator.assert_called_with(
-                    "notify",
+                patched_creator.assert_called_with("notify")
+
+    @pytest.mark.unit
+    def test_notify_route_reads_all_user_data(
+        self, patch_open_file, test_data_path, client, patch_csv_reader
+    ):
+        with patch(
+            "app.main.routes.celery.group", autospec=True
+        ) as patched_celery_group:
+            with patch("app.main.routes.send_notification.si") as patched_notification:
+                client.post(
+                    url_for("main.notify_participants"),
+                    data={
+                        "service": "notify",
+                        "api-key": "".join(str(_) for _ in range(100)),
+                    },
                 )
+                assert patched_celery_group.call_count == 2
+                mentors_call, mentees_call = patched_celery_group.call_args_list
+                args, kwargs = mentors_call
+                calls = list(args[0])
+                assert len(calls) == 10
+                notification_args = patched_notification.call_args
+                assert notification_args[1] == {}
