@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+## [2.3.3] - 2022-06-25
+
+### Changed
+
+- the underlying package has been bumped, but we'd already taken advantage of the warnings and fixed everything up
+
 ## [2.3.2] - 2022-06-25
 
 ### Added
