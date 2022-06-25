@@ -100,6 +100,7 @@ tox==3.24.4
 trio==0.19.0
 trio-websocket==0.9.2
 types-freezegun==1.1.6
+types-mock==4.0.15
 types-requests==2.27.10
 types-urllib3==1.26.9
 typing-extensions==3.10.0.2
