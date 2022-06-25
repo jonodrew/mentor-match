@@ -1,0 +1,57 @@
+{% extends 'page-with-header.html' %}
+{% block title %}Choose options{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+
+{% block breadcrumbs %}
+ <li class="breadcrumbs--list-item">
+   <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+ </li>
+{% endblock %}
+
+{% block pagecaption %}Mentor matcher{% endblock %}
+{% block pageheading %}Notify participants{% endblock %}
+{% block pageexcerpt %}Send emails to mentors and mentees with the results of the matching process.{% endblock %}
+
+{%  block content %}
+<div class="grid-row">
+  <div class="grid-column-two-thirds" id="options">
+  
+    <form method=post enctype=multipart/form-data action="">
+      {% if error_message %}
+      <blockquote class="error warning-text">
+        <p><strong>An error has occurred</strong></p>
+        <p>{{ error_message }}</p>
+      </blockquote>
+      {% endif %}
+      <div class="form-group">
+      
+        <fieldset id="fieldset-notify" aria-describedby="fieldset-notify--hint" class="fieldset" style="margin-bottom: 45px">
+          <legend id="fieldset-notify--title" class="legend-md">
+          GOV.UK Notify credentials
+          </legend>
+          
+          <p id="fieldset-notify--hint" class="hint">Enter the <code>api-key</code>, <code>template-id</code> and <code>reply-id</code> from GOV.UK Notify, so that this service can send notification emails to mentors and mentees.</p>
+          
+          <label class="input-label label-sm" for="api-key-field">
+            API key
+          </label>
+          <input class="input" id="api-key" placeholder="api-key" name="api-key-field" type="text">
+          
+          <label class="input-label label-sm" for="template-id-field">
+            Message template ID
+          </label>
+          <input class="input" id="template-id" placeholder="template-id" name="template-id-field" type="text">
+          
+          <label class="input-label label-sm" for="reply-id-field">
+            Reply ID
+          </label>
+          <input class="input" id="reply-id" placeholder="reply-id" name="reply-id-field" type="text">
+        
+        </fieldset>
+        
+      </div>
+      <input type="submit" class="button button--action" value="Set these options ❯">
+    </form>
+  </div>
+</div>
+{% endblock %}

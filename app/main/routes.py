@@ -285,3 +285,8 @@ def notify_participants():
             return Response(status=200)
         else:
             abort(404, "That data doesn't exist")
+
+
+@main_bp.route("/notify-settings", methods=["GET"])
+def notify_settings():
+    return render_template("notify-settings.html")
