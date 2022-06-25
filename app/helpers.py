@@ -2,10 +2,12 @@ import csv
 import functools
 import math
 import operator
+import os
 import pathlib
 import string
 import random
 
+import flask
 import matching.rules.rule as rl
 
 
@@ -194,3 +196,9 @@ def base_rules() -> list[rl.Rule]:
             and match.mentee.characteristic != "",
         ),
     ]
+
+
+def get_data_folder_path(app_instance: flask.Flask, folder_name: str) -> pathlib.Path:
+    return pathlib.Path(
+        os.path.join(app_instance.config["UPLOAD_FOLDER"].strpath, folder_name)
+    )
