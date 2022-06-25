@@ -5,6 +5,7 @@ import os.path
 from datetime import timedelta
 
 import celery
+import werkzeug.exceptions
 from flask import (
     make_response,
     render_template,
@@ -261,13 +262,17 @@ def finished():
 def notify_participants():
     if request.method == "GET":
         return render_template("notify-settings.html")
-
     else:
         form = request.form.to_dict()
         service = form.pop("service", "notify")
         data_folder = request.cookies.get("task-id", "")
         if (data_path := get_data_folder_path(current_app, data_folder)).exists():
-            exporter = ExportFactory.create_exporter(service, **form)
+            try:
+                exporter = ExportFactory.create_exporter(service, **form)
+            except AssertionError:
+                raise werkzeug.exceptions.BadRequest(
+                    "The API key you have provided is not recognised"
+                )
             for string in ("csmentors-list.csv", "csmentees-list.csv"):
                 with open(
                     pathlib.Path(os.path.join(data_path, string))
