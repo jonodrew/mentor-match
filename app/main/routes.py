@@ -1,8 +1,11 @@
+import csv
 import datetime
 import json
 import os.path
 from datetime import timedelta
 
+import celery
+import werkzeug.exceptions
 from flask import (
     make_response,
     render_template,
@@ -12,18 +15,22 @@ from flask import (
     url_for,
     send_from_directory,
     after_this_request,
+    Response,
+    abort,
 )
 import pathlib
 import shutil
 from werkzeug.utils import secure_filename, redirect
 
 from app.classes import CSMentor, CSMentee
+from app.export import ExportFactory
 from app.extensions import celery_app
 from app.main import main_bp
-from app.helpers import valid_files, random_string
+from app.helpers import valid_files, random_string, get_data_folder_path
 from app.tasks.tasks import (
     async_process_data,
     delete_mailing_lists_after_period,
+    send_notification,
 )
 from app.tasks.helpers import most_mentees_with_at_least_one_mentor
 from matching.process import create_participant_list_from_path, create_mailing_list
@@ -191,11 +198,12 @@ def tasks(task_id):
     if request.method == "GET":
 
         @after_this_request
-        def remove_files(response):
+        def remove_files(response: Response):
             shutil.rmtree(pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id))
             os.remove(
                 pathlib.Path(current_app.config["UPLOAD_FOLDER"], f"{task_id}.zip")
             )
+            response.set_cookie("task-id", task_id)
             return response
 
         data_path = pathlib.Path(current_app.config["UPLOAD_FOLDER"], task_id)
@@ -248,3 +256,32 @@ def process():
 @main_bp.route("/finished", methods=["GET"])
 def finished():
     return render_template("done.html")
+
+
+@main_bp.route("/notify-participants", methods=["GET", "POST"])
+def notify_participants():
+    if request.method == "GET":
+        return render_template("notify-settings.html")
+    else:
+        form = request.form.to_dict()
+        service = form.pop("service", "notify")
+        data_folder = request.cookies.get("task-id", "")
+        if (data_path := get_data_folder_path(current_app, data_folder)).exists():
+            try:
+                exporter = ExportFactory.create_exporter(service, **form)
+            except AssertionError:
+                raise werkzeug.exceptions.BadRequest(
+                    "The API key you have provided is not recognised"
+                )
+            for string in ("csmentors-list.csv", "csmentees-list.csv"):
+                with open(
+                    pathlib.Path(os.path.join(data_path, string))
+                ) as participant_csv:
+                    reader = csv.DictReader(participant_csv)
+                    celery.group(
+                        send_notification.si(exporter, participant)
+                        for participant in reader
+                    ).apply_async()
+            return Response(status=200)
+        else:
+            abort(404, "That data doesn't exist")

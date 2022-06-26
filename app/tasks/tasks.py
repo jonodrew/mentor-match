@@ -2,7 +2,7 @@ import functools
 import os
 import sys
 import requests
-from typing import Tuple, List, Sequence
+from typing import Tuple, List, Sequence, Protocol
 
 from app.classes import CSMentor, CSMentee
 from app.extensions import celery_app as celery_app
@@ -11,6 +11,11 @@ from app.helpers import base_rules
 from matching.rules.rule import UnmatchedBonus
 
 sys.setrecursionlimit(10000)
+
+
+class Exporter(Protocol):
+    def send_email(self, recipient: str, **kwargs):
+        ...
 
 
 @celery_app.task(name="async_process_data", bind=True)
@@ -61,3 +66,8 @@ def find_best_output(
 def delete_mailing_lists_after_period(self, task_id: str):
     url = f"{os.environ.get('SERVICE_URL', 'http://app:5000')}/tasks/{task_id}"
     return requests.delete(url).status_code
+
+
+@celery_app.task
+def send_notification(exporter: Exporter, participant_data: dict[str, str]):
+    return exporter.send_email(participant_data.get("email", ""), **participant_data)
