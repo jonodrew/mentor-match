@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+## [2.4.0] - 2022-06-26
+
+### Added
+
+- This change exposes a route that, on a `POST` request:
+  - reads a cookie `task-id`, which is the folder where the output is stored
+  - receives a form from the request, which has a `template-id`, a `reply-id`, a `service`, and an `api-key`
+  - the `service` defaults to Notify, so for the moment that choice doesn't need to be coded into the system
+  - it creates the appropriate client for the `service`, and then sends every participant, in both files in the
+    output folder, the `template-id` email using each row in the file as the personalisation
+  - the emails are handed off to Celery to take care of
+  - this does not yet take account of any other templates: for example, templates where no matches have been made.
+    These `template-id`s would need to be passed, somehow, from the frontend. Alternatively, a template could be
+    designed that comprises big `if ...then` blocks
+
+
+
 ## [2.3.3] - 2022-06-25
 
 ### Changed
