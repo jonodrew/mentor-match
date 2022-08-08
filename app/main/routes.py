@@ -292,9 +292,9 @@ def notify_settings_api_key():
     return render_template("notify-settings--api-key.html")
     
     
-@main_bp.route("/notify-settings/reply-id", methods=["GET"])
+@main_bp.route("/notify-settings/reply-to", methods=["GET"])
 def notify_settings_reply_id():
-    return render_template("notify-settings--reply-id.html")
+    return render_template("notify-settings--reply-to.html")
     
     
 @main_bp.route("/notify-settings/template-ids", methods=["GET"])
