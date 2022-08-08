@@ -299,4 +299,4 @@ def notify_settings_reply_id():
     
 @main_bp.route("/notify-settings/template-ids", methods=["GET"])
 def notify_settings_template_id():
-    return render_template("notify-settings--template-id.html")
+    return render_template("notify-settings--template-ids.html")
