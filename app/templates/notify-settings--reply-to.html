@@ -1,0 +1,48 @@
+{% extends 'page-with-header.html' %}
+{% block title %}Choose options{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+
+{% block breadcrumbs %}
+ <li class="breadcrumbs--list-item">
+   <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+ </li>
+{% endblock %}
+
+{% block pagecaption %}Mentor matcher{% endblock %}
+{% block pageheading %}Notify participants{% endblock %}
+{% block pageexcerpt %}Send emails to mentors and mentees with the results of the matching process.{% endblock %}
+
+{%  block content %}
+<div class="grid-row">
+  <div class="grid-column-two-thirds" id="options">
+  
+    <form method=post enctype=multipart/form-data action="">
+      {% if error_message %}
+      <blockquote class="error warning-text">
+        <p><strong>An error has occurred</strong></p>
+        <p>{{ error_message }}</p>
+      </blockquote>
+      {% endif %}
+      <div class="form-group">
+      
+        <fieldset id="fieldset-notify" aria-describedby="fieldset-notify--hint" class="fieldset" style="margin-bottom: 45px">
+          <legend id="fieldset-notify--title" class="legend-md">
+          GOV.UK Notify credentials
+          </legend>
+          
+          <!-- Reply ID isn't necessary if the Notify account only has 1 reply-to email address set up -->
+          <p id="fieldset-notify--hint" class="hint">Enter the <code>reply-id</code> from GOV.UK Notify.</p>
+          
+          <label class="input-label label-sm" for="reply-id-field">
+            Reply ID
+          </label>
+          <input class="input" id="reply-id" placeholder="reply-id" name="reply-id-field" type="text">
+        
+        </fieldset>
+        
+      </div>
+      <input type="submit" class="button button--action" value="Use these credentials ❯">
+    </form>
+  </div>
+</div>
+{% endblock %}
