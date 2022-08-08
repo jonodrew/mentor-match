@@ -288,15 +288,15 @@ def notify_participants():
 
 
 @main_bp.route("/notify-settings/api-key", methods=["GET"])
-def notify_settings():
+def notify_settings_api_key():
     return render_template("notify-settings--api-key.html")
     
     
 @main_bp.route("/notify-settings/reply-id", methods=["GET"])
-def notify_settings():
+def notify_settings_reply_id():
     return render_template("notify-settings--reply-id.html")
     
     
 @main_bp.route("/notify-settings/template-ids", methods=["GET"])
-def notify_settings():
+def notify_settings_template_id():
     return render_template("notify-settings--template-id.html")
