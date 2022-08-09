@@ -2,6 +2,8 @@ import csv
 import datetime
 import json
 import os.path
+import pathlib
+import shutil
 from datetime import timedelta
 
 import celery
@@ -18,22 +20,20 @@ from flask import (
     Response,
     abort,
 )
-import pathlib
-import shutil
+from matching.process import create_participant_list_from_path, create_mailing_list
 from werkzeug.utils import secure_filename, redirect
 
 from app.classes import CSMentor, CSMentee
 from app.export import ExportFactory
 from app.extensions import celery_app
-from app.main import main_bp
 from app.helpers import valid_files, random_string, get_data_folder_path
+from app.main import main_bp
+from app.tasks.helpers import most_mentees_with_at_least_one_mentor
 from app.tasks.tasks import (
     async_process_data,
     delete_mailing_lists_after_period,
     send_notification,
 )
-from app.tasks.helpers import most_mentees_with_at_least_one_mentor
-from matching.process import create_participant_list_from_path, create_mailing_list
 
 
 @main_bp.route("/", methods=["GET"])
@@ -289,14 +289,14 @@ def notify_participants():
 
 @main_bp.route("/notify-settings/api-key", methods=["GET"])
 def notify_settings_api_key():
-    return render_template("notify-settings--api-key.html")
+    return render_template("notify-settings/notify-settings--api-key.html")
 
 
 @main_bp.route("/notify-settings/reply-to", methods=["GET"])
 def notify_settings_reply_id():
-    return render_template("notify-settings--reply-to.html")
+    return render_template("notify-settings/notify-settings--reply-to.html")
 
 
 @main_bp.route("/notify-settings/template-ids", methods=["GET"])
 def notify_settings_template_id():
-    return render_template("notify-settings--template-ids.html")
+    return render_template("notify-settings/notify-settings--template-ids.html")

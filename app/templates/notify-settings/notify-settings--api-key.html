@@ -4,7 +4,7 @@
 
 {% block breadcrumbs %}
  <li class="breadcrumbs--list-item">
-   <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+   <a class="breadcrumbs--link" href="/app/static">Mentor matcher</a>
  </li>
 {% endblock %}
 
@@ -15,7 +15,7 @@
 {%  block content %}
 <div class="grid-row">
   <div class="grid-column-two-thirds" id="options">
-  
+
     <form method=post enctype=multipart/form-data action="">
       {% if error_message %}
       <blockquote class="error warning-text">
@@ -24,21 +24,21 @@
       </blockquote>
       {% endif %}
       <div class="form-group">
-      
+
         <fieldset id="fieldset-notify" aria-describedby="fieldset-notify--hint" class="fieldset" style="margin-bottom: 45px">
           <legend id="fieldset-notify--title" class="legend-md">
           GOV.UK Notify credentials
           </legend>
-          
+
           <label class="input-label label-sm" for="api-key-field">
             API key
           </label>
           <p id="fieldset-notify--hint" class="hint">In order to send emails via GOV.UK Notify, you need an API key. If you don't have an API key, contact the person who manages your GOV.UK Notify account.</p>
 
           <input class="input" id="api-key" placeholder="Enter your API key" name="api-key-field" type="text">
-        
+
         </fieldset>
-        
+
       </div>
       <input type="submit" class="button button--action" value="Next ❯">
     </form>

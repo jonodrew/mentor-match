@@ -4,7 +4,7 @@
 
 {% block breadcrumbs %}
  <li class="breadcrumbs--list-item">
-   <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+   <a class="breadcrumbs--link" href="/app/static">Mentor matcher</a>
  </li>
 {% endblock %}
 
@@ -15,7 +15,7 @@
 {%  block content %}
 <div class="grid-row">
   <div class="grid-column-two-thirds" id="options">
-  
+
     <form method=post enctype=multipart/form-data action="">
       {% if error_message %}
       <blockquote class="error warning-text">
@@ -24,35 +24,35 @@
       </blockquote>
       {% endif %}
       <div class="form-group">
-      
+
         <fieldset id="fieldset-notify" aria-describedby="fieldset-notify--hint" class="fieldset" style="margin-bottom: 45px">
           <legend id="fieldset-notify--title" class="legend-md">
           Reply-to email address
           </legend>
-          
+
           <!-- Reply ID isn't necessary if the Notify account only has 1 reply-to email address set up -->
           <p id="fieldset-notify--hint" class="hint">Emails sent from GOV.UK Notify must have a <strong>reply-to</strong> email address. You can add a reply to email to email address under <strong>Settings</strong> on the GOV.UK Notify website.</p>
-          
+
           <p id="fieldset-notify--hint" class="hint">Enter your reply-to ID code in the field below if you:</p>
           <ol id="fieldset-notify--hint" class="hint">
             <li>have more than 1 reply-to email address set up, <strong>and</strong> </li>
             <li>do not want to send emails using the default reply-to email address</li>
-          </ol>          
-          
+          </ol>
+
           <blockquote class="warning-text">
             <p><strong>Your reply-to ID is not your email address</strong></p>
             <p>Reply-to IDs are strings of numbers and letters, separated by hyphens. You can copy them from the GOV.UK Notify website.</p>
           </blockquote>
-          
+
           <hr>
-          
+
           <label class="input-label label-sm" for="reply-id-field">
             Reply ID
           </label>
           <input class="input" id="reply-id" placeholder="Enter the ID for your reply-to email address" name="reply-id-field" type="text">
-        
+
         </fieldset>
-        
+
       </div>
       <input type="submit" class="button button--action" value="Next ❯">
     </form>

@@ -4,7 +4,7 @@
 
 {% block breadcrumbs %}
  <li class="breadcrumbs--list-item">
-   <a class="breadcrumbs--link" href="/">Mentor matcher</a>
+   <a class="breadcrumbs--link" href="/app/static">Mentor matcher</a>
  </li>
 {% endblock %}
 
@@ -15,7 +15,7 @@
 {%  block content %}
 <div class="grid-row">
   <div class="grid-column-two-thirds" id="options">
-  
+
     <form method=post enctype=multipart/form-data action="">
       {% if error_message %}
       <blockquote class="error warning-text">
@@ -24,12 +24,12 @@
       </blockquote>
       {% endif %}
       <div class="form-group">
-      
+
         <fieldset id="fieldset-notify" aria-describedby="fieldset-notify--hint" class="fieldset" style="margin-bottom: 45px">
           <legend id="fieldset-notify--title" class="legend-md">
           GOV.UK Notify message templates
           </legend>
-          
+
           <p id="fieldset-notify--hint" class="hint">The matching process creates four possible outcomes. These outcomes are:</p>
           <ol id="fieldset-notify--hint" class="hint">
             <li>mentees receive at least 1 match</li>
@@ -48,33 +48,33 @@
             <li><code>(( number of matches ))</code></li>
             <li><code>(( match details ))</code></li>
           </ol>
-          
+
           <p>Enter the message template IDs for each template in the fields below.</p>
-          
+
           <hr>
-          
+
           <label class="input-label label-sm" for="template-id-field-mentees-matches">
             1. Mentees with at least 1 match
           </label>
           <input class="input" id="template-id-mentees-matches" placeholder="Enter the message ID" name="template-id-field-mentees-matches" type="text">
-          
+
           <label class="input-label label-sm" for="template-id-field-mentees-no-matches">
             2. Mentees with no matches
           </label>
           <input class="input" id="template-id-mentees-no-matches" placeholder="Enter the message ID" name="template-id-field-mentees-no-matches" type="text">
-          
+
           <label class="input-label label-sm" for="template-id-field-mentors-matches">
             3. Mentors with at least 1 match
           </label>
           <input class="input" id="template-id-mentors-matches" placeholder="Enter the message ID" name="template-id-field-mentors-matches" type="text">
-          
+
           <label class="input-label label-sm" for="template-id-field-mentors-no-matches">
             4. Mentors with no matches
           </label>
           <input class="input" id="template-id-mentors-no-matches" placeholder="Enter the message ID" name="template-id-field-mentors-no-matches" type="text">
-        
+
         </fieldset>
-        
+
       </div>
       <input type="submit" class="button button--action" value="Next ❯">
     </form>
