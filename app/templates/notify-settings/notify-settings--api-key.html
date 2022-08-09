@@ -1,16 +1,5 @@
-{% extends 'page-with-header.html' %}
-{% block title %}Choose options{% endblock %}
-{% block head %}{{ super() }}{% endblock %}
+{% extends 'notify-settings/base-notify-settings.html' %}
 
-{% block breadcrumbs %}
- <li class="breadcrumbs--list-item">
-   <a class="breadcrumbs--link" href="/app/static">Mentor matcher</a>
- </li>
-{% endblock %}
-
-{% block pagecaption %}Mentor matcher{% endblock %}
-{% block pageheading %}Notify participants{% endblock %}
-{% block pageexcerpt %}Send emails to mentors and mentees with the results of the matching process.{% endblock %}
 
 {%  block content %}
 <div class="grid-row">
