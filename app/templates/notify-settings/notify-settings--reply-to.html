@@ -14,30 +14,28 @@
       <div class="form-group">
 
         <fieldset id="fieldset-notify" aria-describedby="fieldset-notify--hint" class="fieldset" style="margin-bottom: 45px">
-          <legend id="fieldset-notify--title" class="legend-md">
-          Reply-to email address
+          <legend id="fieldset-notify--title" class="legend-lg">
+          Alternative reply-to email address
           </legend>
 
           <!-- Reply ID isn't necessary if the Notify account only has 1 reply-to email address set up -->
-          <p id="fieldset-notify--hint" class="hint">Emails sent from GOV.UK Notify must have a <strong>reply-to</strong> email address. You can add a reply to email to email address under <strong>Settings</strong> on the GOV.UK Notify website.</p>
-
-          <p id="fieldset-notify--hint" class="hint">Enter your reply-to ID code in the field below if you:</p>
-          <ol id="fieldset-notify--hint" class="hint">
-            <li>have more than 1 reply-to email address set up, <strong>and</strong> </li>
-            <li>do not want to send emails using the default reply-to email address</li>
-          </ol>
-
-          <blockquote class="warning-text">
-            <p><strong>Your reply-to ID is not your email address</strong></p>
-            <p>Reply-to IDs are strings of numbers and letters, separated by hyphens. You can copy them from the GOV.UK Notify website.</p>
-          </blockquote>
-
+          <p id="fieldset-notify--hint" class="hint">Emails sent from GOV.UK Notify must have a “reply-to” email address.</p>
+          
+          <p id="fieldset-notify--hint" class="hint">If you'd like users to reply to an email address that is different to the default, you'll need to add it on the GOV.UK Notify website. Once you've done that, copy and paste its reply-to ID key into the text field below.</p>
+                    
           <hr>
-
-          <label class="input-label label-sm" for="reply-id-field">
-            Reply ID
+          
+          <blockquote class="warning-text">
+            <p><strong>Your reply-to ID key is not your email address</strong></p>
+            <p>Reply-to ID keys are strings of numbers and letters, separated by hyphens. You can copy them from the GOV.UK Notify website.</p>
+          </blockquote>
+          
+          <label class="input-label label-md" for="reply-id-field">
+            Reply-to ID key
           </label>
-          <input class="input" id="reply-id" placeholder="Enter the ID for your reply-to email address" name="reply-id-field" type="text">
+          <p id="fieldset-notify--hint" class="hint"><strong>This step is optional.</strong> If you don't put anything in here, the reply-to address will be whatever your default is in GOV.UK Notify.</p>
+
+          <input class="input" id="reply-id" placeholder="Enter the ID key for your reply-to email address" name="reply-id-field" type="text">
 
         </fieldset>
 
