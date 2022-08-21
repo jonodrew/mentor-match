@@ -50,6 +50,7 @@ def test_matches_and_rules(base_mentor, base_mentee):
 def test_export(base_mentor, base_mentee, base_mentor_data):
     base_mentor.connections.extend([base_mentee, base_mentee])
     assert base_mentor.to_dict_for_output() == {
+        "type": "csmentor",
         "both mentor and mentee": "no",
         "email address": "test@data.com",
         "first name": "Test",
