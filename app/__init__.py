@@ -19,9 +19,11 @@ def create_app(configuration=Config):
 
     from app.main import main_bp
     from app.auth import auth_bp
+    from app.errors import error_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(error_bp)
 
     app.secret_key = secrets.token_urlsafe(48)
 
