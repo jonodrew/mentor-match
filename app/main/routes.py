@@ -258,50 +258,69 @@ def finished():
     return render_template("done.html")
 
 
-@main_bp.route("/notify-participants", methods=["GET", "POST"])
-def notify_participants():
-    if request.method == "GET":
-        return render_template("notify-settings.html")
-    else:
-        form = request.form.to_dict()
-        service = form.pop("service", "notify")
-        data_folder = request.cookies.get("task-id", "")
-        if (data_path := get_data_folder_path(current_app, data_folder)).exists():
-            try:
-                exporter = ExportFactory.create_exporter(service, **form)
-            except AssertionError:
-                raise werkzeug.exceptions.BadRequest(
-                    "The API key you have provided is not recognised"
-                )
-            for string in ("csmentors-list.csv", "csmentees-list.csv"):
-                with open(
-                    pathlib.Path(os.path.join(data_path, string))
-                ) as participant_csv:
-                    reader = csv.DictReader(participant_csv)
-                    celery.group(
-                        send_notification.si(exporter, participant)
-                        for participant in reader
-                    ).apply_async()
-            return Response(status=200)
-        else:
-            abort(404, "That data doesn't exist")
-
-
 @main_bp.route("/notify-settings/before-you-start", methods=["GET"])
 def notify_settings_before_you_start():
     return render_template("notify-settings/notify-settings-intro.html")
 
 
-@main_bp.route("/notify-settings/api-key", methods=["GET"])
-def notify_settings_api_key():
-    return render_template("notify-settings/notify-settings--api-key.html")
-
-
-@main_bp.route("/notify-settings/reply-to", methods=["GET"])
-def notify_settings_reply_id():
-    return render_template("notify-settings/notify-settings--reply-to.html")
-
-
 @main_bp.route("/notify-settings/template-ids", methods=["GET"])
 def notify_settings_template_id():
     return render_template("notify-settings/notify-settings--template-ids.html")
+
+
+@main_bp.route("/notify-settings/reply-to", methods=["GET", "POST"])
+def notify_settings_reply_id():
+    response = make_response(
+        render_template("notify-settings/notify-settings--reply-to.html")
+    )
+    if request.method == "POST":
+        for name, value in request.form.items():
+            response.set_cookie(
+                name, value, expires=datetime.datetime.utcnow() + timedelta(minutes=15)
+            )
+    return response
+
+
+@main_bp.route("/notify-settings/api-key", methods=["GET", "POST"])
+def notify_settings_api_key():
+    response = make_response(
+        render_template("notify-settings/notify-settings--api-key.html")
+    )
+    if request.method == "POST":
+        for name, value in request.form.items():
+            response.set_cookie(
+                name, value, expires=datetime.datetime.utcnow() + timedelta(minutes=15)
+            )
+    return response
+
+
+@main_bp.route("/notify-settings/done", methods=["POST"])
+def notify_settings_done():
+    queue_emails()
+    return redirect(url_for("main.index"))
+
+
+def queue_emails():
+    service = request.cookies.get("service", "notify")
+    data_folder = request.cookies["task-id"]
+    if (data_path := get_data_folder_path(current_app, data_folder)).exists():
+        current_app.logger.debug(request.cookies)
+        try:
+            exporter = ExportFactory.create_exporter(
+                service, api_key=request.form.get("api-key-field"), **request.cookies
+            )
+        except AssertionError as e:
+            current_app.logger.info(e)
+            raise werkzeug.exceptions.BadRequest(
+                "The API key you have provided is not recognised"
+            )
+        for string in ("csmentors-list.csv", "csmentees-list.csv"):
+            with open(pathlib.Path(os.path.join(data_path, string))) as participant_csv:
+                reader = csv.DictReader(participant_csv)
+                batch = celery.group(
+                    send_notification.si(exporter, participant)
+                    for participant in reader
+                ).apply_async()
+        return Response(response=batch.id, status=201)
+    else:
+        abort(404, "That data doesn't exist")

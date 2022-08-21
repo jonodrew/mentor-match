@@ -4,7 +4,7 @@
 <div class="grid-row">
   <div class="grid-column-two-thirds" id="options">
 
-    <form method=post enctype=multipart/form-data action="">
+    <form method=post enctype=multipart/form-data action="{{ url_for("main.notify_settings_api_key") }}">
       {% if error_message %}
       <blockquote class="error warning-text">
         <p><strong>An error has occurred</strong></p>
@@ -20,16 +20,16 @@
 
           <!-- Reply ID isn't necessary if the Notify account only has 1 reply-to email address set up -->
           <p id="fieldset-notify--hint" class="hint">Emails sent from GOV.UK Notify must have a “reply-to” email address.</p>
-          
+
           <p id="fieldset-notify--hint" class="hint">If you'd like users to reply to an email address that is different to the default, you'll need to add it on the GOV.UK Notify website. Once you've done that, copy and paste its reply-to ID key into the text field below.</p>
-                    
+
           <hr>
-          
+
           <blockquote class="warning-text">
             <p><strong>Your reply-to ID key is not your email address</strong></p>
             <p>Reply-to ID keys are strings of numbers and letters, separated by hyphens. You can copy them from the GOV.UK Notify website.</p>
           </blockquote>
-          
+
           <label class="input-label label-md" for="reply-id-field">
             Reply-to ID key
           </label>
