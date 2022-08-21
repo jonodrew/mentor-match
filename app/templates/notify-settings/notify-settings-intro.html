@@ -1,0 +1,21 @@
+{% extends 'notify-settings/base-notify-settings.html' %}
+
+{%  block content %}
+<div class="grid-row">
+  <div class="grid-column-two-thirds">
+    <div class="page--content">
+    <h2 class="heading-md">Before you start</h2>
+    <ol>
+        <li><strong>You must have a Notify API key.</strong> You can <a href="https://www.notifications.service.gov.uk/">sign up for one on the service's homepage</a>.
+        <li><strong>You must have set up at least two templates in Notify</strong>. There should be one for mentors, and one for mentees</li>
+    </ol>
+        <p>If you haven't come here from the mentor-match service, we won't have access to your files. Please go to the
+            Notify service and upload your spreadsheet there</p>
+    <hr>
+    <div class="button-group">
+      <a href="{{ url_for("main.notify_settings_template_id") }}" class="button button--action">Start now</a>
+    </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

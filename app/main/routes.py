@@ -287,6 +287,11 @@ def notify_participants():
             abort(404, "That data doesn't exist")
 
 
+@main_bp.route("/notify-settings/before-you-start", methods=["GET"])
+def notify_settings_before_you_start():
+    return render_template("notify-settings/notify-settings-intro.html")
+
+
 @main_bp.route("/notify-settings/api-key", methods=["GET"])
 def notify_settings_api_key():
     return render_template("notify-settings/notify-settings--api-key.html")
