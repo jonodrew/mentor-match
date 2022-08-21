@@ -34,6 +34,8 @@ function getStatus(taskID) {
 
       matching.innerHTML = '<blockquote class="warning-text"><h2 class="heading-sm">Matching is complete</h2><p>Mentors and mentees have been matched. You will be redirected in 3 seconds.</p></blockquote>';
       setTimeout(function() {
+        document.cookie="task-id=" + res.task_id
+
         window.location.replace(downloadURL)
       }, 3000);
     }
