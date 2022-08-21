@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Users can now edit the weightings, but only for specific attributes, and for the pre-existing calculation
 
+[2.5.0]
+
+### Added
+This release adds the notification workflow, using GOV.UK Notify. Getting from the "matching" to the "notification"
+workflow is a little rough, and we expect that to be fixed up in the next patch release.
+
+The user interface has once again been designed and implemented by @johnpeart.
+
+We've also added some really nice docs, and so they're being added to this release too - two for the price of one,
+you lucky people. As ever the entire system can be brought up with `docker-compose up`. Check out the docs on
+`localhost:4000`. Documentation is so important for an open-source system like ours, so additions to that are just
+as welcome as code changes.
+
 ## [2.4.0] - 2022-06-26
 
 ### Added
