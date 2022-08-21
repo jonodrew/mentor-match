@@ -303,7 +303,6 @@ def queue_emails():
     service = request.cookies.get("service", "notify")
     data_folder = request.cookies["task-id"]
     if (data_path := get_data_folder_path(current_app, data_folder)).exists():
-        current_app.logger.debug(request.cookies)
         try:
             exporter = ExportFactory.create_exporter(
                 service, api_key=request.form.get("api-key-field"), **request.cookies

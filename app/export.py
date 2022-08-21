@@ -1,4 +1,3 @@
-import logging
 from typing import TypedDict
 
 from notifications_python_client import NotificationsAPIClient
@@ -12,7 +11,6 @@ class NotifyClient(NotificationsAPIClient):
     def __init__(self, **kwargs):
         super(NotifyClient, self).__init__(api_key=kwargs.get("api_key"))
         template_prefix = "template-id-field-"
-        logging.log(logging.INFO, kwargs)
         self.templates: dict[str, str] = {
             key[len(template_prefix) :]: value
             for key, value in kwargs.items()
@@ -31,7 +29,6 @@ class NotifyClient(NotificationsAPIClient):
     def _get_template(self, person: dict[str, str]) -> str:
         number_matches = int(person.get("number of matches"))
         person_type = person.get("type")
-        logging.log(logging.INFO, self.templates)
         if person_type == "csmentor":
             if number_matches > 0:
                 return self.templates["mentor-matches"]
