@@ -27,8 +27,8 @@ class NotifyClient(NotificationsAPIClient):
         )
 
     def _get_template(self, person: dict[str, str]) -> str:
-        number_matches = int(person.get("number of matches"))
-        person_type = person.get("type")
+        number_matches = int(person["number of matches"])
+        person_type = person["type"]
         if person_type == "csmentor":
             if number_matches > 0:
                 return self.templates["mentor-matches"]
