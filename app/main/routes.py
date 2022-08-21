@@ -276,7 +276,8 @@ def notify_settings_reply_id():
     if request.method == "POST":
         for name, value in request.form.items():
             response.set_cookie(
-                name, value, expires=datetime.datetime.utcnow() + timedelta(minutes=15)
+                name,
+                value,
             )
     return response
 
@@ -288,9 +289,7 @@ def notify_settings_api_key():
     )
     if request.method == "POST":
         for name, value in request.form.items():
-            response.set_cookie(
-                name, value, expires=datetime.datetime.utcnow() + timedelta(minutes=15)
-            )
+            response.set_cookie(name, value)
     return response
 
 
