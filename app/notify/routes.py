@@ -21,17 +21,17 @@ from app.notify import notify_bp
 from app.tasks.tasks import send_notification
 
 
-@notify_bp.route("/notify-settings/before-you-start", methods=["GET"])
+@notify_bp.route("/before-you-start", methods=["GET"])
 def notify_settings_before_you_start():
     return render_template("notify-settings/notify-settings-intro.html")
 
 
-@notify_bp.route("/notify-settings/template-ids", methods=["GET"])
+@notify_bp.route("/template-ids", methods=["GET"])
 def notify_settings_template_id():
     return render_template("notify-settings/notify-settings--template-ids.html")
 
 
-@notify_bp.route("/notify-settings/reply-to", methods=["GET", "POST"])
+@notify_bp.route("/reply-to", methods=["GET", "POST"])
 def notify_settings_reply_id():
     response = make_response(
         render_template("notify-settings/notify-settings--reply-to.html")
@@ -45,7 +45,7 @@ def notify_settings_reply_id():
     return response
 
 
-@notify_bp.route("/notify-settings/api-key", methods=["GET", "POST"])
+@notify_bp.route("/api-key", methods=["GET", "POST"])
 def notify_settings_api_key():
     response = make_response(
         render_template("notify-settings/notify-settings--api-key.html")
@@ -56,7 +56,7 @@ def notify_settings_api_key():
     return response
 
 
-@notify_bp.route("/notify-settings/done", methods=["POST"])
+@notify_bp.route("/done", methods=["POST"])
 def notify_settings_done():
     queue_emails()
     return redirect(url_for("main.index"))
