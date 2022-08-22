@@ -5,7 +5,7 @@
 <div class="grid-row">
   <div class="grid-column-two-thirds" id="options">
 
-    <form method=post enctype=multipart/form-data action="">
+    <form method=post enctype=multipart/form-data action="{{ url_for("notify.notify_settings_done") }}">
       {% if error_message %}
       <blockquote class="error warning-text">
         <p><strong>An error has occurred</strong></p>

@@ -70,4 +70,6 @@ def delete_mailing_lists_after_period(self, task_id: str):
 
 @celery_app.task
 def send_notification(exporter: Exporter, participant_data: dict[str, str]):
-    return exporter.send_email(participant_data.get("email", ""), **participant_data)
+    return exporter.send_email(
+        participant_data.get("email address", ""), **participant_data
+    )

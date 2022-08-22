@@ -1,8 +1,8 @@
 import configparser
 import os
+import secrets
 
 from flask import Flask
-import secrets
 
 from app.config import Config
 from app.tasks import make_celery
@@ -19,9 +19,11 @@ def create_app(configuration=Config):
 
     from app.main import main_bp
     from app.auth import auth_bp
+    from app.notify import notify_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(notify_bp)
 
     app.secret_key = secrets.token_urlsafe(48)
 

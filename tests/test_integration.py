@@ -95,6 +95,7 @@ class TestIntegration:
         ) as csv_file:
             reader = csv.DictReader(csv_file)
             assert list(next(reader).keys()) == [
+                "type",
                 "first name",
                 "last name",
                 "email address",

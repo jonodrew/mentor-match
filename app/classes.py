@@ -64,6 +64,7 @@ class CSPerson(Person):
 
     def to_dict_for_output(self, depth=1) -> dict:
         return {
+            "type": self.class_name(),
             "first name": self.first_name,
             "last name": self.last_name,
             "email address": self.email,
