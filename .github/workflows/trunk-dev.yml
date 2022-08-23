@@ -74,6 +74,8 @@ jobs:
 
       - name: tag images
         run: |
+          export WEB_IMAGE=web:${GH_IMAGE_COMMIT_TAG}
+          export WORKER_IMAGE=worker:${GH_IMAGE_COMMIT_TAG}
           docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WEB_IMAGE}
           docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WEB_IMAGE}
           docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/${WEB_IMAGE}
