@@ -85,6 +85,10 @@ jobs:
           docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/${WORKER_IMAGE}
           docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/worker:latest
 
+      - name: log in to registries
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+          docker login --username=${{ secrets.HEROKU_EMAIL }} --password-stdin <<< "${{ secrets.HEROKU_API_KEY }}" registry.heroku.com
 
       - name: Push images
         run: |
