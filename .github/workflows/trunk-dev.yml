@@ -43,8 +43,7 @@ jobs:
         run: |
           echo "::set-output name=image_commit_tag::$(git rev-parse --short HEAD)"
 
-
-  all-tests:
+  test-and-push:
     needs:
       - get-commit-tag
     env:
@@ -73,10 +72,18 @@ jobs:
         if: ${{ env.ACT }}
         run: docker-compose down
 
-      - name: Push to Heroku registry
+      - name: tag images
         run: |
-          docker login --username=${{ secrets.HEROKU_EMAIL }} --password-stdin <<< "${{ secrets.HEROKU_API_KEY }}" registry.heroku.com
-          docker tag web:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/web
-          docker tag worker:${{ needs.get-commit-tag.outputs.image_commit_tag }} registry.heroku.com/cslgbt-mentor-match/worker
-          docker push registry.heroku.com/cslgbt-mentor-match/web
-          docker push registry.heroku.com/cslgbt-mentor-match/worker
+          docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WEB_IMAGE}
+          docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WEB_IMAGE}
+          docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/${WEB_IMAGE}
+          docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/${WEB_IMAGE}
+          docker tag ${WORKER_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WORKER_IMAGE}
+          docker tag ${WORKER_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WORKER_IMAGE}
+          docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/${WORKER_IMAGE}
+          docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/${WORKER_IMAGE}
+
+
+      - name: Push images
+        run: |
+          docker image push --all-tags
