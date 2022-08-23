@@ -77,15 +77,18 @@ jobs:
           export WEB_IMAGE=web:${GH_IMAGE_COMMIT_TAG}
           export WORKER_IMAGE=worker:${GH_IMAGE_COMMIT_TAG}
           docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WEB_IMAGE}
-          docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WEB_IMAGE}
+          docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/web:latest
           docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/${WEB_IMAGE}
-          docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/${WEB_IMAGE}
+          docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/web:latest
           docker tag ${WORKER_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WORKER_IMAGE}
-          docker tag ${WORKER_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WORKER_IMAGE}
+          docker tag ${WORKER_IMAGE} registry.heroku.com/cslgbt-mentor-match/worker:latest
           docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/${WORKER_IMAGE}
-          docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/${WORKER_IMAGE}
+          docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/worker:latest
 
 
       - name: Push images
         run: |
-          docker image push --all-tags
+          docker image push --all-tags ghcr.io/jonodrew/mentor-match/web
+          docker image push --all-tags ghcr.io/jonodrew/mentor-match/worker
+          docker image push --all-tags registry.heroku.com/cslgbt-mentor-match/web
+          docker image push --all-tags registry.heroku.com/cslgbt-mentor-match/worker
