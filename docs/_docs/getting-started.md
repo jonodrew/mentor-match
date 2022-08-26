@@ -23,11 +23,15 @@ After `docker-compose` is installed, clone [the mentor match repository](https:/
 
 A Github account is required if you wish to [contribute to the documentation or code](/contribute).
 
-Once you've done that, use the command line to get to where you've cloned this repository. Then run
+Use the command line to get to where you've cloned this repository. 
 
-`docker-compose up`
+From the repository folder, in the command line run:
+
+```
+docker-compose up
+```
 
 You should now be able to access the service on the `localhost:` followed by the ports above. I recommend starting
 with [the docs](localhost:4000), so you can come back here and keep going!
 
-To stop the service at any time, just press the control (ctrl) key and 'c' together.
+To stop the service at any time, just press the control (<kbd>Ctrl</kbd>) key and <kbd>C</kbd> key together.
