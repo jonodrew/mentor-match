@@ -17,7 +17,9 @@ By default, the service can be accessed on the following ports:
 
 ## Installing dependencies
 
-You should install `docker-compose` [using the documentation](https://docs.docker.com/desktop/). Once you've done
+You **must** install `docker-compose` to use this software. [Follow the documentation from Docker](https://docs.docker.com/desktop/) to install the required software.
+
+Once you've done
 that, you'll need to clone [this repository](https://www.github.com/jonodrew/mentor-match). You don't necessarily
 need to sign up to GitHub to do this.
 
