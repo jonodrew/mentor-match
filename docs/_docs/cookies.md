@@ -15,3 +15,4 @@ We use some cookies to make the Mentor Matcher work properly. We do not need to 
 | Name | Purpose | Expires |
 |------|---------|---------|
 | `data-folder` |	This unique string is the name of the folder where your uploaded data is stored | 30 minutes |
+| `matching_func` | Stores the choice you make about how mentors and mentees should be matched together | 30 minutes | 
