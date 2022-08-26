@@ -39,16 +39,23 @@ We implement a variety of security measures to maintain the safety of data used 
 
 The data uploaded to this service is only retained for as long as is strictly necessary and it is regularly erased to mitigate against it being accessed by others.
 
-## Changes to this policy
-
-We keep this policy under review. Any updates to this policy will be published on this website. This policy was last updated on 25 June 2022.
-
-## Informing you of changes or issues
-
-If we make changes to the way we process your information, or we identify an issue with the way data is being managed, we will publish a notice on our website.
-
-[Read all notices](https://www.civilservice.lgbt/notices/)
-
 ## How to contact us
 
 Please [contact us](https://www.civilservice.lgbt/contact-us/) if you have any questions about this policy or information we hold about you.
+
+## Changes to this policy
+
+We keep this policy under review. Any updates to this policy will be published on this website. This policy was last updated on 26 August June 2022.
+
+<details markdown=1>
+<summary>Updates to this policy</summary>
+
+### 26 August 2022
+
+This policy was updated to change the way we publicise changes to this policy.
+
+### 25 June 2022
+
+This policy was updated to reflect changes to the Civil Service LGBT+ mentoring programme that allowed participants to provide special category data, and to be matched on that basis.
+
+</details>
