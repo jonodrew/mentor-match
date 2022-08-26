@@ -21,6 +21,8 @@ You **must** install `docker-compose` to use this software. [Follow the document
 
 After `docker-compose` is installed, clone [the mentor match repository](https://www.github.com/jonodrew/mentor-match). This repository is hosted on Github, but a Github account is not required to clone the repository. 
 
+A Github account is required if you wish to [contribute to the documentation or code](/contribute).
+
 Once you've done that, use the command line to get to where you've cloned this repository. Then run
 
 `docker-compose up`
