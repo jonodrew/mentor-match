@@ -1,11 +1,13 @@
 amqp==5.0.9
 async-generator==1.10
 attrs==21.2.0
+aws-cdk-lib==2.39.0
 backports.entry-points-selectable==1.1.0
 billiard==3.6.4.0
 black==22.1.0
 bump2version==1.0.1
 cachetools==4.2.4
+cattrs==22.1.0
 celery==5.2.3
 celery-stubs==0.1.2
 certifi==2021.10.8
@@ -17,10 +19,12 @@ click-didyoumean==0.0.3
 click-plugins==1.1.1
 click-repl==0.2.0
 commonmark==0.9.1
+constructs==10.1.88
 coverage==6.3
 cryptography==36.0.1
 distlib==0.3.2
 docopt==0.6.2
+exceptiongroup==1.0.0rc8
 execnet==1.9.0
 extras==1.0.0
 filelock==3.0.12
@@ -44,6 +48,7 @@ idna==3.3
 iniconfig==1.1.1
 itsdangerous==2.0.1
 Jinja2==3.0.1
+jsii==1.65.0
 kombu==5.2.3
 lettuce==0.2.23
 Mako==1.1.6
@@ -68,6 +73,7 @@ pluggy==1.0.0
 pre-commit==2.14.1
 prompt-toolkit==3.0.20
 protobuf==3.19.1
+publication==0.0.3
 py==1.10.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
@@ -102,6 +108,7 @@ tomli==2.0.0
 tox==3.24.4
 trio==0.19.0
 trio-websocket==0.9.2
+typeguard==2.13.3
 types-freezegun==1.1.6
 types-mock==4.0.15
 types-requests==2.27.10
