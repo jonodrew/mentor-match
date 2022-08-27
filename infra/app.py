@@ -2,7 +2,7 @@
 
 from aws_cdk import App
 
-from infra.infra_stack import MentorMatchStack
+from infra_stack import MentorMatchStack
 
 
 app = App()
