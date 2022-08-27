@@ -4,3 +4,4 @@
 .vscode/settings.json
 *.pyc
 /.python-version
+/.jekyll-cache/Jekyll/Cache/
