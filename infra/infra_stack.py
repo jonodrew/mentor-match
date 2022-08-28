@@ -1,3 +1,5 @@
+import functools
+
 from aws_cdk import (
     Stack,
     aws_lambda_python_alpha as lambda_python,
@@ -65,10 +67,13 @@ class ProcessData(Construct):
             scope=self,
             id="ProcessEveryUnmatchedBonus",
         )
-        invoke_process_data = sfn_tasks.LambdaInvoke(
-            scope=self, id="InvokeProcessData", lambda_function=process_data
+        invoke_process_data_partial = functools.partial(
+            sfn_tasks.LambdaInvoke,
+            scope=self,
+            # id="InvokeProcessData",
+            lambda_function=process_data,
         )
-        map_tasks.iterator(invoke_process_data)
+        map_tasks.iterator(invoke_process_data_partial(id="InvokeProcessDataMap"))
 
         quantity_path = prepare_task.next(map_tasks).next(reduce_fn)
 
@@ -77,7 +82,7 @@ class ProcessData(Construct):
         definition = approach_choice.when(
             step_fn.Condition.string_equals("$.matching_function", "quantity"),
             quantity_path,
-        ).otherwise(invoke_process_data)
+        ).otherwise(invoke_process_data_partial(id="InvokeProcessDataOnce"))
 
         step_fn.StateMachine(
             scope=self, id="ProcessingStateMachine", definition=definition
