@@ -33,6 +33,7 @@ class ProcessData(Construct):
             index="index.py",
             handler="async_process_data_event_handler",
             layers=[dependencies],
+            memory_size=1024,
         )
 
         reduce_fn = sfn_tasks.LambdaInvoke(
