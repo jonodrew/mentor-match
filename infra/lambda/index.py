@@ -1,4 +1,7 @@
+from copy import deepcopy
+
 from tasks import async_process_data
+from classes import base_rules
 
 
 def async_process_data_event_handler(event: dict, context):
@@ -17,3 +20,14 @@ def async_process_data_event_handler(event: dict, context):
 
 def find_best_result_lambda(event: dict, context):
     return event
+
+
+def prepare_data_for_mapping(event: dict, context):
+    max_score = sum(rule.results.get(True) for rule in base_rules())
+    mentees = event["mentees"]
+    mentors = event["mentors"]
+    copies = ((deepcopy(mentors), deepcopy(mentees), i) for i in range(max_score))
+    return [
+        {"unmatched bonus": copy[2], "mentors": copy[0], "mentees": copy[1]}
+        for copy in copies
+    ]
