@@ -12,10 +12,13 @@ from constructs import Construct
 
 class ProcessData(Construct):
     """
-    A Construct that contains the StateMachine that processes data requests
+    A Construct that contains the StateMachine that processes data requests. The State Machine input might not be able
+    to cope with very large datasets, so instead we load the code into a bucket, and start the machine with a reference
+    to that bucket
     """
 
     def __init__(self, scope: Construct, id: str, **kwargs):
+        # TODO: Add S3 bucket and means for writing and reading to and from it
         super(ProcessData, self).__init__(scope=scope, id=id)
 
         dependencies = lambda_python.PythonLayerVersion(
