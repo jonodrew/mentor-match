@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "infra"
+version = "0.1.0"
+description = ""
+authors = ["jonathan <jonodrew@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aws-cdk-lib = "^2.0.0"
+mentor-match = "^7.0.0"
+"aws-cdk.aws-lambda-python-alpha" = "^2.39.0-alpha.0"
+exceptiongroup = "^1.0.0-rc.9"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
