@@ -4,7 +4,7 @@ from tasks import async_process_data
 from classes import base_rules
 
 
-def async_process_data_event_handler(event: dict, context):
+def async_process_data_event_handler(event: dict[str, int | list[dict]], context):
     """
     Event handler that calls the `tasks.async_process_data` function.
     :param event: A dictionary with an event from AWS. Must have the "mentees" and "mentors" keys
