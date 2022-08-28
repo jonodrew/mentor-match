@@ -9,6 +9,10 @@ from constructs import Construct
 
 
 class ProcessData(Construct):
+    """
+    A Construct that contains the StateMachine that processes data requests
+    """
+
     def __init__(self, scope: Construct, id: str, **kwargs):
         super(ProcessData, self).__init__(scope=scope, id=id)
 
