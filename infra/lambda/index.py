@@ -6,3 +6,7 @@ def async_process_data_event_handler(event: dict, context):
     mentees = event["mentees"]
     mentors = event["mentors"]
     return async_process_data(mentors, mentees, unmatched_bonus)
+
+
+def find_best_result_lambda(event: dict, context):
+    return event
