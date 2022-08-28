@@ -43,16 +43,38 @@ class ProcessData(Construct):
             ),
         )
 
+        prepare_task = sfn_tasks.LambdaInvoke(
+            scope=self,
+            id="InvokePrepareFunction",
+            lambda_function=lambda_python.PythonFunction(
+                scope=self,
+                id="PrepareDataForMapping",
+                entry="./lambda",
+                runtime=Runtime.PYTHON_3_9,
+                index="index.py",
+                handler="prepare_data_for_mapping",
+                layers=[dependencies],
+            ),
+        )
+
         map_tasks = step_fn.Map(
             scope=self,
             id="ProcessEveryUnmatchedBonus",
         )
-        map_tasks.iterator(
-            sfn_tasks.LambdaInvoke(
-                scope=self, id="InvokeProcessData", lambda_function=process_data
-            )
+        invoke_process_data = sfn_tasks.LambdaInvoke(
+            scope=self, id="InvokeProcessData", lambda_function=process_data
         )
-        definition = map_tasks.next(reduce_fn)
+        map_tasks.iterator(invoke_process_data)
+
+        quantity_path = prepare_task.next(map_tasks).next(reduce_fn)
+
+        approach_choice = step_fn.Choice(scope=self, id="MatchingApproachChoice")
+
+        definition = approach_choice.when(
+            step_fn.Condition.string_equals("$.matching_function", "quantity"),
+            quantity_path,
+        ).otherwise(invoke_process_data)
+
         step_fn.StateMachine(
             scope=self, id="ProcessingStateMachine", definition=definition
         )
