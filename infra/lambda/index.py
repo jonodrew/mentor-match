@@ -1,4 +1,4 @@
-from python.tasks import async_process_data
+from tasks import async_process_data
 
 
 def async_process_data_event_handler(event: dict, context):

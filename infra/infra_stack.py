@@ -10,7 +10,7 @@ class ProcessData(Construct):
         dependencies = lambda_python.PythonLayerVersion(
             scope=self,
             id="MatchProcessingDependencies",
-            entry="./lambda/python",
+            entry="./python",
             compatible_runtimes=[Runtime.PYTHON_3_9],
         )
         lambda_python.PythonFunction(
