@@ -1,3 +1,5 @@
+import json
+
 import uuid
 
 import os
@@ -24,9 +26,9 @@ def s3_gateway_get(event, context):
 
 def s3_gateway_post(event, context):
     data_uuid = uuid.uuid4()
-    response = s3_client.put_object(
-        Bucket=bucket_name, Key=data_uuid, Body=event.get("data")
-    )
+    s3 = boto3.resource("s3")
+    new_file = s3.Object(f"{data_uuid}.json")
+    response = new_file.put(Body=json.dumps(event.get("data")).encode("UTF-8"))
     if response:
         return {"status": 201, "uuid": data_uuid}
 
