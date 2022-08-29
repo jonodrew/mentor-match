@@ -13,3 +13,8 @@ You can contribute to this project on Github.
 The roadmap for this project is published on Github.
 
 [Visit the roadmap on Github](https://github.com/users/jonodrew/projects/1)
+
+## Principal contributors
+
+- [Jonathan Kerr](https://www.twitter.com/jonodrew)
+- [John Peart](https://johnpe.art)
