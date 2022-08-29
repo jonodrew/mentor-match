@@ -150,4 +150,5 @@ class ProcessData(Construct):
 class MentorMatchStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+        DataStore(scope=self, id="DataStorage")
         ProcessData(scope=self, id="DataProcessingStepFunction")
