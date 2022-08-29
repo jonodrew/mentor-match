@@ -9,7 +9,7 @@ from aws_cdk import (
     aws_apigateway as api_gw,
 )
 from aws_cdk.aws_lambda import Runtime
-from aws_cdk.aws_s3 import Bucket
+from aws_cdk.aws_s3 import Bucket, BlockPublicAccess
 from constructs import Construct
 
 
@@ -22,8 +22,7 @@ class DataStore(Construct):
         super(DataStore, self).__init__(scope, id)
 
         self._bucket = s3.Bucket(
-            scope=self,
-            id="DataBucket",
+            scope=self, id="DataBucket", block_public_access=BlockPublicAccess.BLOCK_ALL
         )
 
         s3_function_partial = functools.partial(
@@ -62,7 +61,6 @@ class DataStore(Construct):
 
     @property
     def bucket(self):
-        print(self._bucket)
         return self._bucket
 
 
