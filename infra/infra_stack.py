@@ -39,6 +39,7 @@ class DataStore(Construct):
         post_handler = s3_function_partial(
             id="PostDataIntegration", handler="s3_gateway_post"
         )
+        self._post_handler = post_handler
         delete_handler = s3_function_partial(
             id="DeleteDataIntegration", handler="s3_gateway_delete"
         )
@@ -62,6 +63,10 @@ class DataStore(Construct):
     @property
     def bucket(self):
         return self._bucket
+
+    @property
+    def post_handler(self):
+        return self._post_handler
 
 
 class ProcessData(Construct):
@@ -144,9 +149,13 @@ class ProcessData(Construct):
             quantity_path,
         ).otherwise(invoke_process_data_partial(id="InvokeProcessDataOnce"))
 
-        step_fn.StateMachine(
+        self._state_machine = step_fn.StateMachine(
             scope=self, id="ProcessingStateMachine", definition=definition
         )
+
+    @property
+    def matching_machine(self):
+        return self._state_machine
 
 
 class MentorMatchStack(Stack):
