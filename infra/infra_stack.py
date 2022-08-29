@@ -18,10 +18,6 @@ class DataStore(Construct):
     A Construct that contains the S3 bucket where we store data, and the API Gateway that manages it
     """
 
-    @property
-    def bucket(self):
-        return self._bucket
-
     def __init__(self, scope: Construct, id: str):
         super(DataStore, self).__init__(scope, id)
 
@@ -64,6 +60,11 @@ class DataStore(Construct):
             "DELETE", integration=api_gw.LambdaIntegration(delete_handler)
         )
 
+    @property
+    def bucket(self):
+        print(self._bucket)
+        return self._bucket
+
 
 class ProcessData(Construct):
     """
@@ -74,7 +75,7 @@ class ProcessData(Construct):
 
     def __init__(self, scope: Construct, id: str, data_bucket: Bucket, **kwargs):
         # TODO: Add S3 bucket and means for writing and reading to and from it
-        super(ProcessData, self).__init__(scope=scope, id=id)
+        super().__init__(scope, id)
 
         dependencies = lambda_python.PythonLayerVersion(
             scope=self,
@@ -83,7 +84,7 @@ class ProcessData(Construct):
             compatible_runtimes=[Runtime.PYTHON_3_9],
         )
 
-        process_data = lambda_python.PythonFunction(
+        process_data_function = lambda_python.PythonFunction(
             scope=self,
             id="ProcessDataFunction",
             entry="./lambda",
@@ -94,36 +95,36 @@ class ProcessData(Construct):
             memory_size=1024,
         )
 
-        reduce_fn = sfn_tasks.LambdaInvoke(
+        reduce_function = lambda_python.PythonFunction(
             scope=self,
-            id="InvokeReduceFunction",
-            lambda_function=lambda_python.PythonFunction(
-                scope=self,
-                id="ReduceToBestResult",
-                entry="./lambda",
-                runtime=Runtime.PYTHON_3_9,
-                index="index.py",
-                handler="find_best_result_lambda",
-                layers=[dependencies],
-            ),
+            id="ReduceToBestResult",
+            entry="./lambda",
+            runtime=Runtime.PYTHON_3_9,
+            index="index.py",
+            handler="find_best_result_lambda",
+            layers=[dependencies],
+        )
+
+        prepare_function = lambda_python.PythonFunction(
+            scope=self,
+            id="PrepareDataForMapping",
+            entry="./lambda",
+            runtime=Runtime.PYTHON_3_9,
+            index="index.py",
+            handler="prepare_data_for_mapping",
+            layers=[dependencies],
+        )
+
+        for fn in (prepare_function, reduce_function, process_data_function):
+            data_bucket.grant_read_write(fn)
+
+        reduce_invocation = sfn_tasks.LambdaInvoke(
+            scope=self, id="InvokeReduceFunction", lambda_function=reduce_function
         )
 
         prepare_task = sfn_tasks.LambdaInvoke(
-            scope=self,
-            id="InvokePrepareFunction",
-            lambda_function=lambda_python.PythonFunction(
-                scope=self,
-                id="PrepareDataForMapping",
-                entry="./lambda",
-                runtime=Runtime.PYTHON_3_9,
-                index="index.py",
-                handler="prepare_data_for_mapping",
-                layers=[dependencies],
-            ),
+            scope=self, id="InvokePrepareFunction", lambda_function=prepare_function
         )
-
-        for fn in (prepare_task, reduce_fn, process_data):
-            data_bucket.grant_read_write(fn)
 
         map_tasks = step_fn.Map(
             scope=self,
@@ -133,11 +134,11 @@ class ProcessData(Construct):
             sfn_tasks.LambdaInvoke,
             scope=self,
             # id="InvokeProcessData",
-            lambda_function=process_data,
+            lambda_function=process_data_function,
         )
         map_tasks.iterator(invoke_process_data_partial(id="InvokeProcessDataMap"))
 
-        quantity_path = prepare_task.next(map_tasks).next(reduce_fn)
+        quantity_path = prepare_task.next(map_tasks).next(reduce_invocation)
 
         approach_choice = step_fn.Choice(scope=self, id="MatchingApproachChoice")
 
@@ -154,7 +155,5 @@ class ProcessData(Construct):
 class MentorMatchStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        data_store = DataStore(scope=self, id="DataStorage")
-        ProcessData(
-            scope=self, id="DataProcessingStepFunction", data_bucket=data_store.bucket
-        )
+        data_store = DataStore(self, "DataStorage")
+        ProcessData(self, "DataProcessingStepFunction", data_bucket=data_store.bucket)
