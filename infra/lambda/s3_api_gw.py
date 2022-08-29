@@ -7,7 +7,9 @@ import os
 import boto3
 
 s3_client = boto3.client("s3")
+s3_resource = boto3.resource("s3")
 bucket_name = os.environ.get("S3_BUCKET_NAME")
+bucket = boto3.resource("s3").Bucket(bucket_name)
 
 
 def s3_gateway_get(event, context):
@@ -27,7 +29,7 @@ def s3_gateway_get(event, context):
 def s3_gateway_post(event, context):
     data_uuid = uuid.uuid4()
     s3 = boto3.resource("s3")
-    new_file = s3.Object(f"{data_uuid}.json")
+    new_file = s3.Object(f"{data_uuid}/0.json")
     data = event.get("data")
     response = new_file.put(Body=json.dumps(data).encode("UTF-8"))
     machine = boto3.client("stepfunctions")
@@ -47,7 +49,6 @@ def s3_gateway_post(event, context):
 
 def s3_gateway_delete(event, context):
     data_uuid = event["pathParameters"]["data_uuid"]
-    bucket = boto3.resource("s3").Bucket(bucket_name)
     try:
         bucket.objects.filter(Prefix=data_uuid).delete()
     finally:
