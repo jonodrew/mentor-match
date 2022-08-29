@@ -5,7 +5,7 @@ category: Technical detail
 ---
 ## Telling participants about their matches
 
-Having conducted a matching exercise, the next step is to let participants on the programme know that they've been matched. We use [GOV.UK Notify](gov.uk/notify) to notify participants.
+Having conducted a matching exercise, the next step is to let participants on the programme know that they've been matched. We use [GOV.UK Notify](https://www.gov.uk/notify) to notify participants.
 
 The system allows you
 to download a zipped folder that contains rows of CSV data. This data is in a format that works with templates we have set up in our GOV.UK Notify. You could use another email service that supports templating or mail merging, if you prefer.
