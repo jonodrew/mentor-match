@@ -9,6 +9,7 @@ from aws_cdk import (
     aws_apigateway as api_gw,
 )
 from aws_cdk.aws_lambda import Runtime
+from aws_cdk.aws_s3 import Bucket
 from constructs import Construct
 
 
@@ -71,7 +72,7 @@ class ProcessData(Construct):
     to that bucket
     """
 
-    def __init__(self, scope: Construct, id: str, **kwargs):
+    def __init__(self, scope: Construct, id: str, data_bucket: Bucket, **kwargs):
         # TODO: Add S3 bucket and means for writing and reading to and from it
         super(ProcessData, self).__init__(scope=scope, id=id)
 
@@ -121,6 +122,9 @@ class ProcessData(Construct):
             ),
         )
 
+        for fn in (prepare_task, reduce_fn, process_data):
+            data_bucket.grant_read_write(fn)
+
         map_tasks = step_fn.Map(
             scope=self,
             id="ProcessEveryUnmatchedBonus",
@@ -150,5 +154,7 @@ class ProcessData(Construct):
 class MentorMatchStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        DataStore(scope=self, id="DataStorage")
-        ProcessData(scope=self, id="DataProcessingStepFunction")
+        data_store = DataStore(scope=self, id="DataStorage")
+        ProcessData(
+            scope=self, id="DataProcessingStepFunction", data_bucket=data_store.bucket
+        )
