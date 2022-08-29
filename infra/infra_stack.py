@@ -5,9 +5,63 @@ from aws_cdk import (
     aws_lambda_python_alpha as lambda_python,
     aws_stepfunctions as step_fn,
     aws_stepfunctions_tasks as sfn_tasks,
+    aws_s3 as s3,
+    aws_apigateway as api_gw,
 )
 from aws_cdk.aws_lambda import Runtime
 from constructs import Construct
+
+
+class DataStore(Construct):
+    """
+    A Construct that contains the S3 bucket where we store data, and the API Gateway that manages it
+    """
+
+    @property
+    def bucket(self):
+        return self._bucket
+
+    def __init__(self, scope: Construct, id: str):
+        super(DataStore, self).__init__(scope, id)
+
+        self._bucket = s3.Bucket(
+            scope=self,
+            id="DataBucket",
+        )
+
+        s3_function_partial = functools.partial(
+            lambda_python.PythonFunction,
+            scope=self,
+            entry="./lambda",
+            runtime=Runtime.PYTHON_3_9,
+            index="s3_api_gw.py",
+        )
+
+        get_handler = s3_function_partial(
+            id="GetDataIntegration", handler="s3_gateway_get"
+        )
+        post_handler = s3_function_partial(
+            id="PostDataIntegration", handler="s3_gateway_post"
+        )
+        delete_handler = s3_function_partial(
+            id="DeleteDataIntegration", handler="s3_gateway_delete"
+        )
+
+        self.bucket.grant_put(post_handler)
+        self.bucket.grant_read(get_handler)
+        self.bucket.grant_delete(delete_handler)
+
+        gateway = api_gw.RestApi(scope=self, id="DataBucketAPI")
+        bucket_api = gateway.root.add_resource("data")
+        bucket_api.add_method(
+            "POST", integration=api_gw.LambdaIntegration(post_handler)
+        )
+
+        data_set = bucket_api.add_resource("{data_uuid}")
+        data_set.add_method("GET", integration=api_gw.LambdaIntegration(get_handler))
+        data_set.add_method(
+            "DELETE", integration=api_gw.LambdaIntegration(delete_handler)
+        )
 
 
 class ProcessData(Construct):
