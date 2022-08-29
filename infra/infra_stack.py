@@ -87,35 +87,30 @@ class ProcessData(Construct):
             compatible_runtimes=[Runtime.PYTHON_3_9],
         )
 
-        process_data_function = lambda_python.PythonFunction(
+        lambda_partial = functools.partial(
+            lambda_python.PythonFunction,
             scope=self,
             id="ProcessDataFunction",
             entry="./lambda",
             runtime=Runtime.PYTHON_3_9,
             index="index.py",
-            handler="async_process_data_event_handler",
             layers=[dependencies],
+        )
+
+        process_data_function = lambda_partial(
+            id="ProcessDataFunction",
+            handler="async_process_data_event_handler",
             memory_size=1024,
         )
 
-        reduce_function = lambda_python.PythonFunction(
-            scope=self,
+        reduce_function = lambda_partial(
             id="ReduceToBestResult",
-            entry="./lambda",
-            runtime=Runtime.PYTHON_3_9,
-            index="index.py",
             handler="find_best_result_lambda",
-            layers=[dependencies],
         )
 
-        prepare_function = lambda_python.PythonFunction(
-            scope=self,
+        prepare_function = lambda_partial(
             id="PrepareDataForMapping",
-            entry="./lambda",
-            runtime=Runtime.PYTHON_3_9,
-            index="index.py",
             handler="prepare_data_for_mapping",
-            layers=[dependencies],
         )
 
         for fn in (prepare_function, reduce_function, process_data_function):
