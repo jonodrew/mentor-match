@@ -1,9 +1,41 @@
+import json
+
+import functools
+
+import os
+
+import boto3
 from copy import deepcopy
 
 from tasks import async_process_data
 from classes import base_rules
 
+s3_client = boto3.client("s3")
+s3_resource = boto3.resource("s3")
+bucket_name = os.environ.get("S3_BUCKET_NAME")
+bucket = boto3.resource("s3").Bucket(bucket_name)
 
+
+def read_write_s3(function):
+    @functools.wraps
+    def wrapped_func(event, context):
+        data_uuid = event["data_uuid"]
+        step = event.get("step", 0)
+        data = s3_resource.Object(bucket_name, f"{data_uuid}/{str(step)}.json")
+        file_content = data.get()["Body"].read().decode("utf-8")
+        json_content = json.loads(file_content)
+
+        output = function(json_content)
+
+        data_for_next_step = s3_resource.Object(
+            bucket_name, f"{data_uuid}/{str(step + 1)}"
+        )
+        data_for_next_step.put(Body=(bytes(json.dumps(output).encode("UTF-8"))))
+
+    return wrapped_func
+
+
+@read_write_s3
 def async_process_data_event_handler(event: dict[str, int | list[dict]], context):
     """
     Event handler that calls the `tasks.async_process_data` function.
