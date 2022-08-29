@@ -158,4 +158,11 @@ class MentorMatchStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         data_store = DataStore(self, "DataStorage")
-        ProcessData(self, "DataProcessingStepFunction", data_bucket=data_store.bucket)
+        state_machine = ProcessData(
+            self, "DataProcessingStepFunction", data_bucket=data_store.bucket
+        )
+        data_store.post_handler.add_environment(
+            key="MATCHING_MACHINE_ARN",
+            value=state_machine.matching_machine.state_machine_arn,
+        )
+        state_machine.matching_machine.grant_start_execution(data_store.post_handler)
