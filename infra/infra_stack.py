@@ -131,7 +131,6 @@ class ProcessData(Construct):
         invoke_process_data_partial = functools.partial(
             sfn_tasks.LambdaInvoke,
             scope=self,
-            # id="InvokeProcessData",
             lambda_function=process_data_function,
         )
         map_tasks.iterator(invoke_process_data_partial(id="InvokeProcessDataMap"))
