@@ -28,7 +28,19 @@ def s3_gateway_post(event, context):
     data_uuid = uuid.uuid4()
     s3 = boto3.resource("s3")
     new_file = s3.Object(f"{data_uuid}.json")
-    response = new_file.put(Body=json.dumps(event.get("data")).encode("UTF-8"))
+    data = event.get("data")
+    response = new_file.put(Body=json.dumps(data).encode("UTF-8"))
+    machine = boto3.client("stepfunctions")
+    machine.start_execution(
+        StateMachineArn=os.environ.get("MATCHING_MACHINE_ARN"),
+        name=data_uuid,
+        input=json.dumps(
+            {
+                "matching_function": data.get("matching_function", "quality"),
+                "data_uuid": data_uuid,
+            }
+        ),
+    )
     if response:
         return {"status": 201, "uuid": data_uuid}
 
