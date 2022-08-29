@@ -31,6 +31,7 @@ class DataStore(Construct):
             entry="./lambda",
             runtime=Runtime.PYTHON_3_9,
             index="s3_api_gw.py",
+            environment={"S3_BUCKET_NAME": self.bucket.bucket_name},
         )
 
         get_handler = s3_function_partial(
