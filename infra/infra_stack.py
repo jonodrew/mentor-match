@@ -95,6 +95,7 @@ class ProcessData(Construct):
             runtime=Runtime.PYTHON_3_9,
             index="index.py",
             layers=[dependencies],
+            environment={"S3_BUCKET_NAME": data_bucket.bucket_name},
         )
 
         process_data_function = lambda_partial(
