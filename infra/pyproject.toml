@@ -5,7 +5,7 @@ description = ""
 authors = ["jonathan <jonodrew@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 aws-cdk-lib = "^2.0.0"
 mentor-match = "^7.0.0"
 "aws-cdk.aws-lambda-python-alpha" = "^2.39.0-alpha.0"
