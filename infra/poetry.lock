@@ -14,7 +14,7 @@ tests_no_zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy 
 
 [[package]]
 name = "aws-cdk-lib"
-version = "2.39.0"
+version = "2.40.0"
 description = "Version 2 of the AWS Cloud Development Kit library"
 category = "main"
 optional = false
@@ -22,35 +22,35 @@ python-versions = "~=3.7"
 
 [package.dependencies]
 constructs = ">=10.0.0,<11.0.0"
-jsii = ">=1.65.0,<2.0.0"
+jsii = ">=1.66.0,<2.0.0"
 publication = ">=0.0.3"
 typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "aws-cdk.aws-lambda-python-alpha"
-version = "2.39.0a0"
+version = "2.40.0a0"
 description = "The CDK Construct Library for AWS Lambda in Python"
 category = "main"
 optional = false
 python-versions = "~=3.7"
 
 [package.dependencies]
-aws-cdk-lib = ">=2.39.0,<3.0.0"
+aws-cdk-lib = ">=2.40.0,<3.0.0"
 constructs = ">=10.0.0,<11.0.0"
-jsii = ">=1.65.0,<2.0.0"
+jsii = ">=1.66.0,<2.0.0"
 publication = ">=0.0.3"
 typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "boto3"
-version = "1.24.61"
+version = "1.24.64"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 
 [package.dependencies]
-botocore = ">=1.27.61,<1.28.0"
+botocore = ">=1.27.64,<1.28.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -59,7 +59,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.27.61"
+version = "1.27.64"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -83,18 +83,18 @@ python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
 attrs = ">=20"
-exceptiongroup = { version = "*", python = "< 3.11" }
+exceptiongroup = {version = "*", markers = "python_version <= \"3.10\""}
 
 [[package]]
 name = "constructs"
-version = "10.1.89"
+version = "10.1.93"
 description = "A programming model for software-defined state"
 category = "main"
 optional = false
 python-versions = "~=3.7"
 
 [package.dependencies]
-jsii = ">=1.65.0,<2.0.0"
+jsii = ">=1.66.0,<2.0.0"
 publication = ">=0.0.3"
 typeguard = ">=2.13.3,<2.14.0"
 
@@ -119,7 +119,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "jsii"
-version = "1.65.0"
+version = "1.66.0"
 description = "Python client for jsii runtime"
 category = "main"
 optional = false
@@ -228,8 +228,8 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.10"
-content-hash = "7294d2181bb7cf5b9a0e5a5ec77e5d8a98556f7b59f7ed0463f9795416d794bd"
+python-versions = "^3.9"
+content-hash = "195e6ef569a4593fe6f40cb664969c2eedf82c1dfe5bf7c52d016ede71b46cc7"
 
 [metadata.files]
 attrs = [
@@ -237,28 +237,28 @@ attrs = [
     {file = "attrs-22.1.0.tar.gz", hash = "sha256:29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6"},
 ]
 aws-cdk-lib = [
-    {file = "aws-cdk-lib-2.39.0.tar.gz", hash = "sha256:17fa6a78b6ec6f4ab2ce655f565d9f799f37afa8ca03ff78675e61f30ca6ef79"},
-    {file = "aws_cdk_lib-2.39.0-py3-none-any.whl", hash = "sha256:4a4bc7798e73f527f1fb1bf8033da3c15f272ed91c07ef886b8f0713f96c5dc5"},
+    {file = "aws-cdk-lib-2.40.0.tar.gz", hash = "sha256:0a4c2c9ad95e126b4a157134f968c7d0bcd74b6bd91f208be72aa562952114ce"},
+    {file = "aws_cdk_lib-2.40.0-py3-none-any.whl", hash = "sha256:376c64aefe5971c121c6098ab7fd7efa7a61a9caa8f1b9deeeb87c1a5a768318"},
 ]
 "aws-cdk.aws-lambda-python-alpha" = [
-    {file = "aws-cdk.aws-lambda-python-alpha-2.39.0a0.tar.gz", hash = "sha256:0ea09956754cbeb4b3bf938e5374dd4aeab061e1907dda1147dfb405ab1ec304"},
-    {file = "aws_cdk.aws_lambda_python_alpha-2.39.0a0-py3-none-any.whl", hash = "sha256:c7de75718f870886e03fe4e3cb5366893aba92b10e31183c1bdb313bfc33b4d4"},
+    {file = "aws-cdk.aws-lambda-python-alpha-2.40.0a0.tar.gz", hash = "sha256:07e0f8b15a9f3f97fbd860145948342c7e849cb3c4461dbf29fe2abb84e2d253"},
+    {file = "aws_cdk.aws_lambda_python_alpha-2.40.0a0-py3-none-any.whl", hash = "sha256:4e9b3a066137546b6562a0c44eaef9e54483c12908aa76274a6b11239b647005"},
 ]
 boto3 = [
-    {file = "boto3-1.24.61-py3-none-any.whl", hash = "sha256:ec1aa3f4c2b68da1a9c01e175086f5f6b1b8b67780fa569ab8875be5bb3fd5ae"},
-    {file = "boto3-1.24.61.tar.gz", hash = "sha256:b72496c7eaa45afbdfa48a7c648c3211342582d91c8c1b7330d09c18242132d1"},
+    {file = "boto3-1.24.64-py3-none-any.whl", hash = "sha256:232ce2e82cf7d79f3ec02d301fd370a8e21ede81d5be3d9edf182ad10dc24e30"},
+    {file = "boto3-1.24.64.tar.gz", hash = "sha256:932edb4373cca0062521a236af46d80115598d3056c7356f00fee26db25efcd7"},
 ]
 botocore = [
-    {file = "botocore-1.27.61-py3-none-any.whl", hash = "sha256:535c8e97ed28a38fd09dd8f4735195e761bbee54e4c6021f3a709a97b1287dd6"},
-    {file = "botocore-1.27.61.tar.gz", hash = "sha256:99012965e2409665c7d86706862c5a141e01e1c4d2c81cb9409a44200ee59631"},
+    {file = "botocore-1.27.64-py3-none-any.whl", hash = "sha256:670aec1c6f201a06ad7fbf252485629f4cd17e63e31dea5b67accb4d08b5f2fa"},
+    {file = "botocore-1.27.64.tar.gz", hash = "sha256:25793c7e13d989ba27bbca83ea5e19a4ee1cf7ddbab2c0ab3d63461e64e9be50"},
 ]
 cattrs = [
     {file = "cattrs-22.1.0-py3-none-any.whl", hash = "sha256:d55c477b4672f93606e992049f15d526dc7867e6c756cd6256d4af92e2b1e364"},
     {file = "cattrs-22.1.0.tar.gz", hash = "sha256:94b67b64cf92c994f8784c40c082177dc916e0489a73a9a36b24eb18a9db40c6"},
 ]
 constructs = [
-    {file = "constructs-10.1.89-py3-none-any.whl", hash = "sha256:129945a8a95a5d22a517b14dee45d4f8a9bcf12adbef75a99045c73fc1d258e7"},
-    {file = "constructs-10.1.89.tar.gz", hash = "sha256:990c80d37c4f6874053ba3379f18d7febdd5481834e7824972aebf3e3c3e3d46"},
+    {file = "constructs-10.1.93-py3-none-any.whl", hash = "sha256:98bdc9746f25605cd791bdc43ef666671f3c96ee8d70bbdec4d9103efa5b4770"},
+    {file = "constructs-10.1.93.tar.gz", hash = "sha256:9b76723e16b0de7ea973c46f1d6919b4c951e66d4118b456fa4788d2e7f4d20f"},
 ]
 exceptiongroup = [
     {file = "exceptiongroup-1.0.0rc9-py3-none-any.whl", hash = "sha256:2e3c3fc1538a094aab74fad52d6c33fc94de3dfee3ee01f187c0e0c72aec5337"},
@@ -269,8 +269,8 @@ jmespath = [
     {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
 ]
 jsii = [
-    {file = "jsii-1.65.0-py3-none-any.whl", hash = "sha256:47b939259ec465bc044aed6d3288b9b27a8edef2af21f1a8448e297b8429f154"},
-    {file = "jsii-1.65.0.tar.gz", hash = "sha256:a09ef1f9864fe27457ba4233b3a0744a76d2562077d5b8b3a7f2242edc4a8293"},
+    {file = "jsii-1.66.0-py3-none-any.whl", hash = "sha256:3c776c3fc32ed1e28fc95625617f106ca28e9e87b0b47d4d0bb66b78b873cafe"},
+    {file = "jsii-1.66.0.tar.gz", hash = "sha256:11c64c7c799776fe05922032970c36ac81c726dbdc18039dd3d2e848458d105c"},
 ]
 mentor-match = [
     {file = "mentor-match-7.0.0.tar.gz", hash = "sha256:37a3ab04423731211f8067695bcebd64aa03cb17cfc11a974e7872af0af26245"},
