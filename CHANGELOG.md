@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[2.5.0]
+## [3.1.0] - 2022-06-26
 
 ### Added
 This release adds the notification workflow, using GOV.UK Notify. Getting from the "matching" to the "notification"
