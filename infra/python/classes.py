@@ -1,11 +1,13 @@
 import operator
-from typing import Union
+from typing import Union, TypeVar
 
 from matching.factory import ParticipantFactory
 from matching.mentee import Mentee
 from matching.mentor import Mentor
 from matching.person import Person
 from matching.rules import rule as rl
+
+CSPersonType = TypeVar("CSPersonType", bound="CSPerson")
 
 
 class CSPerson(Person):
@@ -32,7 +34,7 @@ class CSPerson(Person):
         self.both = True if kwargs.get("both mentor and mentee") == "yes" else False
         kwargs = self.map_input_to_model(kwargs)
         super(CSPerson, self).__init__(**kwargs)
-        self._connections: list[CSPerson] = []
+        self._connections: list[CSPersonType] = []
 
     @classmethod
     def str_grade_to_val(cls, grade: str):
@@ -43,7 +45,7 @@ class CSPerson(Person):
         return cls.grade_mapping[grade]
 
     @property
-    def connections(self) -> list["CSPerson"]:
+    def connections(self) -> list[CSPersonType]:
         return self._connections
 
     @connections.setter

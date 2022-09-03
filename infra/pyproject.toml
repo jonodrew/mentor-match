@@ -12,7 +12,10 @@ mentor-match = "^7.0.0"
 exceptiongroup = "^1.0.0-rc.9"
 boto3 = "^1.24.61"
 
+
 [tool.poetry.dev-dependencies]
+moto = "^4.0.1"
+pytest = "^7.1.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -123,11 +123,11 @@ def celery_worker_parameters():
 def known_participants():
     def _known_participants(quantity=50) -> tuple[list[CSMentor], list[CSMentee]]:
         mentors = [
-            CSParticipantFactory.create_from_dict({"mentor": known_data("mentor")})
+            CSParticipantFactory.create_from_dict({"csmentor": known_data("mentor")})
             for i in range(quantity)
         ]
         mentees = [
-            CSParticipantFactory.create_from_dict({"mentee": known_data("mentee")})
+            CSParticipantFactory.create_from_dict({"csmentee": known_data("mentee")})
             for i in range(quantity)
         ]
         return mentors, mentees
