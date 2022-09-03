@@ -54,7 +54,7 @@ lettuce==0.2.23
 Mako==1.1.6
 Markdown==3.3.7
 MarkupSafe==2.0.1
-mentor-match==7.0.0
+mentor-match==7.0.1
 mock==4.0.3
 munkres==1.1.4
 mypy==0.910
