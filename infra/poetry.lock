@@ -135,7 +135,7 @@ typing-extensions = ">=3.7,<5.0"
 
 [[package]]
 name = "mentor-match"
-version = "7.0.0"
+version = "7.0.1"
 description = "A series of classes to match mentors and mentees"
 category = "main"
 optional = false
@@ -273,8 +273,8 @@ jsii = [
     {file = "jsii-1.66.0.tar.gz", hash = "sha256:11c64c7c799776fe05922032970c36ac81c726dbdc18039dd3d2e848458d105c"},
 ]
 mentor-match = [
-    {file = "mentor-match-7.0.0.tar.gz", hash = "sha256:37a3ab04423731211f8067695bcebd64aa03cb17cfc11a974e7872af0af26245"},
-    {file = "mentor_match-7.0.0-py3-none-any.whl", hash = "sha256:26765f63a27acefe102cb016069ccf9fdd073505744f2a002875de065ee88a85"},
+    {file = "mentor-match-7.0.1.tar.gz", hash = "sha256:cfb62cc6c9bc9fba54d4d1dff55d2b26e43b8106640ef21cab6ee86e814ad3bf"},
+    {file = "mentor_match-7.0.1-py3-none-any.whl", hash = "sha256:6b1c667a7331eba18342d7690ac197501816bcb8f4b0c8da76987930c96147b9"},
 ]
 munkres = [
     {file = "munkres-1.1.4-py2.py3-none-any.whl", hash = "sha256:6b01867d4a8480d865aea2326e4b8f7c46431e9e55b4a2e32d989307d7bced2a"},
