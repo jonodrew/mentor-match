@@ -1,10 +1,10 @@
-from typing import Callable, Union, Any
+from typing import Callable, Union, Any, TypedDict, Sequence
 
 import json
 import os
 import boto3
 
-from helpers import serialize, deserialize
+from helpers import serialize, deserialize, read_from_s3, write_to_s3, TaskIO
 from tasks import (
     async_process_data,
     Result,
@@ -36,26 +36,18 @@ def serialize_deserialize(
     return wrapped_func
 
 
-def read_write_s3(function: Callable[[dict, Any], Union[dict, list]]):
-    def wrapped_func(event: dict, context) -> dict[str, Union[str, int]]:
-        data_uuid = event["data_uuid"]
-        step = event.get("step", 0)
-        data = s3_resource().Object(bucket_name, f"{data_uuid}/{str(step)}.json")
-        file_content = data.get()["Body"].read().decode("utf-8")
-        json_content = json.loads(file_content)
+def read_write_s3(function: Callable[[dict, Any], Union[dict, list]]) -> Callable[[dict, Any], TaskIO]:
+    def wrapped_func(event: dict, context) -> TaskIO:
+        json_content = read_from_s3(event, s3_resource(), bucket_name)
 
         output = function(json_content, context)
 
-        data_for_next_step = s3_resource().Object(
-            bucket_name, f"{data_uuid}/{str(step + 1)}"
-        )
-        data_for_next_step.put(Body=(bytes(json.dumps(output).encode("UTF-8"))))
-        return {"data_uuid": data_uuid, "step": step + 1}
+        return write_to_s3(s3_resource(), bucket_name, event["step"], event["data_uuid"], output)
 
     return wrapped_func
 
 
-def async_process_data_event_handler(event: dict[str, Union[str, int]], context):
+def async_process_data_event_handler(event: TaskIO, context) -> TaskIO:
     """
     Event handler that calls the `tasks.async_process_data` function.
     :param event: A dictionary with an event from AWS. Must have the "mentees" and "mentors" keys
@@ -76,16 +68,21 @@ def find_best_result_lambda(event: dict, context):
     ...
 
 
-def prepare_data_for_mapping(event: dict, context):
+def prepare_data_for_mapping(event: dict, context) -> Sequence[TaskIO]:
     """
     Create fresh copies of data, ready for handing to the mapping State defined in the infrastructure
     :param event: The data to be matched
     :param context: The AWS context
     :return: A list of dicts with the format {"mentor": [...], "mentee": [...], "unmatched bonus": int}
     """
-
-    def _prepare_data(data: dict) -> list[dict]:
-        prepared_data = prepare_data_iterator(*deserialize(data))
+    def _prepare_data(data) -> list[dict[str, list[dict] | int]]:
+        prepare_data_for_mapping.hello = "hello"
+        mentors, mentees, bonus = deserialize(data)
+        prepared_data = prepare_data_iterator(mentors, mentees)
         return [serialize(*result) for result in prepared_data]
 
-    return read_write_s3(_prepare_data)(event, context)
+    prepared_data = _prepare_data(read_from_s3(event, s3_resource(), bucket_name))
+    write_to_s3(s3_resource(), bucket_name, event["step"], event["data_uuid"], prepared_data)
+    return [TaskIO(data_uuid=event["data_uuid"])]
+
+

@@ -1,7 +1,15 @@
-from typing import Union
+import json
+from typing import Union, TypedDict
 
 from classes import CSMentor, CSMentee, CSParticipantFactory as CSFactory
 from tasks import Result
+
+
+class TaskIO(TypedDict):
+    data_uuid: str
+    step: int
+    input_path: str
+    output_path: str
 
 
 def serialize(
@@ -23,3 +31,19 @@ def deserialize(data: dict) -> Result:
     ]
     unmatched_bonus = data.get("unmatched bonus", 6)
     return [mentors, mentees, unmatched_bonus]
+
+
+def read_from_s3(event: TaskIO, s3_resource, bucket_name):
+    data_uuid = event["data_uuid"]
+    step = event.get("step", 0)
+    data = s3_resource.Object(bucket_name, f"{data_uuid}/{str(step)}.json")
+    file_content = data.get()["Body"].read().decode("utf-8")
+    return json.loads(file_content)
+
+
+def write_to_s3(s3_resource, bucket_name, step, data_uuid, data_to_write) -> TaskIO:
+    data_for_next_step = s3_resource.Object(
+        bucket_name, f"{data_uuid}/{str(step + 1)}"
+    )
+    data_for_next_step.put(Body=(bytes(json.dumps(data_to_write).encode("UTF-8"))))
+    return {"data_uuid": data_uuid, "step": step + 1}
