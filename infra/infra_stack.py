@@ -28,7 +28,7 @@ class DataStore(Construct):
         s3_function_partial = functools.partial(
             lambda_python.PythonFunction,
             scope=self,
-            entry="./lambda",
+            entry="./app",
             runtime=Runtime.PYTHON_3_9,
             index="s3_api_gw.py",
             environment={"S3_BUCKET_NAME": self.bucket.bucket_name},
@@ -78,7 +78,6 @@ class ProcessData(Construct):
     """
 
     def __init__(self, scope: Construct, id: str, data_bucket: Bucket, **kwargs):
-        # TODO: Add S3 bucket and means for writing and reading to and from it
         super().__init__(scope, id)
 
         dependencies = lambda_python.PythonLayerVersion(
@@ -92,7 +91,7 @@ class ProcessData(Construct):
             lambda_python.PythonFunction,
             scope=self,
             id="ProcessDataFunction",
-            entry="./lambda",
+            entry="./app",
             runtime=Runtime.PYTHON_3_9,
             index="index.py",
             layers=[dependencies],
