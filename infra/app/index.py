@@ -1,6 +1,5 @@
-from typing import Callable, Union, Any, TypedDict, Sequence
+from typing import Callable, Union, Any, Sequence
 
-import json
 import os
 import boto3
 
@@ -9,7 +8,6 @@ from tasks import (
     async_process_data,
     Result,
     prepare_data_iterator,
-    reduce_to_best_output,
 )
 from classes import CSMentee, CSMentor
 
@@ -36,13 +34,17 @@ def serialize_deserialize(
     return wrapped_func
 
 
-def read_write_s3(function: Callable[[dict, Any], Union[dict, list]]) -> Callable[[dict, Any], TaskIO]:
+def read_write_s3(
+    function: Callable[[dict, Any], Union[dict, list]]
+) -> Callable[[dict, Any], TaskIO]:
     def wrapped_func(event: dict, context) -> TaskIO:
         json_content = read_from_s3(event, s3_resource(), bucket_name)
 
         output = function(json_content, context)
 
-        return write_to_s3(s3_resource(), bucket_name, event["step"], event["data_uuid"], output)
+        return write_to_s3(
+            s3_resource(), bucket_name, event["step"], event["data_uuid"], output
+        )
 
     return wrapped_func
 
@@ -75,14 +77,14 @@ def prepare_data_for_mapping(event: dict, context) -> Sequence[TaskIO]:
     :param context: The AWS context
     :return: A list of dicts with the format {"mentor": [...], "mentee": [...], "unmatched bonus": int}
     """
-    def _prepare_data(data) -> list[dict[str, list[dict] | int]]:
-        prepare_data_for_mapping.hello = "hello"
+
+    def _prepare_data(data) -> list[dict[str, Union[list[dict], int]]]:
         mentors, mentees, bonus = deserialize(data)
         prepared_data = prepare_data_iterator(mentors, mentees)
         return [serialize(*result) for result in prepared_data]
 
     prepared_data = _prepare_data(read_from_s3(event, s3_resource(), bucket_name))
-    write_to_s3(s3_resource(), bucket_name, event["step"], event["data_uuid"], prepared_data)
+    write_to_s3(
+        s3_resource(), bucket_name, event["step"], event["data_uuid"], prepared_data
+    )
     return [TaskIO(data_uuid=event["data_uuid"])]
-
-
