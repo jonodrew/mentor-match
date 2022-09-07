@@ -5,6 +5,14 @@ This is a service to help mentoring programme administrators match mentors and m
 It uses [this package](https://github.com/jonodrew/mentor-match-package) to calculate matches. It relies on the Munkres, or Hungarian, algorithm. The Munkres algorithm works on a grid of scores and finds the solution that makes the most people the least unhappy. That is to say, everyone will be equally unhappy with their score: any switch will
 make *someone* worse off.
 
+## Roadmap
+
+This service is free and open source. It welcomes pull requests, feature suggestions, improvements to grammar,
+spelling, or any other way folks want to help.
+
+Our roadmap is hosted [here on GitHub](https://github.com/users/jonodrew/projects/1). Make feature suggestions by
+raising an issue on this repo.
+
 ## Architecture
 This service has three main parts: a web server, running Flask; a Celery worker; and a Redis instance. The long-running task of matching mentors and mentees is passed off to the Celery worker via Redis, which acts as the broker. Results are also stored in Redis and retrieved by the Flask app as needed.
 
