@@ -5,7 +5,7 @@ description = ""
 authors = ["jonathan <jonodrew@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 mentor-match = "^7.0.0"
 
 [tool.poetry.dev-dependencies]
