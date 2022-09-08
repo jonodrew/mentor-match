@@ -7,9 +7,8 @@ from helpers import serialize, deserialize, read_from_s3, write_to_s3, TaskIO
 from tasks import (
     async_process_data,
     Result,
-    prepare_data_iterator,
 )
-from classes import CSMentee, CSMentor
+from classes import CSMentee, CSMentor, base_rules
 
 
 def s3_resource():
@@ -43,7 +42,7 @@ def read_write_s3(
         output = function(json_content, context)
 
         return write_to_s3(
-            s3_resource(), bucket_name, event["step"], event["data_uuid"], output
+            s3_resource(), bucket_name, event["bonus"], event["data_uuid"], output
         )
 
     return wrapped_func
@@ -72,19 +71,10 @@ def find_best_result_lambda(event: dict, context):
 
 def prepare_data_for_mapping(event: dict, context) -> Sequence[TaskIO]:
     """
-    Create fresh copies of data, ready for handing to the mapping State defined in the infrastructure
+    Pass path to data as part of an array with a specific value for the bonus
     :param event: The data to be matched
     :param context: The AWS context
-    :return: A list of dicts with the format {"mentor": [...], "mentee": [...], "unmatched bonus": int}
+    :return: A sequence of `TaskIO` objects
     """
-
-    def _prepare_data(data) -> list[dict[str, Union[list[dict], int]]]:
-        mentors, mentees, bonus = deserialize(data)
-        prepared_data = prepare_data_iterator(mentors, mentees)
-        return [serialize(*result) for result in prepared_data]
-
-    prepared_data = _prepare_data(read_from_s3(event, s3_resource(), bucket_name))
-    write_to_s3(
-        s3_resource(), bucket_name, event["step"], event["data_uuid"], prepared_data
-    )
-    return [TaskIO(data_uuid=event["data_uuid"])]
+    max_score = sum(rule.results.get(True) for rule in base_rules())
+    return [TaskIO(data_uuid=event["data_uuid"], bonus=i) for i in range(max_score)]

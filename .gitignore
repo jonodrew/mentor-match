@@ -5,3 +5,4 @@
 *.pyc
 /.python-version
 /.jekyll-cache/Jekyll/Cache/
+*.xml
