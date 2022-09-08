@@ -40,6 +40,8 @@ def read_from_s3(event: TaskIO, s3_resource, bucket_name):
 
 
 def write_to_s3(s3_resource, bucket_name, bonus, data_uuid, data_to_write) -> TaskIO:
-    data_for_next_step = s3_resource.Object(bucket_name, f"{data_uuid}/{bonus}.json")
+    data_for_next_step = s3_resource.Object(
+        bucket_name, f"{data_uuid}/out/{bonus}.json"
+    )
     data_for_next_step.put(Body=(bytes(json.dumps(data_to_write).encode("UTF-8"))))
     return {"data_uuid": data_uuid, "bonus": bonus}

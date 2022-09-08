@@ -77,4 +77,4 @@ def prepare_data_for_mapping(event: dict, context) -> Sequence[TaskIO]:
     :return: A sequence of `TaskIO` objects
     """
     max_score = sum(rule.results.get(True) for rule in base_rules())
-    return [TaskIO(data_uuid=event["data_uuid"], bonus=i) for i in range(max_score)]
+    return [TaskIO(data_uuid=event["data_uuid"], bonus=i + 1) for i in range(max_score)]
