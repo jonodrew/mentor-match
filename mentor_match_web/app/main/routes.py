@@ -82,7 +82,8 @@ def upload():
             else:
                 error_message = "Unspecified error. Please contact the admin team"
             return make_response(
-                render_template("input.html", error_message=error_message), 415
+                render_template("input.html", error_message=error_message),
+                415,
             )
 
 
@@ -243,7 +244,9 @@ def process():
         return redirect(url_for("main.upload"))
     else:
         return render_template(
-            "process.html", data_folder=data_folder, matching=matching_function
+            "process.html",
+            data_folder=data_folder,
+            matching=matching_function,
         )
 
 

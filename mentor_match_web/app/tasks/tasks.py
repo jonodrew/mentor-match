@@ -1,14 +1,14 @@
-import functools
 import os
 import sys
-import requests
 from typing import Tuple, List, Sequence, Protocol
+
+import requests
+from matching import process
+from matching.rules.rule import UnmatchedBonus
 
 from app.classes import CSMentor, CSMentee
 from app.extensions import celery_app as celery_app
-from matching import process
 from app.helpers import base_rules
-from matching.rules.rule import UnmatchedBonus
 
 sys.setrecursionlimit(10000)
 
@@ -46,12 +46,13 @@ def find_best_output(
     best_outcome = group_result[0]
     for participant_tuple in group_result:
         mentors, mentees, unmatched_bonus = participant_tuple
-        one_connection_min_func = functools.partial(
-            map, lambda participant: len(participant.connections) > 0
-        )
         current_count = {
-            "mentors": sum(one_connection_min_func(mentors)),
-            "mentees": sum(one_connection_min_func(mentees)),
+            "mentors": sum(
+                map(lambda participant: len(participant.connections) > 0, mentors)
+            ),
+            "mentees": sum(
+                map(lambda participant: len(participant.connections) > 0, mentees)
+            ),
         }
         if (current_count["mentees"] > highest_count["mentees"]) or (  # type: ignore
             current_count["mentees"] == highest_count["mentees"]

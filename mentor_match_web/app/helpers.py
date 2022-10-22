@@ -4,8 +4,8 @@ import math
 import operator
 import os
 import pathlib
-import string
 import random
+import string
 
 import flask
 import matching.rules.rule as rl

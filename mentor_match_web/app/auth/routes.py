@@ -1,7 +1,8 @@
 import os
 
-from app.auth import auth_bp
 from flask import redirect, url_for, request, render_template, make_response
+
+from app.auth import auth_bp
 
 
 def valid_login(login_request):

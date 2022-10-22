@@ -22,10 +22,10 @@ jobs:
           pip install mypy flake8 pytest pytest-cov
 
       - name: Test with mypy
-        run: mypy tests/ app/ --ignore-missing-imports
+        run: mypy tests/ mentor_match_web/app/ --ignore-missing-imports
 
       - name: Test with flake8
-        run: flake8 --max-line-length=131 --extend-ignore=E203 tests/ app/
+        run: flake8 --max-line-length=131 --extend-ignore=E203 tests/ mentor_match_web/app/
 
 
   get-commit-tag:
