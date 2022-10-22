@@ -1,0 +1,17 @@
+{% extends "page-with-panel.html" %}
+{% block title %}Matching complete{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumbs--list-item">
+    <a class="breadcrumbs--link" href="/mentor_match_web/app/static">Mentor matcher</a>
+  </li>
+{% endblock %}
+
+{% block paneltitle %}Download complete{% endblock %}
+{% block panelmessage %}
+  <p>You can safely close this window.</p>
+  <p>If your download didn't start automatically, something might have gone wrong. You can <a href="/mentor_match_web/app/static" class="link--inverse" title="Go to start page">try again</a>.</p>
+{% endblock %}

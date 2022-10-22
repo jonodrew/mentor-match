@@ -2,7 +2,7 @@ version: "3"
 services:
   app:
     volumes:
-      - ./app:/app
+      - ./mentor_match_web/app:/app
     environment:
       - USERNAME=CSLGBT
       - PASSWORD=HorseBatteryStapleCorrect

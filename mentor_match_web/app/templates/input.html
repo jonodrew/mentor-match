@@ -1,0 +1,37 @@
+{% extends "page-with-header.html" %}
+{% block title %}Upload data{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumbs--list-item">
+    <a class="breadcrumbs--link" href="/mentor_match_web/app/static">Mentor matcher</a>
+  </li>
+{% endblock %}
+
+{% block pagecaption %}Mentor matcher{% endblock %}
+{% block pageheading %}Upload your data{% endblock %}
+{% block pageexcerpt %}Upload the mentors and mentees you want to match.{% endblock %}
+
+{% block content %}
+<div class="grid-row">
+  <div class="grid-column-two-thirds">
+    <form method=post enctype=multipart/form-data action="{{ url_for('main.upload') }}">
+      {% if error_message %}
+        <blockquote class="error warning-text">
+          <p><strong>An error has occurred</strong></p>
+          <p>{{ error_message }}</p>
+        </blockquote>
+      {% endif %}
+      <div class="form-group" style="padding-bottom: 45px;">
+        <label class="label label-lg" for="files">
+          Select your files
+        </label>
+        <input type="file" name="files" multiple="" id="files">
+      </div>
+      <input type="submit" class="button button--action" value="Upload the data ❯">
+    </form>
+  </div>
+</div>
+{% endblock %}

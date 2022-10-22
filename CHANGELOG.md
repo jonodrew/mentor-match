@@ -157,4 +157,4 @@ use the software, but because it is a licence change it is breaking - hence the 
 Welcome to version 1 of this interface to the mentor-matching project! Thanks to a change in the underlying package we use, we've had to make a bit of a tweak to the package. So we figured why not actually write a changelog for this, for the first time ever?
 
 ### Added
-- Default weightings for the matchings. These can be found in [the `run_task` route](./app/main/routes.py)
+- Default weightings for the matchings. These can be found in [the `run_task` route](mentor_match_web/app/main/routes.py)

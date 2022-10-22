@@ -1,0 +1,30 @@
+{% extends "page-with-header.html" %}
+{% block title %}Match mentees to mentors{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block pagecaption %}Tools{% endblock %}
+{% block pageheading %}Mentor matcher{% endblock %}
+{% block pageexcerpt %}This tool helps you to match mentors to mentees as part of the Civil Service LGBT+ mentoring programme.{% endblock %}
+
+{% block content %}
+
+<div class="grid-row">
+  <div class="grid-column-two-thirds">
+    <div class="page--content">
+    <h2 class="heading-md">Before you start</h2>
+    <ol>
+      <li><strong>This tool will only work with data in specific formats.</strong> You must have two files – <code>mentees.csv</code> and <code>mentors.csv</code> – to start the matching process. Those files need to be formatted with specific column headings. You can <a href="https://github.com/jonodrew/mentor-match-package/blob/main/templates/participant.csv">download a template</a> from this website.</li>
+      <li><strong>Do not close your browser window during the matching process.</strong> Doing this may cause the matching process to fail and you to lose your matches.</li>
+      <li><strong>The larger the number of matches you need, the longer this takes.</strong> Matching mentors to mentees takes around 10 minutes to match 500 participants.</li>
+    </ol>
+    <hr>
+    <div class="button-group">
+      <a href="/upload" class="button button--action">Start now</a>
+    </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,13 +1,17 @@
 import os
 import pathlib
+
 import pytest as pytest
+from matching.process import create_participant_list_from_path
+
 import app.helpers
 from app import create_app
-from app.config import TestConfig
-from matching.process import create_participant_list_from_path
 from app.classes import CSMentee, CSMentor, CSParticipantFactory
-from app.helpers import known_file as kf
+from app.config import TestConfig
 from app.helpers import known_data
+from app.helpers import known_file as kf
+
+pytest_plugins = ("celery.contrib.pytest",)
 
 
 @pytest.fixture(scope="function")
