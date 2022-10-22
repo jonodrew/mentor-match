@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install .
           pip install mypy flake8 pytest pytest-cov
 
       - name: Test with mypy
@@ -62,8 +62,11 @@ jobs:
       - name: Compose environment
         run: docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
 
+      - name: Install test dependencies
+        run: docker-compose exec -T app poetry install --with test
+
       - name: Full test suite
-        run: docker-compose exec -T app pytest tests -n 3 --cache-clear --cov=app tests/ > pytest-coverage.txt
+        run: docker-compose exec -T app poetry run pytest tests -n 3 --cache-clear --cov=app tests/ > pytest-coverage.txt
 
       - name: Comment coverage
         uses: coroo/pytest-coverage-commentator@v1.0.2

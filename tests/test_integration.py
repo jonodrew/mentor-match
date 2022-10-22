@@ -5,7 +5,7 @@ import time
 from unittest.mock import patch
 
 import pytest
-from flask import current_app, url_for, request
+from flask import current_app, url_for
 from matching.process import create_participant_list_from_path
 
 from app.classes import CSMentee, CSMentor
@@ -42,7 +42,7 @@ class TestIntegration:
             for fp in files:
                 fp.close()
         patched_random.stop()
-        cookie_value = request.cookies.get("data-folder")
+        cookie_value = resp.request.cookies.get("data-folder")
         assert resp.status_code == 200
         assert cookie_value == "abcdef"
 
