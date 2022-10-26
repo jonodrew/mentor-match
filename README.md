@@ -50,4 +50,10 @@ This software is best run in Docker, because it needs Redis and a Celery worker.
 `docker-compose`. [Docker instructions](https://docs.docker.com/engine/install/) and
 [docker-compose instructions](https://docs.docker.com/compose/install/). Once you've got those two installed, you'll need to run `docker-compose up -d` to get things running, and `docker-compose down` to stop them again. You should see the app running at http://127.0.0.1:5001
 
+Once you have the app running in your browser, you will be redirected to `/login`. The credentials for logging in locally are:
+  ```
+  Username: CSLGBT
+  Password: HorseBatteryStapleCorrect
+  ```
+
 You can use the randomised data in the [sample_data folder](/sample_data) to try out the system and see for yourself how quickly it matches 500 mentors and mentees. The record on my hardware is 97 seconds. I've not yet tried it by hand...
