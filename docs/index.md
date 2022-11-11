@@ -11,4 +11,4 @@ This documentation explains how the **{{ site.title | downcase }}** software pac
 
 You can contribute to this documentation by raising a pull request on Github. The documentation for this software is located in the `/docs` folder of the repository.
 
-[Visit the Github repository](https://github.com/jonodrew/mentor-match)
+[Visit the Github repository](https://github.com/cs-mentoring/mentor-match)

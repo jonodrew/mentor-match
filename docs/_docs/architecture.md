@@ -12,7 +12,7 @@ queue and processes them. Finally, the results store, where the worker machine d
 While the web server waits for the task, it currently just shows a plain screen. This is definitely a bad user
 experience, but I don't yet want to cram more javascript into this system. However, I accept that this probably
 means doing something clever with attachments, encryption, emails, and other such things.
-[Pull requests are welcome.](https://www.github.com/jonodrew/mentor-match)
+[Pull requests are welcome.](https://www.github.com/cs-mentoring/mentor-match)
 
 In the current system, the web server is Flask. The queue and the results store are both played by Redis, and the
 worker is Celery. There is

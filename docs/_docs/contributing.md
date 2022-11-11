@@ -6,7 +6,7 @@ category: Meta
 
 You can contribute to this project on Github.
 
-[Visit the Github repository](https://github.com/jonodrew/mentor-match)
+[Visit the Github repository](https://github.com/cs-mentoring/mentor-match)
 
 ## Roadmap
 

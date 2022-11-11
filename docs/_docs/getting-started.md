@@ -19,11 +19,11 @@ By default, the service can be accessed on the following ports:
 
 You **must** install `docker-compose` to use this software. [Follow the documentation from Docker](https://docs.docker.com/desktop/) to install the required software.
 
-After `docker-compose` is installed, clone [the mentor match repository](https://www.github.com/jonodrew/mentor-match). This repository is hosted on Github, but a Github account is not required to clone the repository. 
+After `docker-compose` is installed, clone [the mentor match repository](https://www.github.com/cs-mentoring/mentor-match). This repository is hosted on Github, but a Github account is not required to clone the repository.
 
 A Github account is required if you wish to [contribute to the documentation or code](/contribute).
 
-Use the command line to get to where you've cloned this repository. 
+Use the command line to get to where you've cloned this repository.
 
 From the repository folder, in the command line run:
 
