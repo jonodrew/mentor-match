@@ -1,14 +1,12 @@
 # Mentor Match
 
-This is a service to help mentoring programme administrators match mentors and mentees. Right now it's specifically designed to support the Civil Service's LBGTQ+ network. It might work if you run a different network in the Civil Service. Get in touch to find out more, or raise an issue.
+This is a service to help mentoring programme administrators match mentors and mentees. Get in touch to find out more, or raise an issue.
 
-It uses [this package](https://github.com/jonodrew/mentor-match-package) to calculate matches. It relies on the Munkres, or Hungarian, algorithm. The Munkres algorithm works on a grid of scores and finds the solution that makes the most people the least unhappy. That is to say, everyone will be equally unhappy with their score: any switch will
-make *someone* worse off.
+It uses [this package](https://github.com/jonodrew/mentor-match-package) to calculate matches. It relies on the Munkres, or Hungarian, algorithm. The Munkres algorithm works on a grid of scores and finds the solution that makes the most people the least unhappy. That is to say, everyone will be equally unhappy with their score: any switch will make *someone* worse off.
 
 ## Roadmap
 
-This service is free and open source. It welcomes pull requests, feature suggestions, improvements to grammar,
-spelling, or any other way folks want to help.
+This service is free and open source. It welcomes pull requests, feature suggestions, improvements to grammar, spelling, or any other way folks want to help.
 
 Our roadmap is hosted [here on GitHub](https://github.com/users/jonodrew/projects/1). Make feature suggestions by
 raising an issue on this repo.
@@ -18,37 +16,45 @@ This service has three main parts: a web server, running Flask; a Celery worker;
 
 The Flask app is very basic: mostly HTML and basic routes, with a smidgeon of javascript to keep the user interested in what's happening while they wait for their results. That needs some work **so pull requests are welcome**.
 
+Docs are served with Jekyll.
+
 ## Setup
 
-If you've never done Python before in your life this project might not be for you. On the other hand, I think the code is
-beautiful, and I've made an effort with the documentation, and you can [find me on twitter](https://www.twitter.com/jonodrew)
-if you need to ask me questions, so what the heck. Let's get stuck in.
-
-You will need:
-
-- Python 3.7+
+To use this software your local machine, you will need:
 - admin rights, or at least enough rights to install stuff
+- Python 3.7+
+- `docker-compose`
 - `git`
-- a file of mentors and mentees. These files should be called "mentees.csv" and "mentors.csv", and align to the template in [the data folder](mentor_match_web/app/static/data/small)
-  - you can add any columns you want, but if you change any of the existing column headings things will go sideways
-    quickly. So don't do that
+- a file of mentors and mentees. These files should be called "mentees.csv" and "mentors.csv", and align to the template in [the data folder](mentor_match_web/app/static/data/small). 
 
-Start by [cloning this repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository).
-Then [set up a virtual environment](https://docs.python.org/3/library/venv.html), to make sure the things you're about to
-install don't mess around with your base system.
+By default, the service can be accessed on the following ports:
 
-On a Mac, run the following commands:
+| service | port |
+|---------|------|
+| flask   | 5001 |
+| redis   | 6379 |
+| docs    | 4000 |
+
+## Installing dependencies
+
+You **must** install `docker-compose` to use this software. [Follow the documentation from Docker](https://docs.docker.com/desktop/) to install the required software.
+
+After `docker-compose` is installed, clone [the mentor match repository](https://www.github.com/jonodrew/mentor-match). This repository is hosted on Github, but a Github account is not required to clone the repository. 
+
+A Github account is required if you wish to [contribute to the documentation or code](/contribute).
+
+Use the command line to get to where you've cloned this repository. 
+
+From the repository folder, in the command line run:
 
 ```
-python3 -m venv /path/to/new/virtual/environment
-source /path-to-new-virtual-environment/bin-activate
+docker-compose up
 ```
 
-Now install the requirements for this project: `pip install -r requirements.txt`
+You should now be able to access the service on the `localhost:` followed by the ports above. I recommend starting
+with [the docs](localhost:4000), so you can come back here and keep going!
 
-This software is best run in Docker, because it needs Redis and a Celery worker. You'll need to install `Docker` and
-`docker-compose`. [Docker instructions](https://docs.docker.com/engine/install/) and
-[docker-compose instructions](https://docs.docker.com/compose/install/). Once you've got those two installed, you'll need to run `docker-compose up -d` to get things running, and `docker-compose down` to stop them again. You should see the app running at http://127.0.0.1:5001
+To stop the service at any time, just press the control (<kbd>Ctrl</kbd>) key and <kbd>C</kbd> key together.
 
 Once you have the app running in your browser, you will be redirected to `/login`. The credentials for logging in locally are:
   ```
