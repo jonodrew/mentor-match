@@ -5,6 +5,7 @@ on:
 env:
   REDIS_URL: redis@redis
 jobs:
+
   well-written-test:
     runs-on: ubuntu-20.04
 
@@ -68,9 +69,6 @@ jobs:
       - name: Full test suite
         run: docker-compose exec -T app poetry run pytest tests -n 3 --cache-clear --cov=app tests/ > pytest-coverage.txt
 
-      - name: Comment coverage
-        uses: coroo/pytest-coverage-commentator@v1.0.2
-
       - name: Stop docker
         if: ${{ env.ACT }}
         run: docker-compose down
@@ -79,23 +77,16 @@ jobs:
         run: |
           export WEB_IMAGE=web:${GH_IMAGE_COMMIT_TAG}
           export WORKER_IMAGE=worker:${GH_IMAGE_COMMIT_TAG}
-          docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WEB_IMAGE}
-          docker tag ${WEB_IMAGE} registry.heroku.com/cslgbt-mentor-match/web:latest
           docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/${WEB_IMAGE}
           docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/web:latest
-          docker tag ${WORKER_IMAGE} registry.heroku.com/cslgbt-mentor-match/${WORKER_IMAGE}
-          docker tag ${WORKER_IMAGE} registry.heroku.com/cslgbt-mentor-match/worker:latest
           docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/${WORKER_IMAGE}
           docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/worker:latest
 
       - name: log in to registries
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-          docker login --username=${{ secrets.HEROKU_EMAIL }} --password-stdin <<< "${{ secrets.HEROKU_API_KEY }}" registry.heroku.com
 
       - name: Push images
         run: |
           docker image push --all-tags ghcr.io/jonodrew/mentor-match/web
           docker image push --all-tags ghcr.io/jonodrew/mentor-match/worker
-          docker image push --all-tags registry.heroku.com/cslgbt-mentor-match/web
-          docker image push --all-tags registry.heroku.com/cslgbt-mentor-match/worker
