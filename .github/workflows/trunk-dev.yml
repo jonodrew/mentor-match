@@ -5,6 +5,7 @@ on:
 env:
   REDIS_URL: redis@redis
 jobs:
+
   well-written-test:
     runs-on: ubuntu-20.04
 
@@ -67,9 +68,6 @@ jobs:
 
       - name: Full test suite
         run: docker-compose exec -T app poetry run pytest tests -n 3 --cache-clear --cov=app tests/ > pytest-coverage.txt
-
-      - name: Comment coverage
-        uses: coroo/pytest-coverage-commentator@v1.0.2
 
       - name: Stop docker
         if: ${{ env.ACT }}
