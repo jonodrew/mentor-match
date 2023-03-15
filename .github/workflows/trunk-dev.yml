@@ -77,10 +77,10 @@ jobs:
         run: |
           export WEB_IMAGE=web:${GH_IMAGE_COMMIT_TAG}
           export WORKER_IMAGE=worker:${GH_IMAGE_COMMIT_TAG}
-          docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/${WEB_IMAGE}
-          docker tag ${WEB_IMAGE} ghcr.io/jonodrew/mentor-match/web:latest
-          docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/${WORKER_IMAGE}
-          docker tag ${WORKER_IMAGE} ghcr.io/jonodrew/mentor-match/worker:latest
+          docker tag ${WEB_IMAGE} ghcr.io/${{ github.repository }}/${WEB_IMAGE}
+          docker tag ${WEB_IMAGE} ghcr.io/${{ github.repository }}/web:latest
+          docker tag ${WORKER_IMAGE} ghcr.io/${{ github.repository }}/${WORKER_IMAGE}
+          docker tag ${WORKER_IMAGE} ghcr.io/${{ github.repository }}/worker:latest
 
       - name: log in to registries
         run: |
@@ -88,5 +88,5 @@ jobs:
 
       - name: Push images
         run: |
-          docker image push --all-tags ghcr.io/jonodrew/mentor-match/web
-          docker image push --all-tags ghcr.io/jonodrew/mentor-match/worker
+          docker image push --all-tags ghcr.io/${{ github.repository }}/web
+          docker image push --all-tags ghcr.io/${{ github.repository }}/worker

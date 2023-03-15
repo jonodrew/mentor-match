@@ -10,7 +10,7 @@ class MentorMatchStack(cdk.Stack):
 
         ecsp.ApplicationLoadBalancedFargateService(
             self,
-            "MentorMatchWebServer",
+            "MentorMatchWeb",
             task_image_options=ecsp.ApplicationLoadBalancedTaskImageOptions(
                 image=ecs.ContainerImage.from_registry(
                     "ghcr.io/mentor-matching-online/mentor-match/web"
