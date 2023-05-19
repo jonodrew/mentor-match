@@ -3,9 +3,6 @@ from aws_cdk.pipelines import CodePipeline, ShellStep, CodePipelineSource
 from constructs import Construct
 
 
-class InfraPipeline(Stack): pass
-
-
 class MentorMatchPipeline(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
