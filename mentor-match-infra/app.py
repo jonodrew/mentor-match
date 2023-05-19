@@ -2,12 +2,12 @@
 import os
 
 import aws_cdk as cdk
-from mentor_match_infra.infrastructure import MentorMatchStack
+from mentor_match_infra.mentor_match_pipeline import MentorMatchPipeline
 
 app = cdk.App()
-MentorMatchStack(
+MentorMatchPipeline(
     app,
-    "MentorMatchStack",
+    "MentorMatchPipeline",
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.
