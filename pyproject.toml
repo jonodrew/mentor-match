@@ -115,6 +115,7 @@ Werkzeug = "^2.2.2"
 wsproto = "^1.2.0"
 celery = "^5.2.7"
 mentor-match = "^7.0.1"
+aws-cdk-lib = "^2.69.0"
 
 [tool.poetry.dev-dependencies]
 
