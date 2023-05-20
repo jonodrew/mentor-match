@@ -1,10 +1,7 @@
-from aws_cdk import Stack, Environment, Stage
+from aws_cdk import Stack, Environment
 from aws_cdk.pipelines import CodePipeline, ShellStep, CodePipelineSource, ManualApprovalStep
-from aws_cdk.aws_codepipeline_actions import CloudFormationDeleteStackAction
 from constructs import Construct
 from .mentor_match_stage import MentorMatchAppStage
-
-
 
 
 class MentorMatchPipeline(Stack):
