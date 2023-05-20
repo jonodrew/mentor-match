@@ -22,32 +22,7 @@ class MentorMatchPipeline(Stack):
                                                 )
                                 )
         testing_stage = MentorMatchAppStage(self, "testing", env=Environment(account="712310211354", region="eu-west-2"))
-        testing_stage_deployment = pipeline.add_stage(testing_stage)
-        testing_stage_deployment.add_post(
-            ShellStep(
-                "Delete", commands=[
-                    "npm install -g aws-cdk",
-                    "cd mentor-match-infra",
-                    "python -m pip install -r requirements.txt",
-                    "cdk ls",
-                    f"cdk destroy {construct_id}/{testing_stage_deployment.stacks.pop().stack_name.replace('-', '/')} --force"
-                ]
-            )
-        )
-        # testing_stage_deployment.add_action(
-        #     CloudFormationDeleteStackAction(
-        #         admin_permissions=True,
-        #         stack_name=testing_stage_deployment.stacks.pop().stack_name,
-        #         action_name="delete test stack"
-        # ))
-
-        # testing_stage.add_action(
-        #     CloudFormationDeleteStackAction(
-        #         admin_permissions=True,
-        #         stack_name=testing_stage_deployment.stacks.pop().stack_name,
-        #         action_name="delete test stack"
-        #     )
-        # )
+        pipeline.add_stage(testing_stage)
 
         production_stage = pipeline.add_stage(
             MentorMatchAppStage(self, "production", env=Environment(account="712310211354", region="eu-west-2"))
