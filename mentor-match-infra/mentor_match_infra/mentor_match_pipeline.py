@@ -19,7 +19,7 @@ class MentorMatchPipeline(Stack):
                                                 )
                                 )
         prod_stage = pipeline.add_stage(
-            MentorMatchAppStage(self, "prod", env=Environment(account="prod-account", region="eu-west-2"))
+            MentorMatchAppStage(self, "prod", env=Environment(account="712310211354", region="eu-west-2"))
         )
         prod_stage.add_pre(
             ManualApprovalStep('approval')
