@@ -1,4 +1,5 @@
 from aws_cdk import Stack, Environment
+from aws_cdk.aws_codepipeline import Artifact
 from aws_cdk.pipelines import CodePipeline, ShellStep, CodePipelineSource, ManualApprovalStep, CodeBuildStep
 from aws_cdk.aws_codepipeline_actions import CloudFormationDeleteStackAction
 from constructs import Construct
@@ -21,7 +22,13 @@ class MentorMatchPipeline(Stack):
                                 )
         testing_stage = MentorMatchAppStage(self, "testing", env=Environment(account="712310211354", region="eu-west-2"))
         testing_stage_deployment = pipeline.add_stage(testing_stage)
-        testing_stage.add_action(CloudFormationDeleteStackAction(admin_permissions=True, stack_name=testing_stage_deployment.stacks.pop().stack_name))
+
+        delete_test = CloudFormationDeleteStackAction(admin_permissions=True, stack_name=testing_stage_deployment.stacks.pop().stack_name)
+
+        pipeline.add_stage(
+            stage_name="Delete Test Resources",
+            actions=[delete_test]
+        )
 
         production_stage = pipeline.add_stage(
             MentorMatchAppStage(self, "production", env=Environment(account="712310211354", region="eu-west-2"))
