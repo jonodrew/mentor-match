@@ -24,7 +24,10 @@ class MentorMatchPipeline(Stack):
         testing_stage_deployment = pipeline.add_stage(testing_stage)
         testing_stage_deployment.add_post(
             ShellStep(
-                "Delete", commands=[f"cdk destroy {testing_stage_deployment.stacks.pop().stack_name}"]
+                "Delete", commands=[
+                    "npm install -g aws-cdk",
+                    f"cdk destroy {testing_stage_deployment.stacks.pop().stack_name}"
+                ]
             )
         )
 
