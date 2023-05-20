@@ -1,6 +1,7 @@
-from aws_cdk import Stack
-from aws_cdk.pipelines import CodePipeline, ShellStep, CodePipelineSource
+from aws_cdk import Stack, Environment
+from aws_cdk.pipelines import CodePipeline, ShellStep, CodePipelineSource, ManualApprovalStep
 from constructs import Construct
+from .mentor_match_stage import MentorMatchAppStage
 
 
 class MentorMatchPipeline(Stack):
@@ -17,3 +18,9 @@ class MentorMatchPipeline(Stack):
                                                 primary_output_directory="mentor-match-infra/cdk.out"
                                                 )
                                 )
+        prod_stage = pipeline.add_stage(
+            MentorMatchAppStage(self, "prod", env=Environment(account="prod-account", region="eu-west-2"))
+        )
+        prod_stage.add_pre(
+            ManualApprovalStep('approval')
+        )
