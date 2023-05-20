@@ -22,16 +22,10 @@ class MentorMatchPipeline(Stack):
                                 )
         testing_stage = MentorMatchAppStage(self, "testing", env=Environment(account="712310211354", region="eu-west-2"))
         testing_stage_deployment = pipeline.add_stage(testing_stage)
-
-        delete_test = CloudFormationDeleteStackAction(
-            admin_permissions=True,
-            stack_name=testing_stage_deployment.stacks.pop().stack_name,
-            action_name="delete test stack"
-        )
-
-        pipeline.add_stage(
-            stage_name="Delete Test Resources",
-            actions=[delete_test]
+        testing_stage_deployment.add_post(
+            ShellStep(
+                "Delete", commands=[f"cdk destroy {testing_stage_deployment.stacks.pop().stack_name}"]
+            )
         )
 
         production_stage = pipeline.add_stage(
