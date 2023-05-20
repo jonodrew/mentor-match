@@ -26,6 +26,7 @@ class MentorMatchPipeline(Stack):
             ShellStep(
                 "Delete", commands=[
                     "npm install -g aws-cdk",
+                    "cd mentor-match-infra",
                     f"cdk destroy {testing_stage_deployment.stacks.pop().stack_name}"
                 ]
             )
