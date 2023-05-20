@@ -11,6 +11,7 @@ class MentorMatchPipeline(Stack):
                                 synth=ShellStep("Synth",
                                                 input=CodePipelineSource.git_hub("mentor-matching-online/mentor-match", "main"),
                                                 commands=["npm install -g aws-cdk",
+                                                          "cd mentor-match-infra",
                                                           "python -m pip install -r requirements.txt",
                                                           "cdk synth"]
                                                 )
