@@ -1,5 +1,6 @@
 from aws_cdk import Stack, Environment
-from aws_cdk.pipelines import CodePipeline, ShellStep, CodePipelineSource, ManualApprovalStep
+from aws_cdk.pipelines import CodePipeline, ShellStep, CodePipelineSource, ManualApprovalStep, CodeBuildStep
+from aws_cdk.aws_codepipeline_actions import CloudFormationDeleteStackAction
 from constructs import Construct
 from .mentor_match_stage import MentorMatchAppStage
 
@@ -18,9 +19,13 @@ class MentorMatchPipeline(Stack):
                                                 primary_output_directory="mentor-match-infra/cdk.out"
                                                 )
                                 )
-        prod_stage = pipeline.add_stage(
-            MentorMatchAppStage(self, "testing", env=Environment(account="712310211354", region="eu-west-2"))
+        testing_stage = MentorMatchAppStage(self, "testing", env=Environment(account="712310211354", region="eu-west-2"))
+        testing_stage_deployment = pipeline.add_stage(testing_stage)
+        testing_stage.add_action(CloudFormationDeleteStackAction(admin_permissions=True, stack_name=testing_stage_deployment.stacks.pop().stack_name))
+
+        production_stage = pipeline.add_stage(
+            MentorMatchAppStage(self, "production", env=Environment(account="712310211354", region="eu-west-2"))
         )
-        prod_stage.add_pre(
+        production_stage.add_pre(
             ManualApprovalStep('approval')
         )
