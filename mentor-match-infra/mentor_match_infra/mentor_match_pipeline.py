@@ -6,8 +6,8 @@ from constructs import Construct
 class MentorMatchPipeline(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
-        pipeline = CodePipeline(self, "Pipeline",
-                                pipeline_name="MyPipeline",
+        pipeline = CodePipeline(self, "MentorMatchPipeline",
+                                pipeline_name="Pipeline",
                                 synth=ShellStep("Synth",
                                                 input=CodePipelineSource.git_hub("mentor-matching-online/mentor-match", "main"),
                                                 commands=["npm install -g aws-cdk",
