@@ -5,6 +5,8 @@ from constructs import Construct
 from .mentor_match_stage import MentorMatchAppStage
 
 
+
+
 class MentorMatchPipeline(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
@@ -27,13 +29,10 @@ class MentorMatchPipeline(Stack):
                     "npm install -g aws-cdk",
                     "cd mentor-match-infra",
                     "python -m pip install -r requirements.txt",
-                    f"cdk destroy {testing_stage_deployment.stacks.pop().stack_name}"
+                    f"cdk destroy {construct_id}/{testing_stage.stage_name}/{testing_stage_deployment.stacks.pop().stack_name} --force"
                 ]
             )
         )
-        # testing_stage.add_action(
-        #     CloudFormationDeleteStackAction(admin_permissions=True, stack_name=testing_stage_deployment.stacks.pop().stack_name, action_name="delete action")
-        # )
 
         production_stage = pipeline.add_stage(
             MentorMatchAppStage(self, "production", env=Environment(account="712310211354", region="eu-west-2"))
