@@ -30,7 +30,7 @@ class MentorMatchPipeline(Stack):
                     "cd mentor-match-infra",
                     "python -m pip install -r requirements.txt",
                     "cdk ls",
-                    f"cdk destroy {construct_id}/{testing_stage.stage_name}/{testing_stage_deployment.stacks.pop().stack_name} --force"
+                    f"cdk destroy {construct_id}/{testing_stage_deployment.stacks.pop().stack_name.replace('-', '/')} --force"
                 ]
             )
         )
