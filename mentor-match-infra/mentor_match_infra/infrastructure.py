@@ -27,9 +27,8 @@ class MentorMatchStack(cdk.Stack):
                                                       # Use the GHCR image
                                                       image=ecs.ContainerImage.from_registry(
                                                           f"ghcr.io/mentor-matching-online/mentor-match/web:{image_tag}"),
-                                                      memory_limit_mi_b=256
+                                                      memory_limit_mib=256
                                                       )
-        ec2_task_definition.add_container(container)
         service = ecs.Ec2Service(self, "Service",
                                  cluster=cluster,
                                  task_definition=ec2_task_definition,
