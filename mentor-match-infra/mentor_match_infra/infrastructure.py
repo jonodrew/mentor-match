@@ -18,6 +18,7 @@ class MentorMatchStack(cdk.Stack):
             cpu=256, memory_limit_mib=512, listener_port=80, public_load_balancer=True, cluster=cluster, desired_count=1,
             task_image_options=ApplicationLoadBalancedTaskImageOptions(
                                                   image=ContainerImage.from_registry(
-                                                      f"ghcr.io/mentor-matching-online/mentor-match/web:{image_tag}")
+                                                      f"ghcr.io/mentor-matching-online/mentor-match/web:{image_tag}"),
+                container_port=80,
             )
         )
