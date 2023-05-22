@@ -32,7 +32,7 @@ COPY mentor_match_web/app /app
 COPY ./.bumpversion.cfg /.bumpversion.cfg
 
 FROM python-app AS web
-CMD ["poetry", "run", "gunicorn", "app:create_app()"]
+CMD ["poetry", "run", "gunicorn", "app:create_app()", "-b 0.0.0.0:80"]
 
 FROM python-app AS worker
 CMD poetry run celery --app=app.extensions.celery_app worker --loglevel=info
