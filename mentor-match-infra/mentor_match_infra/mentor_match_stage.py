@@ -1,11 +1,23 @@
+from typing import Literal, Mapping
+
 import aws_cdk as cdk
 from constructs import Construct
+
 from .infrastructure import MentorMatchStack
+
+Account = Literal["staging", "production"]
 
 
 class MentorMatchAppStage(cdk.Stage):
-    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+    stage_env_vars: Mapping[Account, Mapping] = {"staging": {"debug": True}}
+
+    def __init__(
+        self,
+        scope: Construct,
+        construct_id: str,
+        account: Account = "staging",
+        **kwargs
+    ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        service = MentorMatchStack(self, "MentorMatchStack")
-
+        MentorMatchStack(self, "MentorMatchStack", *self.stage_env_vars[account])
