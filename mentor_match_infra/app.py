@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-import os
 
 import aws_cdk as cdk
+
 from mentor_match_infra.mentor_match_pipeline import MentorMatchPipeline
 
 app = cdk.App()
