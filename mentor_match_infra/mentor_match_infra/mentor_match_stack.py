@@ -19,7 +19,7 @@ class MentorMatchStack(cdk.Stack):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        vpc = ec2.Vpc(self, "MentorMatchVPC", max_azs=1)  # default is all AZs in region
+        vpc = ec2.Vpc(self, "MentorMatchVPC", max_azs=3)  # default is all AZs in region
 
         cluster = ecs.Cluster(self, "MentorMatchCluster", vpc=vpc)
 
