@@ -17,6 +17,7 @@ class MentorMatchPipeline(Stack):
             self,
             "MentorMatchPipeline",
             pipeline_name="Pipeline",
+            cross_account_keys=True,
             synth=ShellStep(
                 "Synth",
                 input=CodePipelineSource.git_hub(
@@ -32,7 +33,7 @@ class MentorMatchPipeline(Stack):
             ),
         )
         testing_stage = MentorMatchAppStage(
-            self, "testing", env=Environment(account="712310211354", region="eu-west-2")
+            self, "testing", env=Environment(account="661101848753", region="eu-west-2")
         )
         pipeline.add_stage(testing_stage)
 
@@ -40,7 +41,7 @@ class MentorMatchPipeline(Stack):
             MentorMatchAppStage(
                 self,
                 "production",
-                env=Environment(account="712310211354", region="eu-west-2"),
+                env=Environment(account="661101848753", region="eu-west-2"),
             )
         )
         production_stage.add_pre(ManualApprovalStep("approval"))
