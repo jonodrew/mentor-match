@@ -20,4 +20,4 @@ class MentorMatchAppStage(cdk.Stage):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        MentorMatchStack(self, "MentorMatchStack", *self.stage_env_vars[account])
+        MentorMatchStack(self, "MentorMatchStack", **self.stage_env_vars[account])
