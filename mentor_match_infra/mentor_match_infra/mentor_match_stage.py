@@ -20,4 +20,10 @@ class MentorMatchAppStage(cdk.Stage):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        MentorMatchStack(self, "MentorMatchStack", **self.stage_env_vars[account])
+        self._service = MentorMatchStack(
+            self, "MentorMatchStack", **self.stage_env_vars[account]
+        )
+
+    @property
+    def service(self):
+        return self._service

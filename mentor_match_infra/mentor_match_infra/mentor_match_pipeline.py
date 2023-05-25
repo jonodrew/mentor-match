@@ -7,6 +7,7 @@ from aws_cdk.pipelines import (
 )
 from constructs import Construct
 
+from .custom_steps import DeleteStack
 from .mentor_match_stage import MentorMatchAppStage
 
 
@@ -35,7 +36,7 @@ class MentorMatchPipeline(Stack):
         testing_stage = MentorMatchAppStage(
             self, "testing", env=Environment(account="661101848753", region="eu-west-2")
         )
-        pipeline.add_stage(testing_stage)
+        pipeline.add_stage(testing_stage, post=[DeleteStack(testing_stage.service)])
 
         production_stage = pipeline.add_stage(
             MentorMatchAppStage(
