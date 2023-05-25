@@ -19,7 +19,7 @@ class MentorMatchStack(cdk.Stack):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        vpc = ec2.Vpc(self, "MentorMatchVPC", max_azs=3)  # default is all AZs in region
+        vpc = ec2.Vpc(self, "MentorMatchVPC", max_azs=1)  # default is all AZs in region
 
         cluster = ecs.Cluster(self, "MentorMatchCluster", vpc=vpc)
 
@@ -27,11 +27,11 @@ class MentorMatchStack(cdk.Stack):
             self,
             "MentorMatchWebServer",
             cpu=256,
-            memory_limit_mib=1024,
+            memory_limit_mib=512,
             listener_port=80,
             public_load_balancer=True,
             cluster=cluster,
-            desired_count=2,
+            desired_count=1,
             task_image_options=ApplicationLoadBalancedTaskImageOptions(
                 image=ContainerImage.from_registry(
                     f"ghcr.io/mentor-matching-online/mentor-match/web:{image_tag}"
