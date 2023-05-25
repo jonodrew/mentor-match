@@ -24,7 +24,7 @@ class MentorMatchPipeline(Stack):
                 ),
                 commands=[
                     "npm install -g aws-cdk",
-                    "cd mentor-match-infra",
+                    "cd mentor_match_infra",
                     "python -m pip install -r requirements.txt",
                     "cdk synth",
                 ],

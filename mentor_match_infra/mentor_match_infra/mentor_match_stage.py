@@ -3,7 +3,7 @@ from typing import Literal, Mapping
 import aws_cdk as cdk
 from constructs import Construct
 
-from .infrastructure import MentorMatchStack
+from .mentor_match_stack import MentorMatchStack
 
 Account = Literal["staging", "production"]
 
