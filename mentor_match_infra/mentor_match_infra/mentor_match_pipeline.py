@@ -28,7 +28,7 @@ class MentorMatchPipeline(Stack):
                     "python -m pip install -r requirements.txt",
                     "cdk synth",
                 ],
-                primary_output_directory="mentor-match-infra/cdk.out",
+                primary_output_directory="mentor_match_infra/cdk.out",
             ),
         )
         testing_stage = MentorMatchAppStage(
