@@ -37,7 +37,7 @@ class DeleteStack(Step):
             CloudFormationDeleteStackAction(
                 admin_permissions=True,
                 action_name=action_name,
-                stack_name=f'MentorMatch/{self._stack.stack_name.replace("-", "/")}',
+                stack_name=self._stack.stack_name,
                 run_order=run_order,
                 variables_namespace=variables_namespace,
             )
