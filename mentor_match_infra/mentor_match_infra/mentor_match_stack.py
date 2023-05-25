@@ -23,7 +23,7 @@ class MentorMatchStack(cdk.Stack):
 
         cluster = ecs.Cluster(self, "MentorMatchCluster", vpc=vpc)
 
-        ApplicationLoadBalancedFargateService(
+        web_service = ApplicationLoadBalancedFargateService(
             self,
             "MentorMatchWebServer",
             cpu=256,
@@ -40,3 +40,4 @@ class MentorMatchStack(cdk.Stack):
                 environment={"FLASK_DEBUG": "1" if debug else "0"},
             ),
         )
+        web_service.target_group.configure_health_check(path="/login")
