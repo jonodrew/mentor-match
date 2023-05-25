@@ -1,4 +1,4 @@
-from app.extensions import celery_app
+from ..extensions import celery_app
 
 
 def make_celery(app):
