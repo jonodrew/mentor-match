@@ -50,6 +50,7 @@ jobs:
       - get-commit-tag
     env:
       ENV: integration
+      BROKER_URL: redis://localhost:6379/0
       GH_IMAGE_COMMIT_TAG: ${{ needs.get-commit-tag.outputs.image_commit_tag }}
     runs-on: ubuntu-20.04
     steps:

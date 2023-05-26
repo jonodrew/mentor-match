@@ -2,8 +2,8 @@ import os
 
 
 class Config:
-    result_backend = os.environ.get("REDIS_URL", "BROKEN")
-    broker_url = os.environ.get("REDIS_URL", "BROKEN!!")
+    result_backend = os.environ.get("BROKER_URL", "BROKEN")
+    broker_url = os.environ.get("BROKER_URL", "BROKEN!!")
 
 
 class TestConfig(Config):
@@ -15,5 +15,4 @@ class TestConfig(Config):
         "interval_step": 0.2,
         "interval_max": 0.5,
     }
-    if os.environ.get("REDIS_URL") is None:
-        os.environ["REDIS_URL"] = "redis://localhost:6379/0"
+    broker_url = "redis://localhost:6379/0"
