@@ -38,4 +38,5 @@ EXPOSE 80/tcp
 ENTRYPOINT poetry run gunicorn -w 4 -b 0.0.0.0:80 'app:create_app()'
 
 FROM python-app AS worker
+USER nobody
 ENTRYPOINT poetry run celery --app=app.extensions.celery_app worker --loglevel=info
