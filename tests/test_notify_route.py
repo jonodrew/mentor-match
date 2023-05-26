@@ -7,7 +7,7 @@ from flask import url_for
 
 @pytest.fixture
 def notify_client(client):
-    client.set_cookie(server_name="localhost", key="task-id", value="")
+    client.set_cookie(key="task-id", value="")
     yield client
 
 
@@ -66,7 +66,7 @@ class TestNotifyRoute:
 
     @pytest.mark.unit
     def test_notify_route_raises_404_if_no_data(self, notify_client):
-        notify_client.set_cookie(server_name="localhost", key="task-id", value="data")
+        notify_client.set_cookie(key="task-id", value="data")
         response = notify_client.post(
             url_for("notify.notify_settings_done"),
             data={

@@ -16,14 +16,15 @@ services:
       - "5001:5000"
     environment:
       - FLASK_APP=app:create_app()
-      - FLASK_ENV=development
+      - FLASK_DEBUG=1
       - REDIS_URL=redis://redis:6379/0
       - OAUTHLIB_INSECURE_TRANSPORT=1
+
+    entrypoint: poetry run flask run -h 0.0.0.0
 
     volumes:
       - ./tests:/tests
 
-    command: poetry run flask run -h 0.0.0.0
 
   worker:
     user: nobody

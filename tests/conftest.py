@@ -74,7 +74,7 @@ def client(test_data_path):
     test_app_context = test_app.test_request_context()
     test_app_context.push()
     with test_app.test_client() as client:
-        client.set_cookie(server_name="localhost", key="logged-in", value="true")
+        client.set_cookie(key="logged-in", value="true")
         yield client
 
 

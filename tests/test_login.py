@@ -9,7 +9,7 @@ def test_login(client):
     with patch(
         "app.main.routes.os.getenv", side_effect=["CSLGBT", "BatteryHorseStapleCorrect"]
     ):
-        client.delete_cookie("localhost", "logged-in", "true")
+        client.delete_cookie("logged-in", "true")
         response = client.post(
             url_for("auth.login"),
             data={"username": "CSLGBT", "password": "BatteryHorseStapleCorrect"},

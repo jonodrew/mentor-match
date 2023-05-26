@@ -4,8 +4,8 @@ import secrets
 
 from flask import Flask
 
-from app.config import Config
-from app.tasks import make_celery
+from .config import Config
+from .tasks import make_celery
 
 
 def create_app(configuration=Config):
