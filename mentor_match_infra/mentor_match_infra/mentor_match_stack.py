@@ -48,7 +48,7 @@ class MentorMatchStack(cdk.Stack):
 
         cluster = ecs.Cluster(self, "MentorMatchCluster", vpc=vpc)
 
-        broker_vars = {"broker_url": "sqs://"}
+        broker_vars = {"BROKER_URL": "sqs://"}
 
         web_service = ApplicationLoadBalancedFargateService(
             self,
