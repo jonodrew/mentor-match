@@ -27,7 +27,6 @@ services:
 
 
   worker:
-    user: nobody
     build:
       context: "."
       target: worker
