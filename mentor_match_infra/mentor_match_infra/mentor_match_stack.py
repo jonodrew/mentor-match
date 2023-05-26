@@ -5,8 +5,30 @@ from aws_cdk.aws_ecs_patterns import (
     ApplicationLoadBalancedFargateService,
     ApplicationLoadBalancedTaskImageOptions,
 )
+from aws_cdk.aws_iam import Role, CompositePrincipal, ArnPrincipal, ManagedPolicy
 from aws_cdk.aws_sqs import Queue
 from constructs import Construct
+
+
+class DeveloperRole(Role):
+    def __init__(self, scope: Construct, id: str):
+        principals_to_assume = CompositePrincipal(
+            *[
+                ArnPrincipal(f"arn:aws:iam::622626885786:user/{username}")
+                for username in ["jonathan.kerr@digital.cabinet-office.gov.uk"]
+            ]
+        ).with_conditions({"Bool": {"aws:MultiFactorAuthPresent": "true"}})
+        managed_policies = [
+            ManagedPolicy.from_aws_managed_policy_name("PowerUserAccess")
+        ]
+        super().__init__(
+            scope,
+            id,
+            assumed_by=principals_to_assume,
+            role_name="developer",
+            managed_policies=managed_policies,
+            description="A powerful role for developers to assume",
+        )
 
 
 class MentorMatchStack(cdk.Stack):
@@ -19,6 +41,8 @@ class MentorMatchStack(cdk.Stack):
         **kwargs,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
+        DeveloperRole(self, "MentorDev")
 
         vpc = ec2.Vpc(self, "MentorMatchVPC", max_azs=3)  # default is all AZs in region
 
