@@ -110,8 +110,8 @@ def write_test_file(test_data_path):
 @pytest.fixture(scope="session")
 def celery_config():
     return {
-        "broker_url": os.environ.get("REDIS_URL", "redis://localhost:6379/0"),
-        "result_backend": os.environ.get("REDIS_URL", "redis://localhost:6379/0"),
+        "broker_url": os.environ.get("BROKER_URL", "redis://localhost:6379/0"),
+        "result_backend": os.environ.get("BROKER_URL", "redis://localhost:6379/0"),
         "accept_content": ["pickle", "json"],
         "task_serializer": "pickle",
         "result_serializer": "pickle",
