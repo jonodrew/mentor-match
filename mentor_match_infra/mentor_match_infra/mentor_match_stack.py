@@ -41,3 +41,18 @@ class MentorMatchStack(cdk.Stack):
             ),
         )
         web_service.target_group.configure_health_check(path="/login")
+
+        ApplicationLoadBalancedFargateService(
+            self,
+            "MentorMatchCeleryWorker",
+            cpu=256,
+            memory_limit_mib=512,
+            assign_public_ip=False,
+            cluster=cluster,
+            desired_count=1,
+            task_image_options=ApplicationLoadBalancedTaskImageOptions(
+                image=ContainerImage.from_registry(
+                    f"ghcr.io/mentor-matching-online/mentor-match/worker:{image_tag}"
+                ),
+            ),
+        )
