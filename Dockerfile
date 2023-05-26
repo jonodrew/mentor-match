@@ -26,6 +26,8 @@ COPY --from=poetry-base ${POETRY_VENV} ${POETRY_VENV}
 ENV PATH="${PATH}:${POETRY_VENV}/bin"
 
 COPY ./poetry.lock ./pyproject.toml /
+RUN apt update
+RUN apt install -y gcc libcurl4-openssl-dev libssl-dev
 RUN poetry install --only main
 
 COPY mentor_match_web/app /app
