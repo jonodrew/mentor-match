@@ -19,5 +19,5 @@ MentorMatchPipeline(
     # env=cdk.Environment(account='123456789012', region='us-east-1'),
     # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
 )
-
+# ElasticacheDemoCdkAppStack(app, "TestRedis", env=cdk.Environment(account="661101848753", region="eu-west-2"))
 app.synth()

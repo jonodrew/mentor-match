@@ -5,6 +5,7 @@ from aws_cdk.aws_ecs_patterns import (
     ApplicationLoadBalancedFargateService,
     ApplicationLoadBalancedTaskImageOptions,
 )
+from aws_cdk.aws_elasticache import CfnCacheCluster, CfnSubnetGroup
 from aws_cdk.aws_iam import Role, CompositePrincipal, ArnPrincipal, ManagedPolicy
 from aws_cdk.aws_sqs import Queue
 from constructs import Construct
@@ -31,6 +32,55 @@ class DeveloperRole(Role):
         )
 
 
+class RedisCache(Construct):
+    def __init__(self, scope: Construct, id_: str, vpc: ec2.Vpc):
+        super().__init__(scope, id_)
+        self._redis_sec_group = ec2.SecurityGroup(
+            self,
+            "redis-sec-group",
+            security_group_name="redis-sec-group",
+            vpc=vpc,
+            allow_all_outbound=True,
+        )
+
+        private_subnets_ids = [ps.subnet_id for ps in vpc.private_subnets]
+
+        redis_subnet_group = CfnSubnetGroup(
+            scope=self,
+            id="redis_subnet_group",
+            subnet_ids=private_subnets_ids,
+            description="subnet group for redis",
+        )
+
+        self._redis_cluster = CfnCacheCluster(
+            scope=self,
+            id="redis_cluster",
+            engine="redis",
+            cache_node_type="cache.t2.micro",
+            num_cache_nodes=1,
+            cache_subnet_group_name=redis_subnet_group.cache_subnet_group_name,
+            vpc_security_group_ids=[self._redis_sec_group.security_group_id],
+        )
+
+        self._redis_cluster.add_dependency(redis_subnet_group)
+
+        self._connections = ec2.Connections(
+            security_groups=[self._redis_sec_group], default_port=ec2.Port.tcp(6379)
+        )
+
+    @property
+    def cluster(self):
+        return self._redis_cluster
+
+    @property
+    def security_group(self):
+        return self._redis_sec_group
+
+    @property
+    def connections(self):
+        return self._connections
+
+
 class MentorMatchStack(cdk.Stack):
     def __init__(
         self,
@@ -48,11 +98,17 @@ class MentorMatchStack(cdk.Stack):
 
         cluster = ecs.Cluster(self, "MentorMatchCluster", vpc=vpc)
 
-        broker_vars = {"BROKER_URL": "sqs://"}
+        backend = RedisCache(self, "MentorCache", vpc)
+
+        broker_vars = {
+            "BROKER_URL": "sqs://",
+            "BACKEND_URL": backend.cluster.attr_redis_endpoint_address,
+        }
 
         web_service = ApplicationLoadBalancedFargateService(
             self,
             "MentorMatchWebServer",
+            security_groups=backend.cluster.cache_security_group_names,
             cpu=256,
             memory_limit_mib=512,
             listener_port=80,
@@ -69,9 +125,15 @@ class MentorMatchStack(cdk.Stack):
         )
         web_service.target_group.configure_health_check(path="/login")
 
+        backend.connections.allow_from(
+            web_service.service.connections, port_range=ec2.Port.tcp(6379)
+        )
+        backend.connections.allow_from_any_ipv4(port_range=ec2.Port.tcp(6379))
+
         celery_worker = ApplicationLoadBalancedFargateService(
             self,
             "MentorMatchCeleryWorker",
+            security_groups=backend.cluster.cache_security_group_names,
             cpu=256,
             memory_limit_mib=512,
             assign_public_ip=False,
@@ -88,7 +150,7 @@ class MentorMatchStack(cdk.Stack):
         broker = Queue(self, "MentorQueue")
 
         broker.grant_send_messages(celery_worker.task_definition.task_role)
-        broker.grant_consume_messages(celery_worker.task_definition.task_role)
-
-        broker.grant_consume_messages(web_service.task_definition.task_role)
         broker.grant_send_messages(web_service.task_definition.task_role)
+
+        broker.grant_consume_messages(celery_worker.task_definition.task_role)
+        broker.grant_consume_messages(web_service.task_definition.task_role)
