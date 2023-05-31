@@ -147,6 +147,13 @@ class MentorMatchStack(cdk.Stack):
             ),
         )
 
+        celery_worker.target_group.configure_health_check(path="/login")
+
+        backend.connections.allow_from(
+            celery_worker.service.connections, port_range=ec2.Port.tcp(6379)
+        )
+        backend.connections.allow_from_any_ipv4(port_range=ec2.Port.tcp(6379))
+
         broker = Queue(self, "MentorQueue")
 
         broker.grant_send_messages(celery_worker.task_definition.task_role)
