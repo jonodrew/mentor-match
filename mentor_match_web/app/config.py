@@ -2,7 +2,7 @@ import os
 
 
 class Config:
-    result_backend = os.environ.get("BROKER_URL", "BROKEN")
+    result_backend = os.environ.get("BACKEND_URL", "BROKEN")
     broker_url = os.environ.get("BROKER_URL", "BROKEN!!")
 
 
