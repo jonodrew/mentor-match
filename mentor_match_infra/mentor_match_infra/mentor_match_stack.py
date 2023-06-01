@@ -7,7 +7,6 @@ from aws_cdk.aws_ecs_patterns import (
 )
 from aws_cdk.aws_elasticache import CfnCacheCluster, CfnSubnetGroup
 from aws_cdk.aws_iam import Role, CompositePrincipal, ArnPrincipal, ManagedPolicy
-from aws_cdk.aws_sqs import Queue
 from constructs import Construct
 
 
@@ -101,7 +100,7 @@ class MentorMatchStack(cdk.Stack):
         backend = RedisCache(self, "MentorCache", vpc)
 
         broker_vars = {
-            "BROKER_URL": "sqs://",
+            "BROKER_URL": "redis://redis:6379/0",
             "BACKEND_URL": "redis://redis:6379/0",
         }
 
@@ -153,11 +152,3 @@ class MentorMatchStack(cdk.Stack):
             celery_worker.service.connections, port_range=ec2.Port.tcp(6379)
         )
         backend.connections.allow_from_any_ipv4(port_range=ec2.Port.tcp(6379))
-
-        broker = Queue(self, "MentorQueue")
-
-        broker.grant_send_messages(celery_worker.task_definition.task_role)
-        broker.grant_send_messages(web_service.task_definition.task_role)
-
-        broker.grant_consume_messages(celery_worker.task_definition.task_role)
-        broker.grant_consume_messages(web_service.task_definition.task_role)
