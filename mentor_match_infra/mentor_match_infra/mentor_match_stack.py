@@ -102,7 +102,7 @@ class MentorMatchStack(cdk.Stack):
 
         broker_vars = {
             "BROKER_URL": "sqs://",
-            "BACKEND_URL": backend.cluster.attr_redis_endpoint_address,
+            "BACKEND_URL": "redis://redis:6379/0",
         }
 
         web_service = ApplicationLoadBalancedFargateService(
