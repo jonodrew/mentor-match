@@ -98,7 +98,7 @@ class MentorMatchStack(cdk.Stack):
         cluster = ecs.Cluster(self, "MentorMatchCluster", vpc=vpc)
 
         backend = RedisCache(self, "MentorCache", vpc)
-        redis_url = f"{backend.cluster.attr_redis_endpoint_address}:{backend.cluster.attr_redis_endpoint_port}"
+        redis_url = f"redis://{backend.cluster.attr_redis_endpoint_address}:{backend.cluster.attr_redis_endpoint_port}"
 
         broker_vars = {
             "BROKER_URL": redis_url,
