@@ -58,7 +58,7 @@ class RedisCache(Construct):
             engine="redis",
             cache_node_type="cache.t2.micro",
             num_cache_nodes=1,
-            cache_subnet_group_name=redis_subnet_group.cache_subnet_group_name,
+            cache_subnet_group_name=redis_subnet_group.ref,
             vpc_security_group_ids=[self._redis_sec_group.security_group_id],
         )
 
