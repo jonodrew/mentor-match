@@ -1,6 +1,6 @@
 import aws_cdk as cdk
 from aws_cdk import aws_ec2 as ec2, aws_ecs as ecs
-from aws_cdk.aws_ecs import ContainerImage, TaskDefinition
+from aws_cdk.aws_ecs import ContainerImage, FargateTaskDefinition
 from aws_cdk.aws_ecs_patterns import (
     ApplicationLoadBalancedFargateService,
     ApplicationLoadBalancedTaskImageOptions,
@@ -131,15 +131,11 @@ class MentorMatchStack(cdk.Stack):
         )
         backend.connections.allow_from_any_ipv4(port_range=ec2.Port.tcp(6379))
 
-        celery_task_definition = TaskDefinition(
-            self,
-            "MentorMatchCeleryTask",
-            cpu=256,
-            memory_mib=512,
+        celery_task_definition = FargateTaskDefinition(
+            self, "MentorMatchCeleryTask", cpu=256, memory_limit_mib=512
         )
 
         celery_task_definition.add_container(
-            self,
             "MentorMatchCeleryContainer",
             image=ecs.ContainerImage.from_registry(
                 f"ghcr.io/mentor-matching-online/mentor-match/worker:{image_tag}"
@@ -156,6 +152,6 @@ class MentorMatchStack(cdk.Stack):
         )
 
         backend.connections.allow_from(
-            celery_worker.service.connections, port_range=ec2.Port.tcp(6379)
+            celery_worker.connections, port_range=ec2.Port.tcp(6379)
         )
         backend.connections.allow_from_any_ipv4(port_range=ec2.Port.tcp(6379))
