@@ -142,6 +142,9 @@ class MentorMatchStack(cdk.Stack):
             ),
             container_name="worker",
             environment=broker_vars,
+            logging=ecs.AwsLogDriver(
+                stream_prefix="celery", mode=ecs.AwsLogDriverMode.NON_BLOCKING
+            ),
         )
 
         celery_worker = ecs.FargateService(
