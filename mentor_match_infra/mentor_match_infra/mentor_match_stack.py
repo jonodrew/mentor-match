@@ -1,6 +1,6 @@
 import aws_cdk as cdk
 from aws_cdk import aws_ec2 as ec2, aws_ecs as ecs
-from aws_cdk.aws_ecs import ContainerImage
+from aws_cdk.aws_ecs import ContainerImage, TaskDefinition
 from aws_cdk.aws_ecs_patterns import (
     ApplicationLoadBalancedFargateService,
     ApplicationLoadBalancedTaskImageOptions,
@@ -121,6 +121,7 @@ class MentorMatchStack(cdk.Stack):
                 ),
                 container_port=80,
                 environment={"FLASK_DEBUG": "1" if debug else "0", **broker_vars},
+                container_name="web",
             ),
         )
         web_service.target_group.configure_health_check(path="/login")
@@ -130,21 +131,28 @@ class MentorMatchStack(cdk.Stack):
         )
         backend.connections.allow_from_any_ipv4(port_range=ec2.Port.tcp(6379))
 
-        celery_worker = ApplicationLoadBalancedFargateService(
+        celery_task_definition = TaskDefinition(
+            self,
+            "MentorMatchCeleryTask",
+            cpu=256,
+            memory_mib=512,
+        )
+
+        celery_task_definition.add_container(
+            self,
+            "MentorMatchCeleryContainer",
+            image=ecs.ContainerImage.from_registry(
+                f"ghcr.io/mentor-matching-online/mentor-match/worker:{image_tag}"
+            ),
+            container_name="worker",
+            environment=broker_vars,
+        )
+
+        celery_worker = ecs.FargateService(
             self,
             "MentorMatchCeleryWorker",
-            security_groups=backend.cluster.cache_security_group_names,
-            cpu=256,
-            memory_limit_mib=512,
-            assign_public_ip=False,
+            task_definition=celery_task_definition,
             cluster=cluster,
-            desired_count=1,
-            task_image_options=ApplicationLoadBalancedTaskImageOptions(
-                image=ContainerImage.from_registry(
-                    f"ghcr.io/mentor-matching-online/mentor-match/worker:{image_tag}"
-                ),
-                environment=broker_vars,
-            ),
         )
 
         backend.connections.allow_from(
