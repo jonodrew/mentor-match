@@ -93,7 +93,7 @@ class MentorMatchStack(cdk.Stack):
 
         DeveloperRole(self, "MentorDev")
 
-        vpc = ec2.Vpc(self, "MentorMatchVPC", max_azs=1)  # default is all AZs in region
+        vpc = ec2.Vpc(self, "MentorMatchVPC", max_azs=2)  # default is all AZs in region
 
         cluster = ecs.Cluster(self, "MentorMatchCluster", vpc=vpc)
 
