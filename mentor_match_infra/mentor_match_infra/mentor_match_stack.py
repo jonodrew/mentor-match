@@ -149,6 +149,9 @@ class MentorMatchStack(cdk.Stack):
             "MentorMatchCeleryWorker",
             task_definition=celery_task_definition,
             cluster=cluster,
+            desired_count=1,
+            max_healthy_percent=200,
+            min_healthy_percent=50,
         )
 
         backend.connections.allow_from(
