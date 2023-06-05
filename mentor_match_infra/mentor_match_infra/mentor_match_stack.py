@@ -80,7 +80,7 @@ class RedisCache(Construct):
         return self._connections
 
 
-class MentorMatchStack(cdk.Stack):
+class MentorMatchWebStack(cdk.Stack):
     def __init__(
         self,
         scope: Construct,
@@ -90,8 +90,6 @@ class MentorMatchStack(cdk.Stack):
         **kwargs,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
-
-        DeveloperRole(self, "MentorDev")
 
         vpc = ec2.Vpc(self, "MentorMatchVPC", max_azs=2)  # default is all AZs in region
 
@@ -161,3 +159,10 @@ class MentorMatchStack(cdk.Stack):
             celery_worker.connections, port_range=ec2.Port.tcp(6379)
         )
         backend.connections.allow_from_any_ipv4(port_range=ec2.Port.tcp(6379))
+
+
+class MentorMatchSupportStack(cdk.Stack):
+    def __init__(self, scope: Construct, id_: str):
+        super().__init__(scope, id_)
+
+        DeveloperRole(self, "MentorDev")

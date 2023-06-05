@@ -3,7 +3,7 @@ from typing import Literal, Mapping
 import aws_cdk as cdk
 from constructs import Construct
 
-from .mentor_match_stack import MentorMatchStack
+from .mentor_match_stack import MentorMatchWebStack, MentorMatchSupportStack
 
 Account = Literal["staging", "production"]
 
@@ -20,7 +20,9 @@ class MentorMatchAppStage(cdk.Stage):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        self._service = MentorMatchStack(
+        self._support = MentorMatchSupportStack(self, "SupportStack")
+
+        self._service = MentorMatchWebStack(
             self, "MentorMatchStack", **self.stage_env_vars[account]
         )
 
