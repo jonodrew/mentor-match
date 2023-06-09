@@ -2,8 +2,43 @@
 <html lang="en">
 <head>
     {% block head %}
-    <link rel="stylesheet" href="https://assets.mentormatching.online/styles/styles.css">
-    <title>Mentor matcher • {% block title %}{% endblock %}</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	
+    <title>Mentor Matching Online • {% block title %}{% endblock %}</title>
+	
+	<!-- Short description of the page (limit to 150 characters). In *some* situations this description is used as a part of the snippet shown in the search results. -->
+	<meta name="description" content="Mentoring, made easy. Use these guides, resources and tools to deliver a large scale, mentoring programme." />
+	<meta name="author" content="Jonathan Kerr, John Peart" />
+	<meta name="author" content="Mentor Matching Online" />
+	
+	<!-- Control the behaviour of search engine crawling and indexing -->
+	<!-- Change 'noindex' to 'index,follow' to allow search scraping -->
+	<meta name="robots" content="noindex"><!-- All Search Engines -->
+	<meta name="googlebot" content="noindex"><!-- Google Specific -->
+	
+	<!-- Verify ownership (placeholder) -->
+	<meta name="google-site-verification" content=""><!-- Google Search Console -->
+	
+	<!-- Schema.org social media placeholders -->
+	<!-- These should be sufficient to show social images on various sites -->
+	<meta itemprop="name" content="Mentoring, made easy. • Mentor matching tool">
+	<meta itemprop="description" content="Use this online tool to help match mentors and mentees as part of a large scale mentoring programme.">
+	<meta itemprop="image" content="https://assets.mentormatching.online/images/site/social-media.png">
+	
+	<!-- Favicons -->
+	<!-- Place favicon.ico in the root directory - no tag necessary -->
+	<meta name="theme-color" content="#373151">
+	<link rel="icon" href="https://assets.mentormatching.online/images/site/favicon-pinned-svg.svg">
+	<link rel="mask-icon" href="https://assets.mentormatching.online/images/site/favicon-pinned-svg.svg" color="#373151">
+	<link rel="apple-touch-icon" href="https://assets.mentormatching.online/images/site/favicon-large-png.png">
+	
+	<!-- Scripts and styles -->
+	<link rel="stylesheet" href="https://assets.mentormatching.online/styles/styles.css">
+	<script type="text/javascript" src="https://assets.mentormatching.online/scripts/scripts.js"></script>
+	
     {% endblock %}
 </head>
 <body>
