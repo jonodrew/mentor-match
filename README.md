@@ -33,15 +33,12 @@ By default, the service can be accessed on the following ports:
 |---------|------|
 | flask   | 5001 |
 | redis   | 6379 |
-| docs    | 4000 |
 
 ## Installing dependencies
 
 You **must** install `docker-compose` to use this software. [Follow the documentation from Docker](https://docs.docker.com/desktop/) to install the required software.
 
-After `docker-compose` is installed, clone [the mentor match repository](https://www.github.com/jonodrew/mentor-match). This repository is hosted on Github, but a Github account is not required to clone the repository. 
-
-A Github account is required if you wish to [contribute to the documentation or code](/contribute).
+After `docker-compose` is installed, clone [the mentor match repository](https://www.github.com/mentor-matching-online/mentor-match). This repository is hosted on Github, but a Github account is not required to clone the repository. 
 
 Use the command line to get to where you've cloned this repository. 
 
@@ -51,15 +48,8 @@ From the repository folder, in the command line run:
 docker-compose up
 ```
 
-You should now be able to access the service on the `localhost:` followed by the ports above. I recommend starting
-with [the docs](localhost:4000), so you can come back here and keep going!
+You should now be able to access the service on the `localhost:` followed by the ports above.
 
 To stop the service at any time, just press the control (<kbd>Ctrl</kbd>) key and <kbd>C</kbd> key together.
-
-Once you have the app running in your browser, you will be redirected to `/login`. The credentials for logging in locally are:
-  ```
-  Username: CSLGBT
-  Password: HorseBatteryStapleCorrect
-  ```
 
 You can use the randomised data in the [sample_data folder](/sample_data) to try out the system and see for yourself how quickly it matches 500 mentors and mentees. The record on my hardware is 97 seconds. I've not yet tried it by hand...
