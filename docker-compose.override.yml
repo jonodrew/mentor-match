@@ -6,11 +6,3 @@ services:
     environment:
       - USERNAME=CSLGBT
       - PASSWORD=HorseBatteryStapleCorrect
-
-  jekyll:
-    build:
-      context: "./docs/"
-    ports:
-      - "4000:4000"
-    volumes:
-      - ./docs:/srv/jekyll
