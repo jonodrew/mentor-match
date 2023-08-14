@@ -37,12 +37,12 @@ def index():
 
 @main_bp.route("/cookies")
 def cookies():
-    return redirect("http://docs.mentoring.service.civilservice.lgbt/cookies/")
+    return redirect("http://mentormatching.online/cookies/")
 
 
 @main_bp.route("/privacy-and-data")
 def privacy():
-    return redirect("http://docs.mentoring.service.civilservice.lgbt/privacy/")
+    return redirect("http://mentormatching.online/privacy/")
 
 
 @main_bp.route("/upload", methods=["GET", "POST"])
