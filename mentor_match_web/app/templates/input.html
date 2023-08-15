@@ -12,17 +12,17 @@
 <div class="grid-row">
   <div class="grid-column-two-thirds">
     <form method=post enctype=multipart/form-data action="{{ url_for('main.upload') }}">
-      {% if error_message %}
-        <blockquote class="error warning-text">
-          <p><strong>An error has occurred</strong></p>
-          <p>{{ error_message }}</p>
-        </blockquote>
-      {% endif %}
       <div class="form-group" style="padding-bottom: 45px;">
         <label class="label label-lg" for="files">
           Select your files
         </label>
-        <input type="file" name="files" multiple="" id="files">
+        {% if error_message %}
+          <blockquote class="error warning-text">
+            <p><strong>An error has occurred</strong></p>
+            <p>{{ error_message }}</p>
+          </blockquote>
+        {% endif %}
+        <input class="file-upload" type="file" name="files" multiple="" id="files">
       </div>
       <input type="submit" class="button button--action" value="Upload the data ❯">
     </form>
